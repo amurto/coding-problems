@@ -1,3 +1,4 @@
+// Input should not be odd a number or 2
 import java.util.Scanner;  
 
 public class watermelon {
