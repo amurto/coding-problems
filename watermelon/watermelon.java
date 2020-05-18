@@ -1,4 +1,4 @@
-import java.util.Scanner;  // Import the Scanner class
+import java.util.Scanner;  
 
 public class watermelon {
   public static void main(String[] args) {
