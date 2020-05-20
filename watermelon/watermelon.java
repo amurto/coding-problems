@@ -1,15 +1,16 @@
+
 // Input should not be odd a number or 2
-import java.util.Scanner;  
+import java.util.Scanner;
 
 public class watermelon {
   public static void main(String[] args) {
-    Scanner in = new Scanner(System.in); 
-    int weight = in.nextInt(); 
-    in.close(); 
+    Scanner in = new Scanner(System.in);
+    int weight = in.nextInt();
+    in.close();
     if (weight % 2 == 1 || weight == 2) {
-      System.out.println("NO"); 
+      System.out.println("NO");
     } else {
-      System.out.println("YES"); 
+      System.out.println("YES");
     }
   }
 }
