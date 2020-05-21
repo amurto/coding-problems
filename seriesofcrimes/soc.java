@@ -17,6 +17,7 @@ public class soc {
                     a[i][j] = 1;
             }
         }
+        in.close();
         int p=0,q=0,count=0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -39,6 +40,5 @@ public class soc {
             }
         }
         System.out.println(p + " " + q);
-        in.close();
     }
 }

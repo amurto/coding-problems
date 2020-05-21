@@ -7,6 +7,7 @@ public class spa {
         int a[] = new int[n];
         in.nextLine();
         String line = in.nextLine();
+        in.close();
         String[] strs = line.split(" ");
         int max=0,sec=0,i=0;
         for (int j = 0; j < strs.length; j++) {

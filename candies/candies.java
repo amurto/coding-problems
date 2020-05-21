@@ -5,6 +5,7 @@ public class candies {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
         int m = in.nextInt();
+        in.close();
         int a[] = new int[m];
         int q = n/m;
         int r = n%m;
