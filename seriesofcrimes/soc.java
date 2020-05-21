@@ -17,20 +17,28 @@ public class soc {
                     a[i][j] = 1;
             }
         }
-        // for (int i=0;i<n;i++) {
-        // for (int j=0;j<m;j++) {
-        // System.out.print(a[i][j]);
-        // }
-        // System.out.println("");
-        // }
-        outerloop: for (int i = 0; i < n; i++) {
+        int p=0,q=0,count=0;
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (a[i][j] == 1) {
-                    System.out.println(i + "" + j);
-                    break outerloop;
+                    count = 0;
+                    for (int k=0;k<m;k++) {
+                        if (a[i][k] == 1)
+                            count++;
+                    }
+                    if (count == 1)
+                        p = i+1;
+                    count = 0;
+                    for (int k=0;k<n;k++) {
+                        if (a[k][j] == 1)
+                            count++;
+                    }
+                    if (count == 1)
+                        q = j+1;
                 }
             }
         }
+        System.out.println(p + " " + q);
         in.close();
     }
 }
