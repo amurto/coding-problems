@@ -6,7 +6,6 @@ public class candies {
         int n = in.nextInt();
         int m = in.nextInt();
         in.close();
-        int a[] = new int[m];
         int q = n/m;
         int r = n%m;
         for (int i=0; i<m; i++) {
