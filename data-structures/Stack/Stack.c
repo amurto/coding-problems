@@ -1,9 +1,3 @@
-
-
-
-
-Prog 1.1:Implementation of Stack using Array
-Code:
 #include <stdio.h>
 
 #define MAX_SIZE 10

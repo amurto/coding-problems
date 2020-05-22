@@ -1,10 +1,3 @@
-/* 
-Title: Implementation of doubly linked list
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 28/08/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 struct node

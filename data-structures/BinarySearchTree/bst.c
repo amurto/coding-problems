@@ -1,10 +1,3 @@
-/* 
-Title: Implementation of Binary Search Tree
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 24/09/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 struct node

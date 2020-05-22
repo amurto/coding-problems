@@ -1,10 +1,3 @@
-/* 
-Title: Implementation of Priority Queue
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 3/09/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 struct queue

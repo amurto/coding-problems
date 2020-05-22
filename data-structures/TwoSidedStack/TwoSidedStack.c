@@ -1,8 +1,3 @@
-
-Prog 1.2: Implementation of two stacks in an array
-
-
-Code:
 #include  <stdio.h>
 
 #define MAX_SIZE 10

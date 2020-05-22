@@ -1,10 +1,3 @@
-/* 
-Title: Quick Sort
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 25/09/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 #define SIZE 100

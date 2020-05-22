@@ -1,10 +1,3 @@
-/* 
-Title: Implementation of Expression Tree
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 25/09/18
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>

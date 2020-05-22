@@ -1,10 +1,3 @@
-/* 
-Title: Queue using Linked List
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 21/07/2018
-*/ 
-
 #include<stdio.h>
 #include<ctype.h>
 #include<stdlib.h>

@@ -1,11 +1,3 @@
-
-/* 
-Title: Static Implementation of Circular Queue
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 30/07/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX_SIZE 5

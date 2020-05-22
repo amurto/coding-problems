@@ -1,11 +1,3 @@
-
-/* 
-Title: Implementation Of Linked List
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 6/08/2018
-*/ 
-
 #include<stdio.h>
 #include<stdlib.h>
 

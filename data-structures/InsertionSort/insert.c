@@ -1,9 +1,3 @@
-/* 
-Title: Insertion Sorting
-Name: Amurto Basu
-Roll No: 8317
-Date Of Performance: 25/09/2018
-*/ 
 #include<stdio.h>
 #define SIZE 100
 void insertion_sort(int arr[],int n)
