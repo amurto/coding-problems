@@ -1,41 +1,63 @@
+import java.io.*;
 import java.util.*;
 
 public class lazyland {
+
+    final static int MAX = 100000;
+
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        int n = in.nextInt();
-        int k = in.nextInt();
-        int a[] = new int[n];
-        int b[] = new int[n];
-        ArrayList<Integer> c = new ArrayList<Integer>();
-        ArrayList<Integer> t = new ArrayList<Integer>();
-        for (int i=0; i<n; i++) 
-            a[i] = in.nextInt() - 1;
-        for (int i=0; i<n; i++) 
+        Scanner in = new Scanner(new BufferedInputStream(System.in));
+        PrintStream out = System.out;
+        int n = in.nextInt(), k = in.nextInt();
+        HashSet<Integer> set = new HashSet<>();
+        int[] a = new int[n], b = new int[n];
+        int[] times = new int[MAX];
+        for (int i = 0; i < n; i++) {
+            a[i] = in.nextInt();
+            set.add(a[i]);
+            times[a[i]]++;
+        }
+        for (int i = 0; i < n; i++)
             b[i] = in.nextInt();
-        in.close();
-        for (int i=0; i<n; i++) {
-            if (!c.contains(a[i])) {
-                c.add(a[i]);
-                ArrayList<Integer> time = new ArrayList<Integer>();
-                for (int j=i; j<n; j++) {
-                    if (a[j] == a[i]) {
-                        time.add(b[j]);
+        int noChose = k - set.size();
+        if (noChose == 0) {
+            out.println(0);
+            return;
+        }
+        Queue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
+        HashMap<Integer, Integer> maxMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (times[a[i]] <= 1)
+                continue;
+            if (maxMap.get(a[i]) == null) {
+                maxMap.put(a[i], b[i]);
+            } else {
+                Integer pMax = maxMap.get(a[i]);
+                if (pMax < b[i]) {
+                    if (noChose == pq.size()) {
+                        if (pMax < pq.peek()) {
+                            pq.poll();
+                            pq.add(pMax);
+                        }
+                    } else {
+                        pq.add(pMax);
+                    }
+                    maxMap.put(a[i], b[i]);
+                } else {
+                    if (noChose == pq.size()) {
+                        if (b[i] < pq.peek()) {
+                            pq.poll();
+                            pq.add(b[i]);
+                        }
+                    } else {
+                        pq.add(b[i]);
                     }
                 }
-                if (time.size() > 1) {
-                    Collections.sort(time);
-                    time.remove(time.size() - 1); 
-                    t.addAll(time);
-                }
-                time.clear();
             }
         }
-        Collections.sort(t);
-        int sum = 0;
-        for (int i=0; i<k-c.size();i++) {
-            sum = sum + t.get(i);
-        }
-        System.out.println(sum);
+        long res = 0;
+        while (!pq.isEmpty())
+            res += pq.poll();
+        out.println(res);
     }
 }
