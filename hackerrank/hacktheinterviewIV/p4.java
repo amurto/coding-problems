@@ -5,7 +5,7 @@ public class p4 {
     public static ArrayList<ArrayList<ArrayList<Long>>> DP = new ArrayList<ArrayList<ArrayList<Long>>>();
     public static ArrayList<Integer> num = new ArrayList<Integer>();  
     public static int k;
-    final static long m  = 1000000007;
+    final static long m = 1000000007L;
 
     public static long mod(long a) { 
         return a % m; 
@@ -40,9 +40,10 @@ public class p4 {
             if(f == 0 && dgt < LMT) nf = 1;
             if(dgt > 0) ncnt++;
             if(ncnt <= k) {
-                res = mod(res + call(pos+1, ncnt, nf));
+                res = res + call(pos+1, ncnt, nf);
             } 
         }
+        res = res%m;
         DP.get(pos).get(cnt).set(f, res);
         return res;
     }
@@ -71,7 +72,8 @@ public class p4 {
         String[] b = br.readLine().split("");
         k = Integer.parseInt(br.readLine());
         long res = solve(b) - solve(a);
-        System.out.println(solve(b) + " " + solve(a));
+        if (res < 0)
+            res+=m;
         System.out.println(res);
     }
 }
