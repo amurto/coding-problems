@@ -1,5 +1,5 @@
-// https://practice.geeksforgeeks.org/problems/smallest-subarray-with-sum-greater-than-x/0
-// Smallest subarray with sum greater than x
+// https://www.geeksforgeeks.org/maximum-sum-such-that-no-two-elements-are-adjacent/
+// Maximum sum of non adjacent elements
 
 import java.util.*;
 import java.io.*;
