@@ -5,11 +5,6 @@ import java.util.*;
 import java.io.*;
 
 public class p2 {
-    public static int findFactorial(int v) {
-        if (v==1)
-            return 1;   
-        return v*findFactorial(v-1);
-    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int t = Integer.parseInt(br.readLine());
