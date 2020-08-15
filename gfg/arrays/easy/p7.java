@@ -1,32 +1,57 @@
-// Largest Fibonacci Subsequence
-// https://practice.geeksforgeeks.org/problems/largest-fibonacci-subsequence/0
+// Implement two stacks in an array
+// https://practice.geeksforgeeks.org/problems/implement-two-stacks-in-an-array/1
 
 import java.util.*;
 import java.io.*;
 
-public class p6 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int t = Integer.parseInt(br.readLine());
-        while (t-- > 0) {
-            int n = Integer.parseInt(br.readLine());
-            String[] line = br.readLine().split(" ");
-            int[] count = new int[1001];
-            int beg = 0, sec = 1;
-            count[0]++;count[1]++;
-            while (beg + sec <= 1000) {
-                int temp = beg+sec;
-                count[temp]++;
-                beg = sec;
-                sec = temp;
-            }
-            
-            for (int i=0; i<n; i++) {
-                int v = Integer.parseInt(line[i]);
-                if (count[v]>0)
-                    System.out.print(v + " ");
-            }
-            System.out.println();
-        }
-    }
+
+class TwoStack
+{
+	int size;
+	int top1,top2;
+	int arr[] = new int[100];
+
+	TwoStack()
+	{
+		size = 100;
+		top1 = -1;
+		top2 = size;
+	}
+}
+
+class Stacks
+{
+    
+	void push1(int x,TwoStack sq)
+	{
+		// pushing element to the top of first stack
+		if(sq.top1 < sq.top2 - 1)
+			sq.arr[sq.top1++] = x;
+		
+	}
+	
+	void push2(int x, TwoStack sq)
+	{
+		
+		// pushing element to the top of second stop
+		if(sq.top1 < sq.top2 -1)
+			sq.arr[sq.top2--] = x;
+		
+	}
+	
+	int pop1(TwoStack sq)
+	{
+	    // removing element from the top of first stack
+		if(sq.top1 == -1)
+            return -1;
+		return sq.arr[sq.top1--];
+	}
+	
+	int pop2(TwoStack sq)
+	{
+		// removing element from the top of second stack
+		if(sq.top2 == sq.size)
+            return -1;
+		return sq.arr[sq.top2++];
+	}
 }
