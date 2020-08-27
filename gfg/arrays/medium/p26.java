@@ -13,17 +13,22 @@ public class p26 {
             String[] line = br.readLine().split(" ");
             int k = Integer.parseInt(br.readLine());
             int[] a = new int[n];
-            int sum=0, start=-1, max = 0;
+            int[] s = new int[n];
+            int sum=0;
             for (int i=0; i<n; i++) {
-                if (i-prev)
-                if (sum+a[i] < a[i]) {
-                    sum=a[i];
-                    start=i-1;
-                } else
-                    sum+=a[i];
-            }
                 a[i]= Integer.parseInt(line[i]);
-
+                sum+=a[i];
+                s[i] =sum;
+            }
+            sum=s[k-1];
+            int max=sum;
+            for (int i=k;i<n;i++) {
+                sum+=a[i];
+                if (s[i]-s[i-k] > sum) {
+                    sum=s[i]-s[i-k];
+                }
+                max=Math.max(max, sum);
+            }
             System.out.println(max);
         }
     }
