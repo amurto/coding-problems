@@ -1,10 +1,10 @@
-// https://practice.geeksforgeeks.org/problems/longest-subarray-with-sum-divisible-by-k/0
-// Longest subarray with sum divisible by K
+// https://practice.geeksforgeeks.org/problems/sub-array-sum-divisible-by-k/0
+// Sub-Array sum divisible by K
 
 import java.util.*;
 import java.io.*;
 
-public class p24 {
+public class p22 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int t = Integer.parseInt(br.readLine());
@@ -14,21 +14,20 @@ public class p24 {
             int k = Integer.parseInt(params[1]);
             String[] line = br.readLine().split(" ");
             int[] a = new int[n];
-            int sum=0, max = 0;
             for (int i=0; i<n; i++)
                 a[i]= Integer.parseInt(line[i]);
-            
+            int sum=0, c=0;
             int[] map = new int[k];
-            Arrays.fill(map, -2);
-            map[0]=-1;
-            for (int i=0; i<n; i++) {
-                sum=((sum+a[i])%k+k)%k;
-                if (map[sum]==-2)
-                    map[sum]=i;
-                else 
-                    max=Math.max(max, i-map[sum]);
+            map[0]=1;
+            for (int i=0; i<n;i++) {
+                sum+=a[i];
+                sum=((sum%k)+k)%k;
+                map[sum]++;
             }
-            System.out.println(max);
+            for (int i=0; i<k;i++) 
+                if (map[i] > 1) 
+                    c+=map[i]*(map[i]-1)/2;
+            System.out.println(c);
         }
     }
 }
