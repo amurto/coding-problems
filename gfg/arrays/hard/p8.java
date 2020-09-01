@@ -34,8 +34,7 @@ public class p8 {
                     if (gs + sg > 2 * x) {
                         if (l < g)
                             ans++;
-                    }
-                    else {
+                    } else {
                         if (g < l)
                             ans++;
                     }
