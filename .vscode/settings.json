@@ -5,6 +5,11 @@
         "string": "cpp",
         "chrono": "cpp",
         "complex": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "bitset": "cpp",
+        "string_view": "cpp",
+        "deque": "cpp",
+        "iostream": "cpp",
+        "cmath": "cpp"
     }
 }
