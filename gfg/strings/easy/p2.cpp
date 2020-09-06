@@ -20,7 +20,6 @@ int main()
         for (int i = 0; i < n; i++)
             c[i] = s[i];
         string rev="", cur="";
-        int cur_num = 0, sum = 0, l = 0;
         for (int i = n - 1; i >= 0; i--)
         {
             if (c[i] == '.')
