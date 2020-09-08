@@ -1,6 +1,6 @@
 ## Computer Networking
 
-### [OSI Layers](https://www.geeksforgeeks.org/layers-of-osi-model/).
+### [OSI Layers](https://www.geeksforgeeks.org/layers-of-osi-model/)
 
 * OSI Layers
     * Physical Layer
