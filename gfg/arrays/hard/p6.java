@@ -1,5 +1,5 @@
-// Number of subarrays having sum exactly equal to k
 // https://www.geeksforgeeks.org/number-subarrays-sum-exactly-equal-k/
+// Number of subarrays having sum exactly equal to k
 
 import java.util.*;
 import java.io.*;

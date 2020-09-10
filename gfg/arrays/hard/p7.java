@@ -1,5 +1,5 @@
-// Minimum number to make median X 
-// https://practice.geeksforgeeks.org/problems/minimum-number-to-make-median-x/0
+// https://practice.geeksforgeeks.org/problems/maximum-subset-xor/1
+// Maximum subset XOR
 
 import java.util.*;
 import java.io.*;

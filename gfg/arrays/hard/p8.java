@@ -1,5 +1,5 @@
-// Minimum number to make median X
 // https://practice.geeksforgeeks.org/problems/minimum-number-to-make-median-x/0
+// Minimum number to make median X
 
 import java.util.*;
 import java.io.*;
