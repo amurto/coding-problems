@@ -1,5 +1,5 @@
-// Form a palindrome
-// https://practice.geeksforgeeks.org/problems/form-a-palindrome/0
+// Longest Palindromic Subsequence
+// https://www.geeksforgeeks.org/longest-palindromic-subsequence-dp-12/
 
 #include<bits/stdc++.h>
 using namespace std;
