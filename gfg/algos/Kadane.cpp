@@ -1,3 +1,7 @@
+// https://practice.geeksforgeeks.org/problems/kadanes-algorithm/0
+// Kadane's Algorithm
+// Maximum sub-array
+
 #include<bits/stdc++.h>
 using namespace std;
 
