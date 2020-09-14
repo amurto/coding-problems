@@ -1,29 +1,42 @@
 // https://practice.geeksforgeeks.org/problems/longest-prefix-suffix/0
 // Longest Prefix Suffix
 
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-int main() {
+int main()
+{
     int t;
-    cin>>t;
-    while (t-->0) {
-        int n, m, ans=0;;
+    cin >> t;
+    while (t-- > 0)
+    {
         string s;
-        cin>>s;
-        n=s.length();
-        for (int i=1; i<n; i++) {
-            if (s[0] == s[i]) {
-                if (s.substr(0, n-i) == s.substr(i, n-i)) {
-                    ans=n-i;
-                    break;
+        cin >> s;
+        int n = s.length();
+        int LPS[n], len = 0, i = 1;
+        LPS[0] = 0;
+        while (i < n)
+        {
+            if (s[i] == s[len])
+            {
+                LPS[i] = ++len;
+                i++;
+            }
+            else
+            {
+                if (len > 0)
+                    len = LPS[len - 1];
+                else
+                {
+                    LPS[i] = 0;
+                    i++;
                 }
             }
         }
-        cout<<ans<<endl;
+        cout << LPS[n - 1] << endl;
     }
     return 0;
 }
