@@ -56,3 +56,21 @@ int main() {
     return 0;
 }
 ```
+
+
+## Doubly Linked List
+```cpp
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node *prev;
+    Node(int x)
+    {
+        data = x;
+        next = NULL;
+        prev = NULL;
+    }
+};
+```
