@@ -20,14 +20,14 @@ public:
 };
 
 // Recursion
-Node *reverseList(Node *head)
+Node *reverseList(Node *cur)
 {
-    if (head->next==NULL)
-        return head;
-    Node* cur = reverseList(head->next);
-    head->next->next = head;
-    head->next=NULL;
-    return cur;
+    if (cur==NULL || cur->next==NULL)
+        return cur;
+    Node* newHead = reverseList(cur->next);
+    cur->next->next=cur;
+    cur->next=NULL;
+    return newHead;
 }
 
 // Iteration
