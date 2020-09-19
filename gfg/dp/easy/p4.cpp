@@ -9,12 +9,11 @@ typedef long long ll;
 
 int DP[1000][1000], MOD = 1000000007;
 int countPaths(int m, int n) {
-    if (DP[m][n] < 0) {
+    if (DP[m][n] < 0)
         if (m==0 || n==0)
             DP[m][n]=1;
         else
             DP[m][n] = (countPaths(m, n-1) + countPaths(m-1, n))%MOD;
-    }
     return DP[m][n];
 }
 
