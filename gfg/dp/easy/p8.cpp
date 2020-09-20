@@ -1,30 +1,37 @@
 // https://practice.geeksforgeeks.org/problems/longest-repeating-subsequence/0
 // Longest Repeating Subsequence
 
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-int main() {
+int DP[1001][1001];
+
+int LRS(string &str, int i, int j)
+{
+    if (i < 0 || j < 0)
+        return 0;
+    if (DP[i][j] < 0)
+        if (str[i] == str[j] && i != j)
+            DP[i][j] = 1 + LRS(str, i - 1, j - 1);
+        else
+            DP[i][j] = max(LRS(str, i - 1, j), LRS(str, i, j - 1));
+    return DP[i][j];
+}
+
+int main()
+{
     int t;
-    cin>>t;
-    while (t-->0) {
+    cin >> t;
+    while (t-- > 0)
+    {
         int n;
         string str;
-        cin>>n>>str;
-        int DP[n][n];
-        memset(DP, 0, sizeof(DP));
-        for (int i=1; i<=n; i++) {
-            for (int j=1; j<i; j++) {
-                if (str[i-1] == str[j-1]) {
-                    DP[i][j] = 1;
-                }
-                DP[i][j] += DP[i-1][j-1];
-            }
-        }
-        cout<<DP[n][n]<<endl;
+        cin >> n >> str;
+        memset(DP, -1, sizeof(DP));
+        cout << LRS(str, n - 1, n - 1) << endl;
     }
     return 0;
 }
