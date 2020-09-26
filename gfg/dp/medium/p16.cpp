@@ -11,6 +11,7 @@ using namespace std;
 
 typedef long long ll;
 #define pb push_back
+
 int di[5] = {0, 1, -1, 0, 0}, dj[5] = {0, 0, 0, -1, 1};
 ll DP[4][3][26];
 
