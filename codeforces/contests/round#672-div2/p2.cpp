@@ -1,25 +1,34 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-int main() {
+int main()
+{
     int t;
-    cin>>t;
-    while (t-->0) {
-        int n;
-        cin>>n;
-        ll a[n], ans=0;
-        int memo[70];
-        memset(memo, 0, sizeof(memo));
-        for (int i=0; i<n; i++) {
-            cin>>a[i];
-            memo[(int)(log2(a[i]))]++;
+    cin >> t;
+    while (t-- > 0)
+    {
+        int n, x;
+        ll M[30] = {0};
+        cin >> n;
+        for (int i = 0; i < n; i++)
+        {
+            cin >> x;
+            for (int j = 29; j >= 0; j--)
+            {
+                if (x >> j == 1)
+                {
+                    M[j]++;
+                    break;
+                }
+            }
         }
-        for (int v: memo)
-            ans = ans + v*(v-1)/2;
-        cout<<ans<<endl;
+        ll ans=0;
+        for (ll v : M)
+            ans = ans + v * (v - 1) / 2;
+        cout << ans << endl;
     }
     return 0;
 }
