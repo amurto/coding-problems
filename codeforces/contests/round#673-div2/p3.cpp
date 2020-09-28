@@ -10,8 +10,7 @@ int main() {
     while (t-->0) {
         int n, v;
         cin>>n;
-        vector<int> ans(n+1,-1);
-        unordered_map<int, int> GAP, LAST;
+        vector<int> ans(n+1,-1), GAP(n+1, 0), LAST(n+1, 0);
 
         // Calculate Max Gaps for each value in the array
         for (int i=1; i<=n; i++) {
