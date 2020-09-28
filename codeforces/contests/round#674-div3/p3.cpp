@@ -8,11 +8,13 @@ int main() {
     int t;
     cin>>t;
     while (t-->0) {
-        int n;
+        ll n;
         cin>>n;
-        int a[n];
-        for (int i=0; i<n; i++) 
-            cin>>a[i];
+        ll sq = floor(sqrt(n));
+        ll ans = sq-1 + n/sq;
+        if (n%sq == 0)
+            ans--;
+        cout<<ans<<endl;
     }
     return 0;
 }

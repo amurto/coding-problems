@@ -15,7 +15,7 @@ int main()
         for (int i = 0; i < n; i++)
         {
             cin >> TL >> TR >> BL >> BR;
-            if (TL == BR && TR == BL)
+            if (TR == BL)
                 ans = 1;
         }
         if (m % 2 == 0 && ans == 1)
