@@ -8,31 +8,29 @@ int main() {
     int t;
     cin>>t;
     while (t-->0) {
-        int n;
+        int n, v;
         cin>>n;
-        vector<int> ans(n,-1);
-        int v, MAX=0;
-        unordered_map<int, int> MAP;
-        for (int i=0; i<n; i++) {
+        vector<int> ans(n+1,-1);
+        unordered_map<int, int> GAP, LAST;
+
+        // Calculate Max Gaps for each value in the array
+        for (int i=1; i<=n; i++) {
             cin>>v;
-            MAP[v]++;
-            MAX=max(MAX, v);
+            GAP[v] = max(GAP[v], i-LAST[v]);
+            LAST[v] = i;
         }
-        for (int i=n-1; i>=0; i--) {
-            int MIN=-1;
-            for (int j=1; j<=MAX; j++) {
-                if (MAP[j] >= n/(i+1))
-                    if (MIN < 0)
-                        MIN = j;
-                    else
-                        MIN = min(MIN, j);
-            }
-            if (MIN >= 0 && (MAP[MIN] == n/(i+1)))
-                MAP[MIN]--;
-            ans[i] = MIN;
-        }
-        for (int val: ans)
-            cout<<val<<" ";
+
+        // Step remaining from last loop. Check for gap from last occurence to boundary
+        for (int x=1; x<=n; x++) 
+            GAP[x] = max(GAP[x], n-LAST[x] + 1);
+
+        // Iterate from the smallest element and update k for all gaps >= GAP[current element]
+        // If gap is already updated, that is, a smaller element is already found so go to next element
+        for (int x=1; x<=n; x++)
+            for (int i=GAP[x]; i<=n && ans[i] == -1; i++)
+                ans[i] = x;
+        for (int i=1; i<=n; i++)
+            cout<<ans[i]<<" ";
         cout<<endl;
     }
     return 0;
