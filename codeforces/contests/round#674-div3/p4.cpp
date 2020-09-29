@@ -21,7 +21,8 @@ int main()
         if (SET.count(sum))
         {
             count++;
-            SET = unordered_set<ll>{sum - a[i]};
+            SET = unordered_set<ll>{0};
+            sum=a[i];
         }
         SET.insert(sum);
     }

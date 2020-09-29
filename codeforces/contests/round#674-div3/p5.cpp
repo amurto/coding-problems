@@ -3,20 +3,18 @@ using namespace std;
 
 typedef long long ll;
 #define pb push_back
-ll findMax(ll n, ll aR, ll aS, ll aP, ll bR, ll bP, ll bS) {
-    ll count = min(aR, bS) + min(aP, bR) + min(aS, bP);
-    return count;
+
+int findMin(int n, int aR, int aS, int aP, int bR, int bS, int bP) {
+    return (aR>bP+bR ? aR-(bP+bR) : 0) + (aS>bR+bS ? aS-(bR+bS) : 0) + (aP>bP+bS ? aP-(bP+bS) : 0);
 }
 
-ll findMin(ll n, ll aR, ll aS, ll aP, ll bR, ll bP, ll bS) {
-    ll count = max(aR, bS) + max(aP, bR) + max(aS, bP);
-    return count;
+int findMax(int n, int aR, int aS, int aP, int bR, int bS, int bP) {
+    return min(aR, bS) + min(aS, bP) + min(aP, bR);
 }
 
 int main() {
-        ll n, aR, aS, aP, bR, bS, bP;
-        cin>>n>>aR>>aS>>aP>>bR>>bS>>bP;
-
-        
+    int n, aR, aS, aP, bR, bS, bP;
+    cin>>n>>aR>>aS>>aP>>bR>>bS>>bP;     
+    cout<<findMin(n,aR,aS,aP,bR,bS,bP)<<" "<<findMax(n,aR,aS,aP,bR,bS,bP)<<endl;
     return 0;
 }
