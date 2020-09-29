@@ -5,17 +5,16 @@ import java.util.*;
 import java.io.*;
 
 public class p7 {
-    public static void stockBuySell(int[] a, int n) {
+    public static void stockBuySell(int[] price, int n) {
         ArrayList<Integer> ans= new ArrayList<Integer>();
         int i=0;
         while (i<n-1) {
-            int b=i;
-            while (i<n-1 && a[i+1]<=a[i]) 
+            while (i<n-1 && price[i+1]<=price[i]) 
                 i++;
             if (i==n-1)
                 break;
             ans.add(i++);
-            while ((i<n && i>0) && a[i]>=a[i-1])
+            while ((i<n && i>0) && price[i]>=price[i-1])
                 i++;
             ans.add(i-1);
         }
