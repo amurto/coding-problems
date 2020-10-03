@@ -5,7 +5,7 @@ typedef long long ll;
 #define pb push_back
 
 // Recursion with Memo
-// Time O(n^2) and Space O(n)
+// O(n^2) Time and O(n) Space 
 int DP[1001][2];
 int ZZSS(vector<int> &arr, int cur, int n, int flag)
 {
@@ -42,25 +42,18 @@ int ZigZag(vector<int> &arr, int n)
     return MAX;
 }
 
+// O(n) time and O(1) space 
 int wiggleMaxLength(vector<int> &arr) {
     int n = arr.size();
     if (n<2)
         return n;
-    int dp[n][2];
-    dp[0][0] = dp[0][1] = 1;
-    for (int i=1; i<n; i++) {
-        if (arr[i-1] < arr[i]) {
-            dp[i][1] = dp[i-1][0] + 1;
-            dp[i][0] = dp[i-1][0];
-        } else if (arr[i-1] > arr[i]) {
-            dp[i][0] = dp[i-1][1] + 1;
-            dp[i][1] = dp[i-1][1]; 
-        } else {
-            dp[i][0] = dp[i-1][0];
-            dp[i][1] = dp[i-1][1]; 
-        }
-    }
-    return max(dp[n-1][0], dp[n-1][1]);
+    int low=1, high=1;
+    for (int i=1; i<n; i++)
+        if (arr[i-1] < arr[i]) 
+            high = low + 1;
+        else if (arr[i-1] > arr[i])
+            low = high + 1;
+    return max(low, high);
 }
 
 int main()
@@ -74,6 +67,7 @@ int main()
         vector<int> arr(n);
         for (int i = 0; i < n; i++)
             cin >> arr[i];
+        cout<<wiggleMaxLength(arr)<<endl;
     }
     return 0;
 }

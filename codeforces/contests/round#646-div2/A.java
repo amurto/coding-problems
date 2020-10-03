@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class os {
+public class A {
     public static int count(int p) {
         if (p%2 == 0)
             return p;
