@@ -1,5 +1,5 @@
-// Minimum sum partition
 // https://practice.geeksforgeeks.org/problems/minimum-sum-partition3317/1
+// Minimum sum partition
 
 #include <bits/stdc++.h>
 using namespace std;

@@ -7,54 +7,64 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool dfs(int sum, int cur, int *A, vector<bool> &vis) {
-    if (sum==0)
+bool dfs(vector<int> &nums, vector<bool> &vis, vector<int> &ss, int cur, int rs) {
+    if (cur == nums.size()) {
+        for (int i=0; i<ss.size(); i++) {
+            if (ss[i] != rs) return false;
+            if (!vis[i]) return false;
+        }
         return true;
-    if (cur<0)
-        return false;
-    if (!vis[cur] && (sum-A[cur] >=0)) {
-        bool res = dfs(sum-A[cur], cur-1, A, vis);
-        if (res) {
-            cout<<A[cur]<<" ";
-            vis[cur] = true;
-            return true;
+    }
+    for (int i=0; i<ss.size(); i++) {
+        if (ss[i] + nums[cur] <= rs) {
+            bool isempty = !vis[i];
+            if (isempty) vis[i] = true;
+            ss[i] += nums[cur];
+            if (dfs(nums, vis, ss, cur+1, rs)) return true;
+            ss[i] -= nums[cur];
+            if (isempty) {
+                vis[i] = false;
+                break;
+            }
         }
     }
-    return dfs(sum, cur-1, A, vis);
+    return false;
 }
-bool isKPartitionPossible(int A[], int N, int K)
+
+bool canPartitionKSubsets(vector<int>& nums, int k)
 {
-    if (K==1)
+    int n = nums.size();
+    if (k==1)
         return true;
-    if (K>N)
+    if (k>n)
         return false;
     int sum=0;
-    for (int i=0; i<N; i++) 
-        sum+=A[i];
-    if (sum%K > 0)
+    for (int i=0; i<n; i++) 
+        sum+=nums[i];
+    if (sum%k > 0)
         return false;
-    int reqSum = sum/K;
-    sort(A, A+N);
-    vector<bool> vis(N, false);
-    while (K>0) {
-        cout<<"\n";
-        bool res = dfs(reqSum, N-1, A, vis);
-        if (res) K--;
-        else return 0;
-    }
-    return true;
+    int reqSum = sum/k;
+
+    // Very important operation
+    // Sort the array in non-descending order so greater elements are placed first
+    // Massively reduces the running time 
+    sort(nums.begin(), nums.end(), greater<int>());
+
+    vector<int> ss(k, 0);
+    vector<bool> vis(k, false);
+    return dfs(nums, vis, ss, 0, reqSum);
 }
 
 int main() {
     int t;
     cin>>t;
     while (t-->0) {
-        int N, K;
-        cin>>N>>K;
-        int A[N];
-        for (int i=0; i<N; i++) 
-            cin>>A[i];
-        cout<<isKPartitionPossible(A, N, K)<<"\n";
+        int n, k;
+        cin>>n>>k;
+        vector<int> nums(n);
+        for (int i=0; i<n; i++) 
+            cin>>nums[i];
+        cout<<canPartitionKSubsets(nums, k)<<"\n";
     }
     return 0;
 }
