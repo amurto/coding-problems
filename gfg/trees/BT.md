@@ -20,7 +20,7 @@ struct Node {
 
 - [Properties](#properties)
 - [Insertion of Node](#insertion)
-- [Deletion of Node]()
+- [Deletion of Node](#deletion)
 - [InorderTraversal (Recursive and Iterative)]()
 - [Preorder Traversal (Recursive and Iterative)]()
 - [Postorder Traversal (Recursive and Iterative)]()
@@ -86,6 +86,8 @@ Node *insertNode(Node *root, int val)
         root = new Node(val);
         return root;
     }
+    // Level Order Traversal to first empty node
+    // Tree should be Balanced
     queue<Node *> Q;
     Q.push(root);
     while (!Q.empty())
@@ -108,6 +110,57 @@ Node *insertNode(Node *root, int val)
         }
     }
     return root;
+}
+
+Node *constructBinaryTree(vector<int> &nodes) {
+    if (nodes.size()==0)
+        return NULL;
+    Node *root = new Node(nodes[0]);
+    for (int i=1; i<nodes.size();i++)
+        root = insertNode(root, nodes[i]);
+    return root;
+}
+```
+
+</div>
+
+<div id="deletion">
+
+## Deletion of Node
+
+```cpp
+void deleteNode(Node *root, int val)
+{
+    if (root == NULL)
+        return;
+    // Use pair to store both lastnode and its parent
+    queue<pair<Node *, Node *>> Q;
+    pair<Node *, Node *> lastNode;
+    Node *targetNode = NULL;
+    Q.push({root, NULL});
+    while (!Q.empty())
+    {
+        lastNode = Q.front();
+        if (lastNode.first->data == val)
+            targetNode = lastNode.first;
+        Q.pop();
+        if (lastNode.first->left)
+            Q.push({lastNode.first->left, lastNode.first});
+        if (lastNode.first->right)
+            Q.push({lastNode.first->right, lastNode.first});
+    }
+    if (targetNode)
+    {
+        if (lastNode.second)
+            if (lastNode.second->left == lastNode.first)
+                lastNode.second->left = NULL;
+            else if (lastNode.second->right == lastNode.first)
+                lastNode.second->right = NULL;
+        targetNode->data = lastNode.first->data;
+        lastNode.first = NULL;
+        delete (lastNode.first);
+    }
+    return;
 }
 ```
 

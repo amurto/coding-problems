@@ -45,9 +45,6 @@ int KMPSearch(char *text, char *pat, int n, int m)
             i++;
             j++;
         }
-        else
-        {
-        }
         if (j == m)
         {
             j = LPS[j - 1];
