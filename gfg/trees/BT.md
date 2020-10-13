@@ -21,9 +21,9 @@ struct Node {
 - [Properties](#properties)
 - [Insertion of Node](#insertion)
 - [Deletion of Node](#deletion)
-- [InorderTraversal (Recursive and Iterative)]()
-- [Preorder Traversal (Recursive and Iterative)]()
-- [Postorder Traversal (Recursive and Iterative)]()
+- [InorderTraversal (Recursive and Iterative)](#inorder)
+- [Preorder Traversal (Recursive and Iterative)](#preorder)
+- [Postorder Traversal (Recursive and Iterative)](#postorder)
 - [Level Order Traversal](#level-order)
 - [Reverse Level Order traversal]()
 - [Searching of Value]()
@@ -166,6 +166,124 @@ void deleteNode(Node *root, int val)
 
 </div>
 
+<div id="inorder">
+
+## Inorder Traversal
+
+```cpp
+void InorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    InorderTraversalRecursion(root->left);
+    cout << root->data << " ";
+    InorderTraversalRecursion(root->right);
+}
+
+void InorderTraversalStack(Node *root)
+{
+    // DFS with Stack
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        cout << cur->data << " ";
+        STACK.pop();
+        cur = cur->right;
+    }
+    cout << "\n";
+}
+```
+
+</div>
+
+<div id="preorder">
+
+## Preorder Traversal
+
+```cpp
+void PreorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    cout << root->data << " ";
+    PreorderTraversalRecursion(root->left);
+    PreorderTraversalRecursion(root->right);
+}
+
+void PreorderTraversalStack(Node *root)
+{
+    // DFS with Stack
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            cout << cur->data << " ";
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        STACK.pop();
+        cur = cur->right;
+    }
+    cout << "\n";
+}
+```
+</div>
+
+<div id="postorder">
+
+## Postorder Traversal
+```cpp
+void PostorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    PostorderTraversalRecursion(root->left);
+    PostorderTraversalRecursion(root->right);
+    cout << root->data << " ";
+}
+
+void PostorderTraversalStack(Node *root)
+{
+    // DFS with Stack
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        if (cur->right)
+            cur = cur->right;
+        else
+        {
+            STACK.pop();
+            cout << cur->data << " ";
+            while (!STACK.empty() && STACK.top()->right == cur)
+            {
+                cur = STACK.top();
+                cout << cur->data << " ";
+                STACK.pop();
+            }
+            cur = NULL;
+        }
+    }
+}
+```
+</div>
+
 <div id="level-order">
 
 ## Level Order Traversal
@@ -174,6 +292,7 @@ void deleteNode(Node *root, int val)
 void LevelOrderTraversal(Node *root) {
     if (root == NULL)
         return;
+    // BFS with Queue
     queue<Node *> Q;
     Q.push(root);
     while (!Q.empty())

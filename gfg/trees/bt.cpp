@@ -108,12 +108,106 @@ void LevelOrderTraversal(Node *root)
     cout << "\n";
 }
 
+void InorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    InorderTraversalRecursion(root->left);
+    cout << root->data << " ";
+    InorderTraversalRecursion(root->right);
+}
+
+void PreorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    cout << root->data << " ";
+    PreorderTraversalRecursion(root->left);
+    PreorderTraversalRecursion(root->right);
+}
+
+void PostorderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    PostorderTraversalRecursion(root->left);
+    PostorderTraversalRecursion(root->right);
+    cout << root->data << " ";
+}
+
+void InorderTraversalStack(Node *root)
+{
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        cout << cur->data << " ";
+        STACK.pop();
+        cur = cur->right;
+    }
+    cout << "\n";
+}
+
+void PreorderTraversalStack(Node *root)
+{
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            cout << cur->data << " ";
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        STACK.pop();
+        cur = cur->right;
+    }
+    cout << "\n";
+}
+
+void PostorderTraversalStack(Node *root)
+{
+    stack<Node *> STACK;
+    Node *cur = root;
+    while (cur || !STACK.empty())
+    {
+        while (cur)
+        {
+            STACK.push(cur);
+            cur = cur->left;
+        }
+        cur = STACK.top();
+        if (cur->right)
+            cur = cur->right;
+        else
+        {
+            STACK.pop();
+            cout << cur->data << " ";
+            while (!STACK.empty() && STACK.top()->right == cur)
+            {
+                cur = STACK.top();
+                cout << cur->data << " ";
+                STACK.pop();
+            }
+            cur = NULL;
+        }
+    }
+}
+
 int main()
 {
-    vector<int> nodes = {7, 11, 12, 10, 15, 9, 8};
+    vector<int> nodes = {10, 8, 2, 3, 5, 2};
     Node *root = constructBinaryTree(nodes);
-    LevelOrderTraversal(root);
-    deleteNode(root, 11);
-    LevelOrderTraversal(root);
+    PostorderTraversalRecursion(root);
+    cout << "\n";
+    PostorderTraversalStack(root);
     return 0;
 }
