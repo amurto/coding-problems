@@ -25,14 +25,15 @@ struct Node {
 - [Preorder Traversal (Recursive and Iterative)](#preorder)
 - [Postorder Traversal (Recursive and Iterative)](#postorder)
 - [Level Order Traversal](#level-order)
-- [Reverse Level Order traversal]()
-- [Searching of Value]()
-- [Height of Tree]()
-- [Diameter of Tree]()
-- [Mirror of Tree]()
-- [Check Tree is balanced or not]()
-- [Find minimum value in Tree]()
-- [Find maximum value in Tree]()
+- [Reverse Level Order traversal](#reverse-level-order)
+- [Searching of Value](#search)
+- [Height of Tree](#height)
+- [Diameter of Tree](#diameter)
+- [Invert a Binary Tree](#invert)
+- [Mirror of Tree](#mirror)
+- [Check Tree is balanced or not](#balanced)
+- [Find minimum value in Tree](#minimum)
+- [Find maximum value in Tree](#maximum)
 
 <div id="properties">
 
@@ -289,6 +290,7 @@ void PostorderTraversalStack(Node *root)
 ## Level Order Traversal
 
 ```cpp
+// BFS with Queue
 void LevelOrderTraversal(Node *root) {
     if (root == NULL)
         return;
@@ -307,6 +309,234 @@ void LevelOrderTraversal(Node *root) {
     }
     cout << "\n";
 }
+
+// Recursion
+void printLevel(Node *root, int level)
+{
+    if (root == NULL)
+        return;
+    if (level == 0)
+        cout << root->data << " ";
+    else
+    {
+        printLevel(root->left, level - 1);
+        printLevel(root->right, level - 1);
+    }
+}
+void LevelOrderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    for (int i = 0; i < TreeHeight(root); i++)
+        printLevel(root, i);
+}
+```
+</div>
+
+<div id="reverse-level-order">
+
+## Reverse Level Order Traversal
+
+```cpp
+void ReverseLevelOrderTraversal(Node *root)
+{
+    if (root == NULL)
+        return;
+    queue<Node *> Q;
+    Q.push(root);
+    vector<int> ans;
+    while (!Q.empty())
+    {
+        // At a certain iteration, all nodes in a queue belong to the same level
+        Node *temp = Q.front();
+        ans.push_back(temp->data);
+        Q.pop();
+        if (temp->right)
+            Q.push(temp->right);
+        if (temp->left)
+            Q.push(temp->left);
+    }
+    for (int i = ans.size() - 1; i >= 0; i--)
+        cout << ans[i] << " ";
+    cout << "\n";
+}
+
+void printLevel(Node *root, int level)
+{
+    if (root == NULL)
+        return;
+    if (level == 0)
+        cout << root->data << " ";
+    else
+    {
+        printLevel(root->left, level - 1);
+        printLevel(root->right, level - 1);
+    }
+}
+void ReverseLevelOrderTraversalRecursion(Node *root)
+{
+    if (root == NULL)
+        return;
+    for (int i = TreeHeight(root)-1; i >=0; i--)
+        printLevel(root, i);
+}
 ```
 
+</div>
+
+<div id="search">
+
+## Searching 
+```cpp
+bool TreeSearch(Node *root, int val) {
+    // Use any Traversal
+    // Preorder Traversal
+    if (root==NULL)
+        return false;
+    stack<Node *> STACK;
+    STACK.push(root);
+    while (!STACK.empty()) {
+        Node *cur = STACK.top();
+        if (cur -> data == val)
+            return true;
+        STACK.pop();
+        if (cur->left) STACK.push(cur->left);
+        if (cur->right) STACK.push(cur->right);
+    }
+    return false;
+}
+```
+</div>
+
+<div id="height">
+
+## Height of Tree
+```cpp
+int TreeHeight(Node *root) {
+    if (root) 
+        return 1 + max(TreeHeight(root->left), TreeHeight(root->right));
+    return 0;
+}
+```
+</div>
+
+<div id="diameter">
+
+## Diameter of Tree
+```cpp
+int diameter(Node *root, int &MAX) {
+    if (root) {
+        int L = diameter(root->left, MAX), R= diameter(root->right, MAX);
+        MAX = max(MAX, L+R);
+        return max(L,R) + 1;
+    }
+    return 0;
+}
+
+int TreeDiameter(Node* root) {
+    if (root==NULL)
+        return 0;
+    int MAX=0;
+    diameter(root, MAX);
+    return MAX;
+}
+```
+</div>
+
+<div id="invert">
+
+## Invert a Binary Tree
+```cpp
+Node *invertTreeRecursion(Node *root)
+{
+    if (root == NULL)
+        return root;
+    Node *temp = root->left;
+    root->left = invertTreeRecursion(root->right);
+    root->right = invertTreeRecursion(temp);
+    return root;
+}
+
+Node *invertTreeIterative(Node *root)
+{
+    if (root == NULL)
+        return root;
+    queue<Node *> Q;
+    Q.push(root);
+    while (!Q.empty())
+    {
+        Node *cur = Q.front();
+        Q.pop();
+        Node *temp = cur->left;
+        cur->left = cur->right;
+        cur->right = temp;
+        if (cur->left)
+            Q.push(cur->left);
+        if (cur->right)
+            Q.push(cur->right);
+    }
+    return root;
+}
+```
+</div>
+
+<div id="mirror">
+
+## Check if Binary Tree is mirror of itself
+
+```cpp
+bool isMirror(Node *L, Node *R)
+{
+    if (L == NULL && R == NULL)
+        return true;
+    if (L == NULL || R == NULL)
+        return false;
+    return (L->data == R->data) && isMirror(L->left, R->right) && isMirror(L->right, R->left);
+}
+bool isSymmetricRecursion(Node *root)
+{
+    return isMirror(root, root);
+}
+
+bool isSymmetricIterative(TreeNode* root) {
+    queue<TreeNode *> Q;
+    Q.push(root);
+    Q.push(root);
+    while (!Q.empty()) {
+        TreeNode *L = Q.front();
+        Q.pop();
+        TreeNode *R = Q.front();
+        Q.pop();
+        if (L==NULL && R==NULL) continue;
+        if (L==NULL || R==NULL || L->val != R->val) return false;
+        Q.push(L->left);
+        Q.push(R->right);
+        Q.push(L->right);
+        Q.push(R->left);
+    }
+    return true;
+}
+```
+</div>
+
+<div id="balanced">
+
+## Check if Tree is height balanced
+
+```cpp
+int depth(Node *root, bool &ans) {
+    if (root==NULL)
+        return 0;
+    int L = depth(root->left, ans), R=depth(root->right, ans);
+    if (abs(L-R) > 1)
+        ans=false;
+    return 1 + max(L,R);
+}
+
+bool TreeBalanced(Node* root) {
+    bool ans=true;
+    depth(root, ans);
+    return ans;
+}
+```
 </div>
