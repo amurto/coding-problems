@@ -26,6 +26,19 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+vector<int> LineToArray(char delimeter, string unwanted) {
+    vector<int> nodes;
+    string S, T;
+    // Empty character
+    getline(cin, S);
+    getline(cin, S);
+    stringstream X(S);
+    while (getline(X, T, delimeter))
+        if (T != unwanted)
+            nodes.push_back(stoi(T));
+    return nodes;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);

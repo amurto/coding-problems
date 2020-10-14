@@ -28,6 +28,8 @@ struct Node {
 - [Reverse Level Order traversal](#reverse-level-order)
 - [Searching of Value](#search)
 - [Height of Tree](#height)
+- [Number of nodes in Tree](#size)
+- [Sum of nodes in Tree](#sum)
 - [Diameter of Tree](#diameter)
 - [Invert a Binary Tree](#invert)
 - [Mirror of Tree](#mirror)
@@ -120,6 +122,16 @@ Node *constructBinaryTree(vector<int> &nodes) {
     for (int i=1; i<nodes.size();i++)
         root = insertNode(root, nodes[i]);
     return root;
+}
+
+// Construct Tree from given Preorder Traversal
+Node* CT(vector<int> &nodes, int &idx, int &n) {
+    if (idx==n || nodes[idx] == -1)
+        return NULL;
+    Node *cur = new Node(nodes[idx]);
+    cur->left = CT(nodes, ++idx, n);
+    cur->right = CT(nodes, ++idx, n);
+    return cur;
 }
 ```
 
@@ -420,6 +432,30 @@ int TreeHeight(Node *root) {
 ```
 </div>
 
+<div id="size">
+
+## Size of Tree (Number of nodes)
+```cpp
+int TreeSize(Node *root) {
+    if (root) 
+        return 1 + TreeSize(root->left) + TreeSize(root->right);
+    return 0;
+}
+```
+</div>
+
+<div id="sum">
+
+## Sum of nodes in Tree
+```cpp
+int TreeSum(Node *root) {
+    if (root) 
+        return root->data + TreeSum(root->left) + TreeSum(root->right);
+    return 0;
+}
+```
+</div>
+
 <div id="diameter">
 
 ## Diameter of Tree
@@ -537,6 +573,32 @@ bool TreeBalanced(Node* root) {
     bool ans=true;
     depth(root, ans);
     return ans;
+}
+```
+</div>
+
+<div id="minimum">
+
+## Find minimum value in Tree
+```cpp
+int TreeMinimum(Node *root)
+{
+    if (root == NULL)
+        return INT_MAX;
+    return min({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+}
+```
+</div>
+
+<div id="maximum">
+
+## Find maximum value in Tree
+```cpp
+int TreeMaximum(Node *root)
+{
+    if (root == NULL)
+        return -1;
+    return max({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
 }
 ```
 </div>

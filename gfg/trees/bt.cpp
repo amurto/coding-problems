@@ -392,6 +392,20 @@ bool isSymmetricIterative(Node *root)
     return true;
 }
 
+int TreeMinimum(Node *root)
+{
+    if (root == NULL)
+        return INT_MAX;
+    return min({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+}
+
+int TreeMaximum(Node *root)
+{
+    if (root == NULL)
+        return -1;
+    return max({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+}
+
 int main()
 {
     vector<int> nodes = {3, 9, 20, 15, 7};
