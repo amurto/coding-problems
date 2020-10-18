@@ -12,7 +12,7 @@ struct Node {
 
     Node() : data(0), left(nullptr), right(nullptr) {}
     Node(int val) : data(val), left(nullptr), right(nullptr) {}
-    Node(int val, Node *left, Node *right) : data(val),left(left), right(right) {}
+    Node(int val, Node *left, Node *right) : data(val), left(left), right(right) {}
 };
 ```
 
