@@ -5,6 +5,9 @@
 - [Sort an array of 0s and 1s](#sort01s)
 - [Sort an array of 0s, 1s and 2s](#sort012s)
 - [Sort Dates](#sort-dates)
+- [Bubble Sort](#bubble-sort)
+- [Selection Sort](#selection-sort)
+- [Insertion Sort](#insertion-sort)
 - [Merge Two Sorted Arrays](#merge-two-sorted-arrays)
 - [Merge Sort](#merge-sort)
 - [Quick Sort](#quick-sort)
@@ -93,6 +96,108 @@ int main()
     for (Date *date : arr)
         cout << date->fulldate << "\n";
     return 0;
+}
+```
+
+</div>
+
+<div id="bubble-sort">
+
+## Bubble Sort
+
+```cpp
+void bubblesort(vector<int> &nums)
+{
+    // n passes
+    int n = nums.size();
+    for (int pass = n - 1; pass >= 0; pass--)
+        for (int j = 0; j < pass; j++)
+            if (nums[j] > nums[j + 1])
+                swap(nums[j], nums[j + 1]);
+}
+
+// Modified Bubble Sort
+void modifiedbubblesort(vector<int> &nums)
+{
+    // n passes
+    int n = nums.size();
+    for (int pass = n - 1; pass >= 0; pass--)
+    {
+        bool isSort = true;
+        for (int j = 0; j < pass; j++)
+        {
+            if (nums[j] > nums[j + 1])
+            {
+                isSort = false;
+                swap(nums[j], nums[j + 1]);
+            }
+        }
+        if (isSort)
+            break;
+    }
+}
+```
+
+</div>
+
+<div id="selection-sort">
+
+## Selection Sort
+
+```cpp
+void selectionsort(vector<int> &nums)
+{
+    int n = nums.size();
+    for (int i = 0; i < n - 1; i++)
+    {
+        int minIdx = i;
+        for (int j = i + 1; j < n; j++)
+            if (nums[j] < nums[minIdx])
+                minIdx = j;
+        swap(nums[i], nums[minIdx]);
+    }
+}
+```
+
+</div>
+
+<div id="insertion-sort">
+
+## Insertion Sort
+
+```cpp
+void insertionsort(vector<int> &nums)
+{
+    int n = nums.size();
+    for (int i = 1; i < n; i++)
+    {
+        int cur = nums[i], j = i - 1;
+        while (j >= 0 && nums[j] > cur)
+        {
+            nums[j + 1] = nums[j];
+            j--;
+        }
+        nums[j + 1] = cur;
+    }
+}
+```
+
+</div>
+
+## Selection Sort
+
+```cpp
+void selectionsort(vector<int> &nums)
+{
+    int n = nums.size();
+    for (int i = 0; i < n - 1; i++)
+    {
+        int minIdx = i;
+        for (int j = i + 1; j < n; j++)
+            if (nums[j] < nums[minIdx])
+                minIdx = j;
+        swap(nums[i], nums[minIdx]);
+    }
 }
 ```
 
