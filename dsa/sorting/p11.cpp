@@ -1,4 +1,5 @@
-// Quick Sort
+// Quick Select
+// Find kth smallest element in array
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -13,31 +14,29 @@ int partition(vector<int> &nums, int low, int high)
     return i;
 }
 
-void quicksort(vector<int> &nums, int low, int high)
+int quickselect(vector<int> &nums, int low, int high, int k)
 {
     if (low < high)
     {
         int pi = partition(nums, low, high);
-        quicksort(nums, low, pi - 1);
-        quicksort(nums, pi + 1, high);
+        if (pi == k)
+            return nums[k];
+        else if (pi > k)
+            return quickselect(nums, low, pi - 1, k);
+        else
+            return quickselect(nums, pi + 1, high, k);
     }
-}
-
-vector<int> sortArray(vector<int> &nums)
-{
-    quicksort(nums, 0, nums.size() - 1);
-    return nums;
+    return nums[k];
 }
 
 int main()
 {
-    int n;
+    int n, k;
     cin >> n;
     vector<int> nums(n);
     for (int i = 0; i < n; i++)
         cin >> nums[i];
-    vector<int> ans = sortArray(nums);
-    for (int v : ans)
-        cout << v << " ";
+    cin >> k;
+    cout << quickselect(nums, k, 0, n - 1) << "\n";
     return 0;
 }

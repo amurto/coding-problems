@@ -1,4 +1,5 @@
 # Sorting
+https://leetcode.com/problems/sort-an-array/
 
 ## Table of Contents
 
@@ -11,7 +12,10 @@
 - [Merge Two Sorted Arrays](#merge-two-sorted-arrays)
 - [Merge Sort](#merge-sort)
 - [Quick Sort](#quick-sort)
+- [Quick Select (Kth smallest/largest element)](#quick-select)
 - [Find Minimum in Rotated Sorted Array](#min-rotate-sort)
+- [Count Sort](#count-sort)
+- [Pairs with given sum](#pair-sum)
 
 <div id="sort01s">
 
@@ -295,6 +299,53 @@ quicksort(nums, 0, nums.size() - 1);
 
 </div>
 
+<div id="quick-select">
+
+## Quick Select (Kth smallest/largest element in array)
+
+```cpp
+// Kth smallest element
+int partition(vector<int> &nums, int low, int high)
+{
+    int pivot = nums[high], i = low;
+    for (int j = low; j < high; j++)
+        if (nums[j] <= pivot)
+            swap(nums[i++], nums[j]);
+    swap(nums[i], nums[high]);
+    return i;
+}
+
+// Kth largest element
+int partition(vector<int> &nums, int low, int high)
+{
+    int pivot = nums[high], i = low;
+    for (int j = low; j < high; j++)
+        if (nums[j] >= pivot)
+            swap(nums[i++], nums[j]);
+    swap(nums[i], nums[high]);
+    return i;
+}
+
+int quickselect(vector<int> &nums, int low, int high, int k)
+{
+    if (low < high)
+    {
+        int pi = partition(nums, low, high);
+        if (pi == k)
+            return nums[k];
+        else if (pi > k)
+            return quickselect(nums, low, pi - 1, k);
+        else
+            return quickselect(nums, pi + 1, high, k);
+    }
+    return nums[k];
+}
+
+cout << quickselect(nums, k, 0, n - 1) << "\n";
+```
+
+</div>
+
 <div id="min-rotate-sort">
 
 ## Find Minimum in Rotated Sorted Array
@@ -323,4 +374,90 @@ int findMin(vector<int> &nums)
 }
 ```
 
+</div>
+
+<div id="count-sort">
+
+## Count Sort
+```cpp
+vector<int> countsort(vector<int> &nums)
+{
+    int n = nums.size();
+    vector<int> ans(n);
+    // Find Min, Max
+    int MIN = INT_MAX, MAX = INT_MIN;
+    for (int val : nums)
+    {
+        MIN = min(MIN, val);
+        MAX = max(MAX, val);
+    }
+    
+    // Make Map of range Min to Max
+    vector<int> MAP(MAX - MIN + 1, 0);
+
+    // Count frequency of every element
+    for (int val : nums)
+        MAP[val - MIN]++;
+
+    for (int i = 1; i < MAX - MIN + 1; i++)
+        MAP[i] += MAP[i - 1];
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+        ans[MAP[nums[i] - MIN] - 1] = nums[i];
+        MAP[nums[i] - MIN]--;
+    }
+    return ans;
+}
+```
+</div>
+
+<div id="pair-sum">
+
+## Count Pairs with given sum
+
+```cpp
+// Using Map to store frequency
+int getPairsCount(vector<int> nums, int sum)
+{
+    unordered_map<int, int> MAP;
+    int pairs = 0;
+    for (int val : nums)
+    {
+        pairs += MAP[sum - val];
+        MAP[val]++;
+    }
+    return pairs;
+}
+
+// Sorting and using two pointers
+int getPairsCountSort(vector<int> nums, int sum)
+{
+    int pairs = 0, beg = 0, end = nums.size() - 1;
+    sort(nums.begin(), nums.end());
+    while (beg < end)
+    {
+        if (nums[beg] + nums[end] > sum)
+            end--;
+        else if (nums[beg] + nums[end] < sum)
+            beg++;
+        else
+        {
+            int cbeg = beg, x = nums[beg], cend = end, y = nums[end];
+            while (beg < end && nums[beg] == x)
+                beg++;
+            while (end >= beg && nums[end] == y)
+                end--;
+            if (x == y)
+            {
+                int temp = beg - cbeg + cend - end - 1;
+                pairs += temp * (temp + 1) / 2;
+            }
+            else
+                pairs += (beg - cbeg) * (cend - end);
+        }
+    }
+    return pairs;
+}
+```
 </div>
