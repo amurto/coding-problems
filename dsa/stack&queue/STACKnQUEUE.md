@@ -7,7 +7,7 @@
 - [Next Greater Element I](#ngt-i)
 - [Stock span problem](#stock-span)
 - [Largest Rectangle in Histogram](#largest-rectangle-in-histogram)
-- [Sliding Window Maximum](#https://leetcode.com/problems/sliding-window-maximum/)
+- [Sliding Window Maximum](#sliding-window-maximum)
 
 <div id="duplicate-brackets">
 
