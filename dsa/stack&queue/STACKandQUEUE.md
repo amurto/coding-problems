@@ -2,6 +2,8 @@
 
 ## Table of Contents
 
+- [Min Stack](#min-stack)
+- [Implement two stacks in an array](#two-stacks-array)
 - [Duplicate Brackets](#duplicate-brackets)
 - [Valid Parentheses](#valid-parentheses)
 - [Next Greater Element I](#ngt-i)
@@ -12,6 +14,109 @@
 - [The Celebrity Problem](#celebrity-problem)
 - [Merge Overlapping Intervals](#merge-intervals)
 - [Number following a pattern](#number-pattern)
+
+<div id="min-stack">
+
+## Min Stack
+https://leetcode.com/problems/min-stack/
+```cpp
+class MinStack
+{
+private:
+    stack<int> st1;
+    stack<int> st2;
+
+public:
+    void push(int x)
+    {
+        if (st1.empty() || x <= st2.top())
+            st2.push(x);
+        st1.push(x);
+    }
+
+    void pop()
+    {
+        if (st1.empty())
+            return;
+        if (st1.top() == st2.top())
+            st2.pop();
+        st1.pop();
+    }
+
+    int top()
+    {
+        if (st1.empty())
+            return -1;
+        return st1.top();
+    }
+
+    int getMin()
+    {
+        if (st2.empty())
+            return -1;
+        return st2.top();
+    }
+};
+```
+</div>
+
+<div id="two-stacks-array">
+
+## Implement two stacks in an array
+https://practice.geeksforgeeks.org/problems/implement-two-stacks-in-an-array/1
+```cpp
+class twoStacks
+{
+    int *arr;
+    int size;
+    int top1, top2;
+
+public:
+    twoStacks(int n = 100)
+    {
+        size = n;
+        arr = new int[n];
+        top1 = -1;
+        top2 = size;
+    }
+
+    void push1(int x);
+    void push2(int x);
+    int pop1();
+    int pop2();
+};
+
+void twoStacks ::push1(int x)
+{
+    // pushing element to the top of first stack
+    if (top1 < top2 - 1)
+        arr[++top1] = x;
+}
+
+void twoStacks ::push2(int x)
+{
+    // pushing element to the top of second stop
+    if (top1 < top2 - 1)
+        arr[--top2] = x;
+}
+
+int twoStacks ::pop1()
+{
+    // removing element from the top of first stack
+    if (top1 == -1)
+        return -1;
+    return arr[top1--];
+}
+
+int twoStacks ::pop2()
+{
+    // removing element from the top of second stack
+    if (top2 == size)
+        return -1;
+    return arr[top2++];
+}
+```
+</div>
 
 <div id="duplicate-brackets">
 
