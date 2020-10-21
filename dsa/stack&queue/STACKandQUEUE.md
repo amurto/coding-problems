@@ -9,6 +9,9 @@
 - [Largest Rectangle in Histogram](#largest-rectangle-in-histogram)
 - [Sliding Window Maximum](#sliding-window-maximum)
 - [Infix, Prefix and Postfix](#infix-prefix-postfix)
+- [The Celebrity Problem](#celebrity-problem)
+- [Merge Overlapping Intervals](#merge-intervals)
+- [Number following a pattern](#number-pattern)
 
 <div id="duplicate-brackets">
 
@@ -208,7 +211,7 @@ vector<int> maxSlidingWindow(vector<int> &nums, int k)
 
 ## Infix, Prefix and Postfix
 
-``` cpp
+```cpp
 bool isOperator(char ch)
 {
     return (!isalpha(ch) && !isdigit(ch));
@@ -499,4 +502,116 @@ string PostfixToPrefix(string str)
 }
 ```
 
+</div>
+
+<div id="celebrity-problem">
+
+## The Celebrity Problem
+
+https://practice.geeksforgeeks.org/problems/the-celebrity-problem/1
+
+```cpp
+int celebrity(vector<vector<int>> &M, int n)
+{
+    stack<int> STACK;
+    for (int i = n - 1; i >= 0; i--)
+        STACK.push(i);
+    while (STACK.size() > 1)
+    {
+        int c1 = STACK.top();
+        STACK.pop();
+        int c2 = STACK.top();
+        STACK.pop();
+        if (M[c1][c2] == 1)
+            STACK.push(c2);
+        else
+            STACK.push(c1);
+    }
+    int celeb = STACK.top();
+    STACK.pop();
+    for (int i = 0; i < n; i++)
+        if (i != celeb && (M[i][celeb] == 0 || M[celeb][i] == 1))
+            return -1;
+    return celeb;
+}
+```
+
+</div>
+
+<div id="merge-intervals">
+
+## Merge Overlapping Intervals
+
+https://leetcode.com/problems/merge-intervals/
+
+```cpp
+static bool cmp(vector<int> &a, vector<int> &b)
+{
+    if (a[0] == b[0])
+        return (a[1] < b[1]);
+    else
+        return (a[0] < b[0]);
+}
+
+vector<vector<int>> merge(vector<vector<int>> &intervals)
+{
+    sort(intervals.begin(), intervals.end(), cmp);
+    deque<vector<int>> dq;
+    vector<vector<int>> ans;
+    for (vector<int> it : intervals)
+    {
+        int beg = it[0], end = it[1];
+        while (!dq.empty() && it[0] <= dq.back().at(1))
+        {
+            beg = min(beg, dq.back().at(0));
+            end = max(end, dq.back().at(1));
+            dq.pop_back();
+        }
+        dq.push_back({beg, end});
+    }
+    while (!dq.empty())
+    {
+        ans.push_back(dq.back());
+        dq.pop_back();
+    }
+    return ans;
+}
+```
+
+</div>
+
+<div id="number-pattern">
+
+## Number following a pattern
+https://practice.geeksforgeeks.org/problems/number-following-a-pattern/0
+```cpp
+vector<int> NumberPattern(string str)
+{
+    stack<int> STACK;
+    vector<int> seq;
+    int cur = 0;
+    for (char ch : str)
+    {
+        if (ch == 'I')
+        {
+            STACK.push(++cur);
+            while (!STACK.empty())
+            {
+                seq.push_back(STACK.top());
+                STACK.pop();
+            }
+        }
+        // ch == 'D'
+        else
+            STACK.push(++cur);
+    }
+    STACK.push(++cur);
+    while (!STACK.empty())
+    {
+        seq.push_back(STACK.top());
+        STACK.pop();
+    }
+    return seq;
+}
+```
 </div>
