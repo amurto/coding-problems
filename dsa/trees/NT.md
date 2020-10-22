@@ -1,5 +1,5 @@
 # N-ary Tree
-
+https://www.geeksforgeeks.org/generic-treesn-array-trees/
 ## Structure
 
 ```cpp
