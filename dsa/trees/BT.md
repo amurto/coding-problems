@@ -460,21 +460,27 @@ int TreeSum(Node *root) {
 
 ## Diameter of Tree
 ```cpp
-int diameter(Node *root, int &MAX) {
-    if (root) {
-        int L = diameter(root->left, MAX), R= diameter(root->right, MAX);
-        MAX = max(MAX, L+R);
-        return max(L,R) + 1;
-    }
-    return 0;
-}
-
-int TreeDiameter(Node* root) {
-    if (root==NULL)
+int TreeDiameter(Node *root, int &dia)
+{
+    if (root == NULL)
         return 0;
-    int MAX=0;
-    diameter(root, MAX);
-    return MAX;
+    int ht = -1;
+    int sh = -1;
+    for (Node *child : root->children)
+    {
+        int ch = TreeDiameter(child, dia);
+        if (ch >= ht)
+        {
+            sh = ht;
+            ht = ch;
+        }
+        else if (ch >= sh)
+            sh = ch;
+    }
+    if (sh + ht + 2 > dia)
+        dia = sh + ht + 2;
+    ht += 1;
+    return ht;
 }
 ```
 </div>
