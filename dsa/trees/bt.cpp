@@ -744,15 +744,11 @@ int largestBst(Node *root)
 
 int main()
 {
-    // int n;
-    // cin >> n;
-    // vector<int> nodes = LineToArray(' ', "n", n);
-    // int idx = 0;
-    // Node *root = CT(nodes, idx, n);
-    Node *root = new Node(60);
-    root->left = new Node(65);
-    root->right = new Node(70);
-    root->left->left = new Node(50);
+    int n;
+    cin >> n;
+    vector<int> nodes = LineToArray(' ', "n", n);
+    int idx = 0;
+    Node *root = CT(nodes, idx, n);
     cout << largestBst(root) << "\n";
     return 0;
 }
