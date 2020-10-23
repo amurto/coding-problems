@@ -1,29 +1,63 @@
-# Binary Search Tree
-https://www.geeksforgeeks.org/binary-search-tree-data-structure/
+#include <bits/stdc++.h>
+using namespace std;
 
-## Structure
-```cpp
-struct Node {
+int toInt(string str)
+{
+    int num;
+    stringstream ss(str);
+    ss >> num;
+    return num;
+}
+
+vector<int> LineToArray(char delimeter, string unwanted, int n)
+{
+    vector<int> nodes;
+    string num;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> num;
+        if (num == "n")
+            nodes.push_back(-1);
+        else
+            nodes.push_back(toInt(num));
+    }
+    return nodes;
+}
+
+struct Node
+{
     int data;
     Node *left;
     Node *right;
 
     Node() : data(0), left(nullptr), right(nullptr) {}
     Node(int val) : data(val), left(nullptr), right(nullptr) {}
-    Node(int val, Node *left, Node *right) : data(val),left(left), right(right) {}
+    Node(int val, Node *left, Node *right) : data(val), left(left), right(right) {}
 };
-```
 
-- [Insertion into BST](#insertion)
-- [Deletion from BST](#deletion)
-- [Searching a value in BST](#search)
-- [Find min and max value in BST](#min-max)
-- [Convert BST to Greater Tree](#bst-gt)
+Node *CT(vector<int> &nodes, int &idx, int &n)
+{
+    if (idx == n || nodes[idx] == -1)
+        return NULL;
+    Node *cur = new Node(nodes[idx]);
+    cur->left = CT(nodes, ++idx, n);
+    cur->right = CT(nodes, ++idx, n);
+    return cur;
+}
 
-<div id="insertion">
+void display(Node *node)
+{
+    if (node == NULL)
+        return;
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->data) + "";
+    str += " <- " + to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->data) + "";
+    cout << str << "\n";
+    display(node->left);
+    display(node->right);
+}
 
-## Insertion into BST
-```cpp
 // Insertion iteratively
 Node *insertNodeIteration(Node *root, int val)
 {
@@ -56,14 +90,18 @@ Node *insertNodeRecursion(Node *cur, int val)
         cur->right = insertNodeRecursion(cur->right, val);
     return cur;
 }
-```
-</div>
 
-<div id="deletion">
+// Node *CT(vector<int> &nodes, int low, int high)
+// {
+//     if (low > high)
+//         return NULL;
+//     int mid = low + (high - low) / 2;
+//     Node *cur = new Node(nodes[mid]);
+//     cur->left = CT(nodes, low, mid - 1);
+//     cur->right = CT(nodes, mid + 1, high);
+//     return cur;
+// }
 
-## Deletion from BST
-https://leetcode.com/problems/delete-node-in-a-bst/
-```cpp
 Node *deleteSuccessor(Node *del, int &dkey)
 {
     // Traverse to maximum value of current subtree
@@ -117,30 +155,7 @@ Node *deleteNode(Node *root, int key)
         prev->right = removeNode(cur);
     return root;
 }
-```
-</div>
 
-<div id="search">
-
-## Searching a value in BST
-```cpp
-bool search(Node *cur, int x)
-{
-    if (cur == NULL)
-        return false;
-    if (x < cur->data)
-        return search(cur->left, x);
-    else if (x > cur->data)
-        return search(cur->right, x);
-    return true;
-}
-```
-</div>
-
-<div id="min-max">
-
-## Find min and max value in BST
-```cpp
 int BSTminimum(Node *cur)
 {
     if (cur->left)
@@ -154,14 +169,18 @@ int BSTmaximum(Node *cur)
         return BSTmaximum(cur->right);
     return cur->data;
 }
-```
-</div>
 
-<div id="bst-gt">
+bool search(Node *cur, int x)
+{
+    if (cur == NULL)
+        return false;
+    if (x < cur->data)
+        return search(cur->left, x);
+    else if (x > cur->data)
+        return search(cur->right, x);
+    return true;
+}
 
-## Convert BST to Greater Tree
-https://leetcode.com/problems/convert-bst-to-greater-tree/
-```cpp
 int BSTtoGT(Node *cur, int sum) {
     if (cur==NULL)
         return sum;
@@ -173,5 +192,17 @@ Node* convertBST(Node* root) {
     BSTtoGT(root, 0);
     return root;
 }
-```
-</div>
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> nodes = LineToArray(' ', "n", n);
+    int idx = 0;
+    Node *root = CT(nodes, idx, n);
+    int key;
+    cin >> key;
+    root = deleteNode(root, key);
+    display(root);
+    return 0;
+}

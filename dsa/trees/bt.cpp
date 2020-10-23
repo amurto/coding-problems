@@ -590,7 +590,6 @@ void display(Node *node)
     str += " <- " + to_string(node->data) + " -> ";
     str += node->right == NULL ? "." : to_string(node->right->data) + "";
     cout << str << "\n";
-
     display(node->left);
     display(node->right);
 }
@@ -749,6 +748,5 @@ int main()
     vector<int> nodes = LineToArray(' ', "n", n);
     int idx = 0;
     Node *root = CT(nodes, idx, n);
-    cout << largestBst(root) << "\n";
     return 0;
 }
