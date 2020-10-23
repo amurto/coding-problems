@@ -26,6 +26,7 @@ struct Node {
 - [Postorder Traversal (Recursive and Iterative)](#postorder)
 - [Level Order Traversal](#level-order)
 - [Reverse Level Order traversal](#reverse-level-order)
+- [Zigzag Level Order Traversal](#zigzag-level-order)
 - [Searching of Value](#search)
 - [Height of Tree](#height)
 - [Number of nodes in Tree](#size)
@@ -36,6 +37,15 @@ struct Node {
 - [Check Tree is balanced or not](#balanced)
 - [Find minimum value in Tree](#minimum)
 - [Find maximum value in Tree](#maximum)
+- [Cousins in Binary Tree](#cousins)
+- [Node to Root path](#node-root-path)
+- [All Nodes Distance K in Binary Tree](#nodes-distance-k)
+- [Find a Corresponding Node of a Binary Tree in a Clone of That Tree](#find-clone-node)
+- [Transform to Left Cloned Tree](#normal-left-cloned)
+- [Transform from Left Cloned to Normal Tree](#left-cloned-normal)
+- [Delete Leaves With a Given Value](#delete-target-leaves)
+- [Binary Tree Tilt](#tilt)
+- [Validate Binary Search Tree](#validate-bst)
 
 <div id="properties">
 
@@ -182,7 +192,7 @@ void deleteNode(Node *root, int val)
 <div id="inorder">
 
 ## Inorder Traversal
-
+https://leetcode.com/problems/binary-tree-inorder-traversal/
 ```cpp
 void InorderTraversalRecursion(Node *root)
 {
@@ -219,7 +229,7 @@ void InorderTraversalStack(Node *root)
 <div id="preorder">
 
 ## Preorder Traversal
-
+https://leetcode.com/problems/binary-tree-preorder-traversal/
 ```cpp
 void PreorderTraversalRecursion(Node *root)
 {
@@ -255,6 +265,7 @@ void PreorderTraversalStack(Node *root)
 <div id="postorder">
 
 ## Postorder Traversal
+https://leetcode.com/problems/binary-tree-postorder-traversal/
 ```cpp
 void PostorderTraversalRecursion(Node *root)
 {
@@ -300,7 +311,7 @@ void PostorderTraversalStack(Node *root)
 <div id="level-order">
 
 ## Level Order Traversal
-
+https://leetcode.com/problems/binary-tree-level-order-traversal/
 ```cpp
 // BFS with Queue
 void LevelOrderTraversal(Node *root) {
@@ -393,7 +404,52 @@ void ReverseLevelOrderTraversalRecursion(Node *root)
         printLevel(root, i);
 }
 ```
+</div>
 
+<div id="zigzag-level-order">
+
+## Zigzag Level Order Traversal
+https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+```cpp
+vector<vector<int>> zigzagLevelOrder(Node *root)
+{
+    vector<vector<int>> zz;
+    if (root == NULL)
+        return zz;
+    int level = 0;
+    stack<Node *> st;
+    st.push(root);
+    while (!st.empty())
+    {
+        vector<int> cur;
+        stack<Node *> temp;
+        while (!st.empty())
+        {
+            Node *parent = st.top();
+            st.pop();
+            cur.push_back(parent->data);
+            if (level)
+            {
+                if (parent->right)
+                    temp.push(parent->right);
+                if (parent->left)
+                    temp.push(parent->left);
+            }
+            else
+            {
+                if (parent->left)
+                    temp.push(parent->left);
+                if (parent->right)
+                    temp.push(parent->right);
+            }
+        }
+        zz.push_back(cur);
+        st = temp;
+        level ^= 1;
+    }
+    return zz;
+}
+```
 </div>
 
 <div id="search">
@@ -591,7 +647,7 @@ int TreeMinimum(Node *root)
 {
     if (root == NULL)
         return INT_MAX;
-    return min({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+    return min({root->data, TreeMinimum(root->left), TreeMinimum(root->right)});
 }
 ```
 </div>
@@ -605,6 +661,282 @@ int TreeMaximum(Node *root)
     if (root == NULL)
         return -1;
     return max({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+}
+```
+</div>
+
+<div id="cousins">
+
+## Cousins in Binary Tree
+https://leetcode.com/problems/cousins-in-binary-tree/
+```cpp
+bool isCousins(Node *root, int x, int y)
+{
+    if (root == NULL)
+        return false;
+    int depthX = 0, depthY = 0, parentX = -1, parentY = -1;
+    queue<pair<Node *, int>> q;
+    q.push({root, 0});
+    // BFS 
+    // Every iteration is removing nodes of the same level
+    // If both are found on same level, check for similarity between parents
+    // If only one of them is found on the same level, they are not cousins
+    while (!q.empty())
+    {
+        int len = q.size();
+        int p1 = -1, p2 = -1;
+        while (len-- > 0)
+        {
+            if (q.front().first->data == x)
+                p1 = q.front().second;
+            if (q.front().first->data == y)
+                p2 = q.front().second;
+            Node *parent = q.front().first;
+            q.pop();
+            if (parent->left)
+                q.push({parent->left, parent->data});
+            if (parent->right)
+                q.push({parent->right, parent->data});
+        }
+        if (p1 >= 0 && p2 >= 0)
+            if (p1 != p2)
+                return true;
+            else
+                return false;
+        if (p1 >= 0 || p2 >= 0)
+            return false;
+    }
+    return false;
+}
+```
+</div>
+
+<div id="node-root-path">
+
+## Node to Root path
+```cpp
+bool PathFinder(Node *cur, int val, vector<int> &path)
+{
+    if (cur == NULL)
+        return false;
+    if (cur->data == val)
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    if (cur->left && PathFinder(cur->left, val, path))
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    if (cur->right && PathFinder(cur->right, val, path))
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    return false;
+}
+
+vector<int> NodeToRootPath(Node *root, int val)
+{
+    vector<int> path;
+    PathFinder(root, val, path);
+    return path;
+}
+```
+</div>
+
+<div id="nodes-distance-k">
+
+## All Nodes Distance K in Binary Tree
+https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+```cpp
+// Get path from target to root
+// All parent nodes
+bool getPath(Node *cur, Node *target, vector<Node *> &path)
+{
+    if (cur == NULL)
+        return false;
+    if (cur == target)
+    {
+        path.push_back(target);
+        return true;
+    }
+    if ((cur->left && getPath(cur->left, target, path)) || (cur->right && (getPath(cur->right, target, path))))
+    {
+        path.push_back(cur);
+        return true;
+    }
+    return false;
+}
+
+// Find all nodes at a distance of K
+void dfs(Node *cur, int K, vector<int> &res)
+{
+    if (cur == NULL)
+        return;
+    if (K == 0)
+        res.push_back(cur->data);
+    else
+    {
+        dfs(cur->left, K - 1, res);
+        dfs(cur->right, K - 1, res);
+    }
+}
+
+vector<int> distanceK(Node *root, Node *target, int K)
+{
+    vector<Node *> path;
+    getPath(root, target, path);
+    vector<int> res;
+    for (int i = 0; i < path.size() && K >= 0; i++, K--)
+        if (K == 0)
+            res.push_back(path[i]->data);
+        else if (i == 0)
+            dfs(path[i], K, res);
+        else if (path[i]->left && path[i]->left == path[i - 1])
+            dfs(path[i]->right, K - 1, res);
+        else
+            dfs(path[i]->left, K - 1, res);
+    return res;
+}
+```
+</div>
+
+<div id="find-clone-node">
+
+## Find a Corresponding Node of a Binary Tree in a Clone of That Tree
+https://leetcode.com/problems/find-a-corresponding-node-of-a-binary-tree-in-a-clone-of-that-tree/
+```cpp
+Node *getTargetCopy(Node *original, Node *cloned, Node *target)
+{
+    if (original == NULL || cloned == NULL || target == NULL)
+        return NULL;
+    // BFS with two queues
+    queue<Node *> q1, q2;
+    q1.push(original);
+    q2.push(cloned);
+    while (!q1.empty())
+    {
+        Node *cur1 = q1.front();
+        q1.pop();
+        Node *cur2 = q2.front();
+        q2.pop();
+        if (cur1 == target)
+            return cur2;
+        if (cur1->right)
+            q1.push(cur1->right);
+        if (cur2->right)
+            q2.push(cur2->right);
+        if (cur1->left)
+            q1.push(cur1->left);
+        if (cur2->left)
+            q2.push(cur2->left);
+    }
+    return NULL;
+}
+```
+</div>
+
+<div id="normal-left-cloned">
+
+## Transform to Left Cloned Tree
+```cpp
+Node *createLeftCloneTree(Node *cur)
+{
+    if (cur == NULL)
+        return NULL;
+    Node *LC = createLeftCloneTree(cur->left);
+    Node *RC = createLeftCloneTree(cur->right);
+    Node *clone = new Node(cur->data, cur->left, NULL);
+    cur->left = clone;
+    cur->right = RC;
+    return cur;
+}
+```
+</div>
+
+<div id="left-cloned-normal">
+
+## Transform from Left Cloned to Normal Tree
+```cpp
+Node *createNormalTree(Node *cur)
+{
+    if (cur == NULL)
+        return NULL;
+    if (cur->left) cur->left = cur->left->left;
+    cur->left = createNormalTree(cur->left);
+    cur->right = createNormalTree(cur->right);
+    return cur;
+}
+
+```
+</div>
+
+<div id="delete-target-leaves">
+
+## Delete Leaves With a Given Value
+https://leetcode.com/problems/delete-leaves-with-a-given-value/
+```cpp
+Node *removeLeafNodes(Node *root, int target)
+{
+    if (root == NULL)
+        return NULL;
+    root->left = removeLeafNodes(root->left, target);
+    root->right = removeLeafNodes(root->right, target);
+    if (root->left == NULL && root->right == NULL && root->data == target)
+        root = NULL;
+    return root;
+}
+```
+</div>
+
+<div id="tilt">
+
+## Binary Tree Tilt
+```cpp
+int subtreeSum(Node *cur, int &tilt)
+{
+    if (cur == NULL)
+        return 0;
+    int L = subtreeSum(cur->left, tilt), R = subtreeSum(cur->right, tilt);
+    tilt += abs(L - R);
+    return cur->data + L + R;
+}
+
+int findTilt(Node *root)
+{
+    int tilt = 0;
+    subtreeSum(root, tilt);
+    return tilt;
+}
+```
+</div>
+
+<div id="validate-bst">
+
+## Validate Binary Search Tree
+https://leetcode.com/problems/validate-binary-search-tree/
+```cpp
+bool isValidBST(Node *root)
+{
+    stack<Node *> st;
+    Node *cur = root, *prev = NULL;
+    while (cur || !st.empty())
+    {
+        while (cur)
+        {
+            st.push(cur);
+            cur = cur->left;
+        }
+        if (prev && prev->data >= st.top()->data)
+            return false;
+        prev = st.top();
+        st.pop();
+        if (prev->right)
+            cur = prev->right;
+    }
+    return true;
 }
 ```
 </div>

@@ -4,6 +4,29 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+int toInt(string str)
+{
+    int num;
+    stringstream ss(str);
+    ss >> num;
+    return num;
+}
+
+vector<int> LineToArray(char delimeter, string unwanted, int n)
+{
+    vector<int> nodes;
+    string num;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> num;
+        if (num == "n")
+            nodes.push_back(-1);
+        else
+            nodes.push_back(toInt(num));
+    }
+    return nodes;
+}
+
 struct Node
 {
     int data;
@@ -44,6 +67,16 @@ Node *insertNode(Node *root, int val)
         }
     }
     return root;
+}
+
+Node *CT(vector<int> &nodes, int &idx, int &n)
+{
+    if (idx == n || nodes[idx] == -1)
+        return NULL;
+    Node *cur = new Node(nodes[idx]);
+    cur->left = CT(nodes, ++idx, n);
+    cur->right = CT(nodes, ++idx, n);
+    return cur;
 }
 
 void deleteNode(Node *root, int val)
@@ -262,6 +295,45 @@ void ReverseLevelOrderTraversalRecursion(Node *root)
         printLevel(root, i);
 }
 
+vector<vector<int>> zigzagLevelOrder(Node *root)
+{
+    vector<vector<int>> zz;
+    if (root == NULL)
+        return zz;
+    int level = 0;
+    stack<Node *> st;
+    st.push(root);
+    while (!st.empty())
+    {
+        vector<int> cur;
+        stack<Node *> temp;
+        while (!st.empty())
+        {
+            Node *parent = st.top();
+            st.pop();
+            cur.push_back(parent->data);
+            if (level)
+            {
+                if (parent->right)
+                    temp.push(parent->right);
+                if (parent->left)
+                    temp.push(parent->left);
+            }
+            else
+            {
+                if (parent->left)
+                    temp.push(parent->left);
+                if (parent->right)
+                    temp.push(parent->right);
+            }
+        }
+        zz.push_back(cur);
+        st = temp;
+        level ^= 1;
+    }
+    return zz;
+}
+
 bool TreeSearch(Node *root, int val)
 {
     // Use any Traversal
@@ -396,7 +468,7 @@ int TreeMinimum(Node *root)
 {
     if (root == NULL)
         return INT_MAX;
-    return min({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
+    return min({root->data, TreeMinimum(root->left), TreeMinimum(root->right)});
 }
 
 int TreeMaximum(Node *root)
@@ -406,12 +478,240 @@ int TreeMaximum(Node *root)
     return max({root->data, TreeMaximum(root->left), TreeMaximum(root->right)});
 }
 
+bool PathFinder(Node *cur, int val, vector<int> &path)
+{
+    if (cur == NULL)
+        return false;
+    if (cur->data == val)
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    if (cur->left && PathFinder(cur->left, val, path))
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    if (cur->right && PathFinder(cur->right, val, path))
+    {
+        path.push_back(cur->data);
+        return true;
+    }
+    return false;
+}
+
+vector<int> NodeToRootPath(Node *root, int val)
+{
+    vector<int> path;
+    PathFinder(root, val, path);
+    return path;
+}
+
+bool getPath(Node *cur, Node *target, vector<Node *> &path)
+{
+    if (cur == NULL)
+        return false;
+    if (cur == target)
+    {
+        path.push_back(target);
+        return true;
+    }
+    if ((cur->left && getPath(cur->left, target, path)) || (cur->right && (getPath(cur->right, target, path))))
+    {
+        path.push_back(cur);
+        return true;
+    }
+    return false;
+}
+
+void dfs(Node *cur, int K, vector<int> &res)
+{
+    if (cur == NULL)
+        return;
+    if (K == 0)
+        res.push_back(cur->data);
+    else
+    {
+        dfs(cur->left, K - 1, res);
+        dfs(cur->right, K - 1, res);
+    }
+}
+
+vector<int> distanceK(Node *root, Node *target, int K)
+{
+    vector<Node *> path;
+    getPath(root, target, path);
+    vector<int> res;
+    for (int i = 0; i < path.size() && K >= 0; i++, K--)
+        if (K == 0)
+            res.push_back(path[i]->data);
+        else if (i == 0)
+            dfs(path[i], K, res);
+        else if (path[i]->left && path[i]->left == path[i - 1])
+            dfs(path[i]->right, K - 1, res);
+        else
+            dfs(path[i]->left, K - 1, res);
+    return res;
+}
+
+Node *getTargetCopy(Node *original, Node *cloned, Node *target)
+{
+    if (original == NULL || cloned == NULL || target == NULL)
+        return NULL;
+    queue<Node *> q1, q2;
+    q1.push(original);
+    q2.push(cloned);
+    while (!q1.empty())
+    {
+        Node *cur1 = q1.front();
+        q1.pop();
+        Node *cur2 = q2.front();
+        q2.pop();
+        if (cur1 == target)
+            return cur2;
+        if (cur1->right)
+            q1.push(cur1->right);
+        if (cur2->right)
+            q2.push(cur2->right);
+        if (cur1->left)
+            q1.push(cur1->left);
+        if (cur2->left)
+            q2.push(cur2->left);
+    }
+    return NULL;
+}
+
+void display(Node *node)
+{
+    if (node == NULL)
+        return;
+    string str = "";
+    str += node->left == NULL ? "." : to_string(node->left->data) + "";
+    str += " <- " + to_string(node->data) + " -> ";
+    str += node->right == NULL ? "." : to_string(node->right->data) + "";
+    cout << str << "\n";
+
+    display(node->left);
+    display(node->right);
+}
+
+Node *createLeftCloneTree(Node *cur)
+{
+    if (cur == NULL)
+        return NULL;
+    Node *LC = createLeftCloneTree(cur->left);
+    Node *RC = createLeftCloneTree(cur->right);
+    Node *clone = new Node(cur->data, cur->left, NULL);
+    cur->left = clone;
+    cur->right = RC;
+    return cur;
+}
+
+Node *createNormalTree(Node *cur)
+{
+    if (cur == NULL)
+        return NULL;
+    if (cur->left)
+        cur->left = cur->left->left;
+    cur->left = createNormalTree(cur->left);
+    cur->right = createNormalTree(cur->right);
+    return cur;
+}
+
+bool isCousins(Node *root, int x, int y)
+{
+    if (root == NULL)
+        return false;
+    int depthX = 0, depthY = 0, parentX = -1, parentY = -1;
+    queue<pair<Node *, int>> q;
+    q.push({root, 0});
+    // BFS
+    // Every iteration is removing nodes of the same level
+    // If both are found on same level, check for similarity between parents
+    // If only one of them is found on the same level, they are not cousins
+    while (!q.empty())
+    {
+        int len = q.size();
+        int p1 = -1, p2 = -1;
+        while (len-- > 0)
+        {
+            if (q.front().first->data == x)
+                p1 = q.front().second;
+            if (q.front().first->data == y)
+                p2 = q.front().second;
+            Node *parent = q.front().first;
+            q.pop();
+            if (parent->left)
+                q.push({parent->left, parent->data});
+            if (parent->right)
+                q.push({parent->right, parent->data});
+        }
+        if (p1 >= 0 && p2 >= 0)
+            if (p1 != p2)
+                return true;
+            else
+                return false;
+        if (p1 >= 0 || p2 >= 0)
+            return false;
+    }
+    return false;
+}
+
+Node *removeLeafNodes(Node *root, int target)
+{
+    if (root == NULL)
+        return NULL;
+    root->left = removeLeafNodes(root->left, target);
+    root->right = removeLeafNodes(root->right, target);
+    if (root->left == NULL && root->right == NULL && root->data == target)
+        root = NULL;
+    return root;
+}
+
+int subtreeSum(Node *cur, int &tilt)
+{
+    if (cur == NULL)
+        return 0;
+    int L = subtreeSum(cur->left, tilt), R = subtreeSum(cur->right, tilt);
+    tilt += abs(L - R);
+    return cur->data + L + R;
+}
+
+int findTilt(Node *root)
+{
+    int tilt = 0;
+    subtreeSum(root, tilt);
+    return tilt;
+}
+
+bool isValidBST(Node *root)
+{
+    stack<Node *> st;
+    Node *cur = root, *prev = NULL;
+    while (cur || !st.empty())
+    {
+        while (cur)
+        {
+            st.push(cur);
+            cur = cur->left;
+        }
+        if (prev && prev->data >= st.top()->data)
+            return false;
+        prev = st.top();
+        st.pop();
+        if (prev->right)
+            cur = prev->right;
+    }
+    return true;
+}
+
 int main()
 {
-    vector<int> nodes = {3, 9, 20, 15, 7};
-    Node *root = constructBinaryTree(nodes);
-    int val;
-    cin >> val;
-    TreeSearch(root, val) ? cout << "found" : cout << "not found";
+    int n;
+    cin >> n;
+    vector<int> nodes = LineToArray(' ', "n", n);
+    int idx = 0;
+    Node *root = CT(nodes, idx, n);
+    cout << findTilt(root) << "\n";
     return 0;
 }
