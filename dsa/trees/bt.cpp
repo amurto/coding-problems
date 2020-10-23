@@ -705,13 +705,54 @@ bool isValidBST(Node *root)
     return true;
 }
 
+class Subtree
+{
+public:
+    int size, MAX, MIN, ans;
+    bool isBST;
+    Subtree() {}
+    Subtree(int size, int MAX, int MIN, int ans, bool isBST) : size(size), MAX(MAX), MIN(MIN), ans(ans), isBST(isBST) {}
+};
+
+Subtree checkBST(Node *cur)
+{
+    if (cur == NULL)
+        return Subtree(0, INT_MIN, INT_MAX, 0, true);
+    if (cur->left == NULL && cur->right == NULL)
+        return Subtree(1, cur->data, cur->data, 1, true);
+    Subtree L = checkBST(cur->left);
+    Subtree R = checkBST(cur->right);
+    Subtree res;
+    res.size = 1 + L.size + R.size;
+    res.MIN = min({cur->data, L.MIN, R.MIN});
+    res.MAX = max({cur->data, L.MAX, R.MAX});
+    if (L.isBST && R.isBST && cur->data > L.MAX && cur->data < R.MIN)
+        res.isBST = true;
+    else
+        res.isBST = false;
+    if (res.isBST)
+        res.ans = res.size;
+    else
+        res.ans = max(L.ans, R.ans);
+    return res;
+}
+int largestBst(Node *root)
+{
+    Subtree res = checkBST(root);
+    return res.ans;
+}
+
 int main()
 {
-    int n;
-    cin >> n;
-    vector<int> nodes = LineToArray(' ', "n", n);
-    int idx = 0;
-    Node *root = CT(nodes, idx, n);
-    cout << findTilt(root) << "\n";
+    // int n;
+    // cin >> n;
+    // vector<int> nodes = LineToArray(' ', "n", n);
+    // int idx = 0;
+    // Node *root = CT(nodes, idx, n);
+    Node *root = new Node(60);
+    root->left = new Node(65);
+    root->right = new Node(70);
+    root->left->left = new Node(50);
+    cout << largestBst(root) << "\n";
     return 0;
 }

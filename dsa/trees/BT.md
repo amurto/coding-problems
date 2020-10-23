@@ -46,6 +46,7 @@ struct Node {
 - [Delete Leaves With a Given Value](#delete-target-leaves)
 - [Binary Tree Tilt](#tilt)
 - [Validate Binary Search Tree](#validate-bst)
+- [Largest BST Subtree](#largest-bst-subtree)
 
 <div id="properties">
 
@@ -937,6 +938,50 @@ bool isValidBST(Node *root)
             cur = prev->right;
     }
     return true;
+}
+```
+</div>
+
+<div id="largest-bst-subtree">
+
+## Largest BST Subtree
+https://practice.geeksforgeeks.org/problems/largest-bst/1
+```cpp
+class Subtree
+{
+public:
+    int size, MAX, MIN, ans;
+    bool isBST;
+    Subtree() {}
+    Subtree(int size, int MAX, int MIN, int ans, bool isBST) : size(size), MAX(MAX), MIN(MIN), ans(ans), isBST(isBST) {}
+};
+
+Subtree checkBST(Node *cur)
+{
+    if (cur == NULL)
+        return Subtree(0, INT_MIN, INT_MAX, 0, true);
+    if (cur->left == NULL && cur->right == NULL)
+        return Subtree(1, cur->data, cur->data, 1, true);
+    Subtree L = checkBST(cur->left);
+    Subtree R = checkBST(cur->right);
+    Subtree res;
+    res.size = 1 + L.size + R.size;
+    res.MIN = min({cur->data, L.MIN, R.MIN});
+    res.MAX = max({cur->data, L.MAX, R.MAX});
+    if (L.isBST && R.isBST && cur->data > L.MAX && cur->data < R.MIN)
+        res.isBST = true;
+    else
+        res.isBST = false;
+    if (res.isBST)
+        res.ans = res.size;
+    else
+        res.ans = max(L.ans, R.ans);
+    return res;
+}
+int largestBst(Node *root)
+{
+    Subtree res = checkBST(root);
+    return res.ans;
 }
 ```
 </div>
