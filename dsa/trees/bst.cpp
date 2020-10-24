@@ -181,15 +181,124 @@ bool search(Node *cur, int x)
     return true;
 }
 
-int BSTtoGT(Node *cur, int sum) {
-    if (cur==NULL)
+int BSTtoGT(Node *cur, int sum)
+{
+    if (cur == NULL)
         return sum;
     cur->data += BSTtoGT(cur->right, sum);
     return BSTtoGT(cur->left, cur->data);
 }
 
-Node* convertBST(Node* root) {
+Node *convertBST(Node *root)
+{
     BSTtoGT(root, 0);
+    return root;
+}
+
+void rangeInorder(Node *cur, int &L, int &R)
+{
+    if (cur == NULL)
+        return;
+    if (cur->data < L)
+        rangeInorder(cur->right, L, R);
+    else if (cur->data > R)
+        rangeInorder(cur->left, L, R);
+    else
+    {
+        rangeInorder(cur->left, L, R);
+        cout << cur->data << "\n";
+        rangeInorder(cur->right, L, R);
+    }
+}
+
+int rangeSumBST(Node *cur, int L, int R)
+{
+    if (cur == NULL)
+        return 0;
+    if (cur->data < L)
+        return rangeSumBST(cur->right, L, R);
+    else if (cur->data > R)
+        return rangeSumBST(cur->left, L, R);
+    return rangeSumBST(cur->left, L, R) + cur->data + rangeSumBST(cur->right, L, R);
+}
+
+// Moves the value of current node in increasing or decreasing order in BST
+int movePointer(Node *&cur, stack<Node *> &st, int op, int dir)
+{
+    if (!cur && st.empty())
+        return -1;
+    while (cur)
+    {
+        st.push(cur);
+        cur = dir == 0 ? cur->left : cur->right;
+    }
+    cur = st.top();
+    op = cur->data;
+    st.pop();
+    cur = dir == 0 ? cur->right : cur->left;
+    return op;
+}
+
+vector<pair<int, int>> TSP(Node *root, int target)
+{
+    vector<pair<int, int>> pairs;
+    stack<Node *> st1, st2;
+    Node *cur1 = root, *cur2 = root;
+    int L = movePointer(cur1, st1, L, 0), R = movePointer(cur2, st2, R, 1);
+    while (L < R)
+    {
+        if (L + R < target)
+            L = movePointer(cur1, st1, L, 0);
+        else if (L + R > target)
+            R = movePointer(cur2, st2, R, 1);
+        else
+        {
+            pairs.push_back({L, R});
+            L = movePointer(cur1, st1, L, 0);
+            R = movePointer(cur2, st2, R, 1);
+        }
+    }
+    return pairs;
+}
+
+bool findTarget(Node *root, int k)
+{
+    stack<Node *> st1, st2;
+    Node *cur1 = root, *cur2 = root;
+    int L = movePointer(cur1, st1, L, 0), R = movePointer(cur2, st2, R, 1);
+    while (L < R)
+        if (L + R < k)
+            L = movePointer(cur1, st1, L, 0);
+        else if (L + R > k)
+            R = movePointer(cur2, st2, R, 1);
+        else
+            return true;
+    return false;
+}
+
+// Iterative
+Node *lowestCommonAncestorIterative(Node *root, Node *p, Node *q)
+{
+    Node *cur = root;
+    while (cur)
+        if (cur->data > p->data && cur->data > q->data)
+            cur = cur->left;
+        else if (cur->data < p->data && cur->data < q->data)
+            cur = cur->right;
+        else
+            return cur;
+    return cur;
+}
+
+// Recursive
+Node *lowestCommonAncestorRecursive(Node *root, Node *p, Node *q)
+{
+    if (root == NULL)
+        return NULL;
+    if (root->data > p->data && root->data > q->data)
+        return lowestCommonAncestorRecursive(root->left, p, q);
+    else if (root->data < p->data && root->data < q->data)
+        return lowestCommonAncestorRecursive(root->right, p, q);
     return root;
 }
 
@@ -200,9 +309,8 @@ int main()
     vector<int> nodes = LineToArray(' ', "n", n);
     int idx = 0;
     Node *root = CT(nodes, idx, n);
-    int key;
-    cin >> key;
-    root = deleteNode(root, key);
-    display(root);
+    int p, q;
+    cin >> p >> q;
+
     return 0;
 }

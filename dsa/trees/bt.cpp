@@ -741,6 +741,64 @@ int largestBst(Node *root)
     return res.ans;
 }
 
+// Iterative
+// Post order traversal
+// Break loop when both are found, that is, found = 2
+// Keep popping stack until such a parent is found where the state was 0
+Node *lowestCommonAncestorIterative(Node *root, Node *p, Node *q)
+{
+    stack<pair<Node *, int>> st;
+    Node *cur = root;
+    int found = 0;
+    while (cur || !st.empty())
+    {
+        while (cur)
+        {
+            st.push({cur, found});
+            if (cur == p || cur == q)
+                found++;
+            cur = cur->left;
+        }
+        if (found == 2)
+            break;
+        cur = st.top().first;
+        if (cur->right)
+            cur = cur->right;
+        else
+        {
+            st.pop();
+            while (!st.empty() && st.top().first->right == cur)
+            {
+                cur = st.top().first;
+                st.pop();
+            }
+            cur = NULL;
+        }
+    }
+    while (!st.empty() && st.top().second > 0)
+        st.pop();
+    if (st.empty())
+        return NULL;
+    return st.top().first;
+}
+
+// Recursive
+bool findLCA(Node *cur, Node *p, Node *q, Node *&lca)
+{
+    if (cur == NULL)
+        return false;
+    int found = (cur == p || cur == q) + findLCA(cur->left, p, q, lca) + findLCA(cur->right, p, q, lca);
+    if (found >= 2)
+        lca = cur;
+    return (found > 0);
+}
+Node *lowestCommonAncestorRecursive(Node *root, Node *p, Node *q)
+{
+    Node *lca = NULL;
+    findLCA(root, p, q, lca);
+    return lca;
+}
+
 int main()
 {
     int n;

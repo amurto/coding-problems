@@ -19,6 +19,10 @@ struct Node {
 - [Searching a value in BST](#search)
 - [Find min and max value in BST](#min-max)
 - [Convert BST to Greater Tree](#bst-gt)
+- [Nodes in Range BST](#range-print)
+- [Range Sum of BST](#range-sum)
+- [Target Sum Pair in BST / Two Sum IV](#tsp-bst)
+- [Lowest Common Ancestor of a Binary Search Tree](#lca-bst)
 
 <div id="insertion">
 
@@ -171,6 +175,141 @@ int BSTtoGT(Node *cur, int sum) {
 
 Node* convertBST(Node* root) {
     BSTtoGT(root, 0);
+    return root;
+}
+```
+</div>
+
+<div id="range-nodes">
+
+## Nodes in Range BST
+```cpp
+void rangeInorder(Node *cur, int L, int R)
+{
+    if (cur == NULL)
+        return;
+    if (cur->data < L)
+        rangeInorder(cur->right, L, R);
+    else if (cur->data > R)
+        rangeInorder(cur->left, L, R);
+    else
+    {
+        rangeInorder(cur->left, L, R);
+        cout << cur->data << "\n";
+        rangeInorder(cur->right, L, R);
+    }
+}
+```
+</div>
+
+<div id="range-sum">
+
+## Range Sum of BST
+https://leetcode.com/problems/range-sum-of-bst/
+```cpp
+int rangeSumBST(Node *cur, int L, int R)
+{
+    if (cur == NULL)
+        return 0;
+    if (cur->data < L)
+        return rangeSumBST(cur->right, L, R);
+    else if (cur->data > R)
+        return rangeSumBST(cur->left, L, R);
+    return rangeSumBST(cur->left, L, R) + cur->data + rangeSumBST(cur->right, L, R);
+}
+```
+</div>
+
+<div id="tsp-bst">
+
+## Target Sum Pair in BST
+```cpp
+// Moves the value of current node in increasing or decreasing order in BST
+int movePointer(Node *&cur, stack<Node *> &st, int op, int dir)
+{
+    if (!cur && st.empty())
+        return -1;
+    while (cur)
+    {
+        st.push(cur);
+        cur = dir == 0 ? cur->left : cur->right;
+    }
+    cur = st.top();
+    op = cur->data;
+    st.pop();
+    cur = dir == 0 ? cur->right : cur->left;
+    return op;
+}
+
+vector<pair<int, int>> TSP(Node *root, int target)
+{
+    vector<pair<int, int>> pairs;
+    stack<Node *> st1, st2;
+    Node *cur1 = root, *cur2 = root;
+    int L = movePointer(cur1, st1, L, 0), R = movePointer(cur2, st2, R, 1);
+    while (L < R)
+    {
+        if (L + R < target)
+            L = movePointer(cur1, st1, L, 0);
+        else if (L + R > target)
+            R = movePointer(cur2, st2, R, 1);
+        else
+        {
+            pairs.push_back({L, R});
+            L = movePointer(cur1, st1, L, 0);
+            R = movePointer(cur2, st2, R, 1);
+        }
+    }
+    return pairs;
+}
+```
+
+https://leetcode.com/problems/two-sum-iv-input-is-a-bst/
+```cpp
+bool findTarget(Node *root, int k)
+{
+    stack<Node *> st1, st2;
+    Node *cur1 = root, *cur2 = root;
+    int L = movePointer(cur1, st1, L, 0), R = movePointer(cur2, st2, R, 1);
+    while (L < R)
+        if (L + R < k)
+            L = movePointer(cur1, st1, L, 0);
+        else if (L + R > k)
+            R = movePointer(cur2, st2, R, 1);
+        else
+            return true;
+    return false;
+}
+```
+</div>
+
+<div id="lca-bst">
+
+## Lowest Common Ancestor of a Binary Search Tree
+```cpp
+// Iterative
+Node *lowestCommonAncestorIterative(Node *root, Node *p, Node *q)
+{
+    Node *cur = root;
+    while (cur)
+        if (cur->data > p->data && cur->data > q->data)
+            cur = cur->left;
+        else if (cur->data < p->data && cur->data < q->data)
+            cur = cur->right;
+        else
+            return cur;
+    return cur;
+}
+
+// Recursive
+Node *lowestCommonAncestorRecursive(Node *root, Node *p, Node *q)
+{
+    if (root == NULL)
+        return NULL;
+    if (root->data > p->data && root->data > q->data)
+        return lowestCommonAncestorRecursive(root->left, p, q);
+    else if (root->data < p->data && root->data < q->data)
+        return lowestCommonAncestorRecursive(root->right, p, q);
     return root;
 }
 ```
