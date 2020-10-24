@@ -14,6 +14,8 @@ struct Node {
 };
 ```
 
+## Table of Contents
+
 - [Insertion into BST](#insertion)
 - [Deletion from BST](#deletion)
 - [Searching a value in BST](#search)
