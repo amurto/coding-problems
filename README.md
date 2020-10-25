@@ -48,9 +48,9 @@ int main() {
     while (t-->0) {
         int n;
         cin>>n;
-        int a[n];
+        vector<int> arr(n);
         for (int i=0; i<n; i++) 
-            cin>>a[i];
+            cin>>arr[i];
     }
     return 0;
 }
@@ -67,7 +67,7 @@ int main() {
 ### Modulo 10^9 + 7
 
 ```cpp
-int MOD = 1000000007;
+const int MOD = 1000000007;
 
 int add(int x, int y)
 {
