@@ -7,6 +7,7 @@
 - [Highest Frequency Character](#hfc)
 - [Intersection of Two Arrays](#intersect-i)
 - [Intersection of Two Arrays II](#intersect-ii)
+- [Longest Consecutive Sequence](#longest-consecutive-sequence)
 
 <div id="hfc">
 
@@ -71,6 +72,50 @@ vector<int> intersect(vector<int> &nums1, vector<int> &nums2)
             MAP[val]--;
         }
     return res;
+}
+```
+</div>
+
+<div id="longest-consecutive-sequence">
+
+## Longest Consecutive Sequence
+https://leetcode.com/problems/longest-consecutive-sequence/
+```cpp
+// set implementation 
+// O(n) time and O(n) space
+int longestConsecutive(vector<int> &nums)
+{
+    unordered_set<int> SET(nums.begin(), nums.end());
+    int streak = 0;
+    for (int val : nums)
+    {
+        if (SET.find(val) != SET.end())
+        {
+            int cnt = 1;
+            SET.erase(val);
+            int L = val, R = val;
+            while (L > INT_MIN)
+            {
+                L--;
+                if (SET.find(L) != SET.end())
+                    cnt++;
+                else
+                    break;
+                SET.erase(L);
+            }
+            while (R < INT_MAX)
+            {
+                R++;
+                if (SET.find(R) != SET.end())
+                    cnt++;
+                else
+                    break;
+                SET.erase(R);
+            }
+            streak = max(streak, cnt);
+        }
+    }
+    return streak;
 }
 ```
 </div>
