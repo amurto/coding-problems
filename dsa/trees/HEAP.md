@@ -58,7 +58,7 @@ public:
         // O(logn)where n is size of heap
         // upheapify
         // keep moving new element while heap property does not hold
-        // child is less than property
+        // child is less than parent
         while (cur > 0 && arr[(cur - 1) / 2] > arr[cur])
         {
             swap(arr[cur], arr[(cur - 1) / 2]);
