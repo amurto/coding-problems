@@ -33,7 +33,7 @@ public:
     }
     bool empty()
     {
-        return (arr.size() > 0);
+        return (arr.size() == 0);
     }
     int top()
     {
@@ -84,6 +84,8 @@ public:
 ## Table of Contents
 - [K largest elements](#k-largest-elements)
 - [Nearly Sorted Algorithm](#nearly-sorted-algorithm)
+- [Find Median from Data Stream](#find-median-from-data-stream)
+- [Merge k Sorted Arrays](#merge-k-sorted-arrays)
 
 <div id="k-largest-elements">
 
@@ -129,6 +131,79 @@ vector<int> sortKsortedArr(vector<int> nums, int k)
         pq.pop();
     }
     return ans;
+}
+```
+</div>
+
+<div id="find-median-from-data-stream">
+
+## Find Median from Data Stream
+https://leetcode.com/problems/find-median-from-data-stream/
+```cpp
+class MedianFinder
+{
+private:
+    priority_queue<int> L;
+    priority_queue<int, vector<int>, greater<int>> R;
+
+public:
+    MedianFinder() {}
+
+    void addNum(int num)
+    {
+        L.push(num);
+        R.push(L.top());
+        L.pop();
+        if (R.size() > L.size())
+        {
+            L.push(R.top());
+            R.pop();
+        }
+    }
+
+    double findMedian()
+    {
+        if (!L.empty() && !R.empty() && L.size() == R.size())
+            return 1.0 * (L.top() + R.top()) / 2;
+        else
+            return L.empty() ? -1 : L.top();
+    }
+};
+```
+</div>
+
+<div id="merge-k-sorted-arrays">
+
+## Merge k Sorted Arrays
+https://practice.geeksforgeeks.org/problems/merge-k-sorted-arrays/1
+```cpp
+class pii
+{
+public:
+    int first, second, third;
+    pii(int first, int second, int third) : first(first), second(second), third(third) {}
+};
+
+bool operator<(const pii &p1, const pii &p2)
+{
+    return (p1.first > p2.first);
+}
+
+vector<int> mergeKsortedArr(vector<vector<int>> &arr, int k)
+{
+    priority_queue<pii> pq;
+    vector<int> nums;
+    for (int i = 0; i < k; i++)
+        pq.push(pii(arr[i][0], i, 0));
+    while (!pq.empty())
+    {
+        pii cur = pq.top();
+        pq.pop();
+        nums.push_back(cur.first);
+        if (arr[cur.second].size() - 1 > cur.third)
+            pq.push(pii(arr[cur.second][cur.third + 1], cur.second, cur.third + 1));
+    }
+    return nums;
 }
 ```
 </div>

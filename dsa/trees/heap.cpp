@@ -29,7 +29,7 @@ public:
     }
     bool empty()
     {
-        return (arr.size() > 0);
+        return (arr.size() == 0);
     }
     int top()
     {
@@ -76,8 +76,50 @@ public:
     }
 };
 
-int main()
+class pii
 {
-    return 0;
+public:
+    int first, second, third;
+    pii(int first, int second, int third) : first(first), second(second), third(third) {}
+};
+
+bool operator<(const pii &p1, const pii &p2)
+{
+    return (p1.first > p2.first);
 }
 
+vector<int> mergeKsortedArr(vector<vector<int>> &arr, int k)
+{
+    priority_queue<pii> pq;
+    vector<int> nums;
+    for (int i = 0; i < k; i++)
+        pq.push(pii(arr[i][0], i, 0));
+    while (!pq.empty())
+    {
+        pii cur = pq.top();
+        pq.pop();
+        nums.push_back(cur.first);
+        if (arr[cur.second].size() - 1 > cur.third)
+            pq.push(pii(arr[cur.second][cur.third + 1], cur.second, cur.third + 1));
+    }
+    return nums;
+}
+
+int main()
+{
+    int k, n;
+    cin >> k;
+    vector<vector<int>> arr;
+    for (int i = 0; i < k; i++)
+    {
+        cin >> n;
+        vector<int> row(n);
+        for (int j = 0; j < n; j++)
+            cin >> row[j];
+        arr.push_back(row);
+    }
+    vector<int> nums = mergeKsortedArr(arr, k);
+    for (int val : nums)
+        cout << val << " ";
+    return 0;
+}
