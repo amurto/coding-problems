@@ -14,11 +14,14 @@ public:
         adjlist.resize(N);
     }
 
+    // source -> destination with weight
     void addEdge(int src, int des, int wt)
     {
         adjlist[src].push_back({des, wt});
     }
 
+    // display edge
+    // source -> destination
     void display()
     {
         for (int i = 0; i < adjlist.size(); i++)
@@ -26,6 +29,7 @@ public:
                 cout << i << " -> " << adjlist[i][j].first << "\n";
     }
 
+    // depth first search
     void explore(int cur, vector<bool> &vis, vector<int> &comp)
     {
         vis[cur] = true;
@@ -35,6 +39,7 @@ public:
                 explore(edge.first, vis, comp);
     }
 
+    // returns all nodes connected to source
     vector<int> dfs(int src)
     {
         vector<bool> vis(n);
@@ -78,6 +83,7 @@ public:
         return paths;
     }
 
+    // returns all connected components
     vector<vector<int>> getConnectedComps()
     {
         vector<vector<int>> res;
@@ -95,7 +101,9 @@ public:
         return res;
     }
 
-    bool isConnected() {
+    // check if entire graph is connected
+    bool isConnected()
+    {
         vector<bool> vis(n);
         for (int i = 0; i < n; i++)
         {
@@ -131,7 +139,6 @@ int main()
         cout << "false \n";
     return 0;
 }
-
 
 // cout << "[";
 // if (!cc.empty()) {
