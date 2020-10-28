@@ -26,25 +26,16 @@ int main()
         {
             deque<int> level;
             int par = q.size();
-            while (par > 0)
+            while (par-- > 0)
             {
                 while (cur < n && (level.empty() || level.back() < arr[cur]))
-                {
-                    level.push_back(arr[cur]);
-                    cur++;
-                }
+                    level.push_back(arr[cur++]);
                 q.pop_front();
-                par--;
                 while (!level.empty())
                 {   
                     q.push_back(level.front());
                     level.pop_front();
                 }
-            }
-            while (!level.empty())
-            {
-                q.push_back(level.front());
-                level.pop_front();
             }
             height++;
         }

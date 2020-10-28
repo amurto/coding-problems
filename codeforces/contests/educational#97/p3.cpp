@@ -15,31 +15,19 @@ int main()
     {
         int n;
         cin >> n;
-        vector<int> arr(n);
-        for (int i = 0; i < n; i++)
+        vector<int> arr(n + 1);
+        for (int i = 1; i <= n; i++)
             cin >> arr[i];
-        // sort(arr.begin(), arr.end());
-        unordered_set<int> SET;
-        int ans = 0;
-        for (int val : arr)
-        {
-            int t1 = val, t2 = val;
-            while (t1 > 0 && SET.find(t1) != SET.end())
-                t1--;
-            while (t2 > 0 && SET.find(t2) != SET.end())
-                t2++;
-            if (t1 == 0 || t2 - val < val - t1)
-            {
-                SET.insert(t2);
-                ans += t2 - val;
-            }
-            else
-            {
-                SET.insert(t1);
-                ans += val - t1;
-            }
-        }
-        cout << ans << "\n";
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> dp(n + 1, vector<int>(2 * n + 1));
+        for (int i = 1; i <= n; i++)
+            for (int time = 0; time <= 2 * n; time++)
+                if (i > time)
+                    dp[i][time] = INT_MAX;
+                else
+                    dp[i][time] = min(abs(time - arr[i]) + dp[i - 1][time - 1], dp[i][time - 1]);
+
+        cout << dp[n][2 * n] << "\n";
     }
     return 0;
 }
