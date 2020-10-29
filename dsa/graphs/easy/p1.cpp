@@ -48,6 +48,50 @@ public:
         return comp;
     }
 
+    // breadth first search from source
+    void bfs(int src)
+    {
+        vector<string> path(n);
+        vector<bool> vis(n);
+        queue<int> Q;
+        Q.push(src);
+        while (!Q.empty())
+        {
+            int cur = Q.front();
+            Q.pop();
+            if (!vis[cur])
+                vis[cur] = true;
+            for (pair<int, int> p : adjlist[cur])
+                if (!vis[p.first])
+                    Q.push(p.first);
+        }
+    }
+
+    // bfs to check if graph is cyclic
+    bool isCyclic()
+    {
+        vector<bool> vis(n);
+        queue<int> Q;
+        for (int i = 0; i < n; i++)
+            if (!vis[i])
+            {
+                Q.push(i);
+                while (!Q.empty())
+                {
+                    int cur = Q.front();
+                    Q.pop();
+                    if (vis[cur])
+                        return true;
+                    else
+                        vis[cur] = true;
+                    for (pair<int, int> p : adjlist[cur])
+                        if (!vis[p.first])
+                            Q.push(p.first);
+                }
+            }
+        return false;
+    }
+
     // Check if path from src -> des exists
     bool hasPath(int src, int des)
     {
@@ -119,6 +163,38 @@ public:
         }
         return false;
     }
+
+    // recursive function to traverse hamiltonian paths and cycles
+    void traverse(string soFar, int cur, int src, vector<bool> &vis, vector<string> &paths, vector<string> &cycles)
+    {
+        if (soFar.length() + 1 == n)
+        {
+            soFar += to_string(cur);
+            for (pair<int, int> p : adjlist[cur])
+                if (p.first == src)
+                {
+                    cycles.push_back(soFar);
+                    return;
+                }
+
+            paths.push_back(soFar);
+            return;
+        }
+        vis[cur] = true;
+        for (pair<int, int> edge : adjlist[cur])
+            if (!vis[edge.first])
+                traverse(soFar + to_string(cur), edge.first, src, vis, paths, cycles);
+        vis[cur] = false;
+    }
+
+    // returns hamiltonian paths and cycles
+    pair<vector<string>, vector<string>> hamiltonian(int src)
+    {
+        vector<string> paths, cycles;
+        vector<bool> vis(n);
+        traverse("", src, src, vis, paths, cycles);
+        return {paths, cycles};
+    }
 };
 
 int main()
@@ -133,11 +209,10 @@ int main()
         G.addEdge(s, d, w);
         G.addEdge(d, s, w);
     }
-    if (G.isConnected())
+    if (G.isCyclic())
         cout << "true \n";
     else
         cout << "false \n";
-    return 0;
 }
 
 // cout << "[";
