@@ -92,6 +92,42 @@ public:
         return false;
     }
 
+    // bipartite graph
+    // all cycles are of even length or no cycles
+    bool isBipartite()
+    {
+        vector<bool> vis(n);
+        vector<int> parity(n);
+        queue<int> Q;
+        for (int i = 0; i < n; i++)
+            if (!vis[i])
+            {
+                int level = 0;
+                Q.push(i);
+                while (!Q.empty())
+                {
+                    level ^= 1;
+                    int nodes = Q.size();
+                    while (nodes-- > 0)
+                    {
+                        int cur = Q.front();
+                        Q.pop();
+                        if (!vis[cur])
+                        {
+                            vis[cur] = true;
+                            parity[cur] = level;
+                            for (pair<int, int> p : adjlist[cur])
+                                if (!vis[p.first])
+                                    Q.push(p.first);
+                        }
+                        else if (parity[cur] != level)
+                            return false;
+                    }
+                }
+            }
+        return true;
+    }
+
     // Check if path from src -> des exists
     bool hasPath(int src, int des)
     {
@@ -195,6 +231,32 @@ public:
         traverse("", src, src, vis, paths, cycles);
         return {paths, cycles};
     }
+
+    int infectedNodes(int src, int time)
+    {
+        int nodes = 0;
+        vector<bool> vis(n);
+        queue<int> Q;
+        Q.push(src);
+        while (!Q.empty() && time-- > 0)
+        {
+            int cnt = Q.size();
+            while (cnt-- > 0)
+            {
+                int cur = Q.front();
+                Q.pop();
+                if (!vis[cur])
+                {
+                    nodes++;
+                    vis[cur] = true;
+                    for (pair<int, int> edge : adjlist[cur])
+                        if (!vis[edge.first])
+                            Q.push(edge.first);
+                }
+            }
+        }
+        return nodes;
+    }
 };
 
 int main()
@@ -209,10 +271,9 @@ int main()
         G.addEdge(s, d, w);
         G.addEdge(d, s, w);
     }
-    if (G.isCyclic())
-        cout << "true \n";
-    else
-        cout << "false \n";
+    int src, time;
+    cin >> src >> time;
+    cout << G.infectedNodes(src, time) << "\n";
 }
 
 // cout << "[";
@@ -232,3 +293,11 @@ int main()
 //     cout << "]";
 // }
 // cout << "]";
+
+// 7
+// 5
+// 0 1 10
+// 2 3 10
+// 4 5 10
+// 5 6 10
+// 4 6 10
