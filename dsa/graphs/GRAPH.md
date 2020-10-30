@@ -8,6 +8,7 @@
 - [Number of Islands](#number-of-islands)
 - [Friend Circles](#friend-circles)
 - [Rotting Oranges](#rotting-oranges)
+- [Is Graph Bipartite?][#is-graph-bipartite]
 
 <div id="number-of-islands">
 
@@ -129,6 +130,48 @@ int orangesRotting(vector<vector<int>> &grid)
 
     // if any fresh orange remaining, return -1
     return fresh == 0 ? minutes : -1;
+}
+```
+</div>
+
+<div id="is-graph-bipartite">
+
+## Is Graph Bipartite?
+https://leetcode.com/problems/is-graph-bipartite/
+```cpp
+bool isBipartite(vector<vector<int>> &graph)
+{
+    int n = graph.size();
+    vector<bool> vis(n);
+    vector<int> parity(n);
+    queue<int> Q;
+    for (int i = 0; i < n; i++)
+        if (!vis[i])
+        {
+            int level = 0;
+            Q.push(i);
+            while (!Q.empty())
+            {
+                level ^= 1;
+                int nodes = Q.size();
+                while (nodes-- > 0)
+                {
+                    int cur = Q.front();
+                    Q.pop();
+                    if (!vis[cur])
+                    {
+                        vis[cur] = true;
+                        parity[cur] = level;
+                        for (int edge : graph[cur])
+                            if (!vis[edge])
+                                Q.push(edge);
+                    }
+                    else if (parity[cur] != level)
+                        return false;
+                }
+            }
+        }
+    return true;
 }
 ```
 </div>
