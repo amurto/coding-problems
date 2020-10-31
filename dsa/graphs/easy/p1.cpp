@@ -257,6 +257,48 @@ public:
         }
         return nodes;
     }
+
+    string trace(int src, int to, vector<int> &pred)
+    {
+        string path = "";
+        for (int v = to; v != src && v != -1; v = pred[v])
+            path += to_string(v);
+        path += to_string(src);
+        reverse(path.begin(), path.end());
+        return path;
+    }
+    void djikstra(int src)
+    {
+        int INF = 1000000;
+        vector<bool> vis(n);
+
+        vector<int> dis(n, INF), pred(n, -1);
+        dis[src] = 0;
+        auto cmp = [&](int &v1, int &v2) { return dis[v1] > dis[v2]; };
+        priority_queue<int, vector<int>, decltype(cmp)> pq(cmp);
+        pq.push(src);
+        while (!pq.empty())
+        {
+            int from = pq.top();
+            pq.pop();
+            if (vis[from])
+                continue;
+            vis[from] = true;
+            cout << from << " via " << trace(src, from, pred) << " @ " << dis[from] << "\n";
+            for (auto to : adjlist[from])
+            {
+                if (!vis[to.first])
+                {
+                    if (dis[from] + to.second < dis[to.first])
+                    {
+                        dis[to.first] = dis[from] + to.second;
+                        pred[to.first] = from;
+                    }
+                    pq.push(to.first);
+                }
+            }
+        }
+    }
 };
 
 int main()
@@ -271,9 +313,9 @@ int main()
         G.addEdge(s, d, w);
         G.addEdge(d, s, w);
     }
-    int src, time;
-    cin >> src >> time;
-    cout << G.infectedNodes(src, time) << "\n";
+    int src;
+    cin >> src;
+    G.djikstra(src);
 }
 
 // cout << "[";
