@@ -1,53 +1,56 @@
-// catch the pawn
-// tbd
+// https://leetcode.com/problems/cheapest-flights-within-k-stops/
+// Cheapest Flights Within K Stops
 
 #include <bits/stdc++.h>
 using namespace std;
 
-bool catchPawn(int n, int ki, int kj, int pi, int pj)
-{
-    int di[8] = {-2, -1, 1, 2, 2, 1, -1, -2}, dj[8] = {1, 2, 2, 1, -1, -2, -2, -1};
-    pj++;
-    queue<pair<int, int>> q;
-    q.push({ki, kj});
+typedef long long ll;
+typedef pair<int, pair<int, int>> piii;
+#define pb push_back
 
-    while (pj < n)
+int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int K)
+{
+    if (src == dst)
+        return 0;
+    // create a graph
+    vector<vector<pair<int, int>>> g(n);
+    for (vector<int> edge : flights)
     {
-        int size = q.size();
-        vector<vector<bool>> vis(n, vector<bool>(n));
+        g[edge[0]].push_back({edge[1], edge[2]});
+        g[edge[1]].push_back({edge[0], edge[2]});
+    }
+    const int inf = 1e9;
+    vector<bool> vis(n);
+    vector<int> dis(n, inf);
+    dis[src] = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({dis[src], src});
+    while (!pq.empty() && K >= 0)
+    {
+        int size = pq.size();
         while (size-- > 0)
         {
-            pair<int, int> cur = q.front();
-            q.pop();
-            for (int dir = 0; dir < 8; dir++)
-            {
-                int i = cur.first + di[dir], j = cur.second + dj[dir];
-                if (i >= 0 && i < n && j >= 0 && j < n && abs(pj - j) <= abs(pj - cur.second) && !vis[i][j])
+            pair<int, int> from = pq.top();
+            pq.pop();
+            if (vis[from.second])
+                continue;
+            vis[from.second] = true;
+            for (pair<int, int> to : g[from.second])
+                if (!vis[to.first])
                 {
-                    if (i == pi && j>=pj)
-                        return true;
-                    vis[i][j] = true;
-                    q.push({i, j});
+                    dis[to.first] = min(dis[to.first], dis[from.second] + to.second);
+                    pq.push({dis[to.first], to.first});
                 }
-            }
         }
-        pj++;
+        K--;
     }
-    return false;
+    return dis[dst] == inf ? -1 : dis[dst];
 }
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-    int t;
-    cin >> t;
-    while (t-- > 0)
-    {
-        int n, ki, kj, pi, pj;
-        cin >> n >> ki >> kj >> pi >> pj;
-        cout << catchPawn(n, ki, kj, pi, pj) << "\n";
-    }
+    vector<vector<int>> edges = {{0, 1, 100}, {1, 2, 100}, {0, 2, 500}};
+    int n = 3, src = 0, dst = 2, k = 0;
+    cout << findCheapestPrice(n, edges, src, dst, k) << "\n";
     return 0;
 }
