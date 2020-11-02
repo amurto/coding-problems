@@ -8,7 +8,9 @@
 - [Number of Islands](#number-of-islands)
 - [Friend Circles](#friend-circles)
 - [Rotting Oranges](#rotting-oranges)
-- [Is Graph Bipartite?][#is-graph-bipartite]
+- [Is Graph Bipartite?](#is-graph-bipartite)
+- [Network Delay Time](#network-delay-time)
+- [Steps by Knight](#steps-by-knight)
 
 <div id="number-of-islands">
 
@@ -172,6 +174,103 @@ bool isBipartite(vector<vector<int>> &graph)
             }
         }
     return true;
+}
+```
+</div>
+
+<div id="network-delay-time">
+
+## Network Delay Time
+https://leetcode.com/problems/network-delay-time/
+```cpp
+int networkDelayTime(vector<vector<int>> &times, int N, int K)
+{
+    // create a graph
+    vector<vector<pair<int, int>>> g(N + 1);
+
+    // adjacency list
+    // g[u] = [[v,w]]
+    for (vector<int> data : times)
+        g[data[0]].push_back({data[1], data[2]});
+
+    // dijkstra
+    const int inf = 1e9;
+    vector<int> dis(N + 1, inf);
+    vector<bool> vis(N + 1);
+    dis[K] = 0;
+
+    // min heap
+    // {dis[v], v}
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({dis[K], K});
+    while (!pq.empty())
+    {
+        pair<int, int> from = pq.top();
+        pq.pop();
+        if (vis[from.second])
+            continue;
+        vis[from.second] = true;
+        for (pair<int, int> to : g[from.second])
+        {
+            if (!vis[to.first])
+            {
+                if (dis[from.second] + to.second < dis[to.first])
+                    dis[to.first] = dis[from.second] + to.second;
+                pq.push({dis[to.first], to.first});
+            }
+        }
+    }
+
+    // return the farthest distance
+    int time = 0;
+    for (int i = 1; i <= N; i++)
+        time = max(time, dis[i]);
+
+    // farthest distance == inf then node cannot be reached
+    return time == inf ? -1 : time;
+}
+```
+</div>
+
+<div id="steps-by-knight">
+
+## Steps by Knight
+https://practice.geeksforgeeks.org/problems/steps-by-knight/0
+```cpp
+int minStepsByKnight(int n, int ki, int kj, int ti, int tj)
+{
+    if (ki == ti && kj == tj)
+        return 0;
+
+    int moves = 0, di[8] = {-2, -1, 1, 2, 2, 1, -1, -2}, dj[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+    queue<pair<int, int>> q;
+    q.push({ki, kj});
+
+    vector<vector<bool>> vis(n + 1, vector<bool>(n + 1));
+    while (!q.empty())
+    {
+        moves++;
+        int size = q.size();
+        while (size-- > 0)
+        {
+            pair<int, int> cur = q.front();
+            q.pop();
+            if (vis[cur.first][cur.second])
+                continue;
+            vis[cur.first][cur.second] = true;
+            for (int dir = 0; dir < 8; dir++)
+            {
+                int i = cur.first + di[dir], j = cur.second + dj[dir];
+                if (i > 0 && i <= n && j > 0 && j <= n && !vis[i][j])
+                {
+                    if (i == ti && j == tj)
+                        return moves;
+                    q.push({i, j});
+                }
+            }
+        }
+    }
+    return moves;
 }
 ```
 </div>

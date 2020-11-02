@@ -267,7 +267,7 @@ public:
         reverse(path.begin(), path.end());
         return path;
     }
-    void djikstra(int src)
+    void dijkstra(int src)
     {
         int INF = 1000000;
         vector<bool> vis(n);
@@ -315,7 +315,7 @@ int main()
     }
     int src;
     cin >> src;
-    G.djikstra(src);
+    G.dijkstra(src);
 }
 
 // cout << "[";
