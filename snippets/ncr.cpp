@@ -1,7 +1,10 @@
-## Snippets
+#include<bits/stdc++.h>
+using namespace std;
 
-```cpp
-const int MOD = 1000000007
+typedef long long ll;
+#define pb push_back
+
+const int MOD = 1000000007, N = 300001;
 
 int add(int x, int y)
 {
@@ -58,5 +61,3 @@ int ncr(int n, int r)
         return 0;
     return mul(fact[n], mul(invfact[r], invfact[n - r]));
 }
-
-```
