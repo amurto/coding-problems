@@ -7,8 +7,7 @@ typedef long long ll;
 string solve(vector<int> &arr, vector<int> &dec, vector<int> &inc, int n)
 {
     dec[0] = arr[0];
-    inc[0] = 0;
-    for (int i=1; i<n;i++) {
+    for (int i=1; i<n; i++) {
         dec[i] = min(dec[i-1], arr[i] - inc[i-1]);
         inc[i] = arr[i] - dec[i];
         if (inc[i] < inc[i-1] || dec[i] < 0)
