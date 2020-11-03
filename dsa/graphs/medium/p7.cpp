@@ -14,37 +14,36 @@ int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int
         return 0;
     // create a graph
     vector<vector<pair<int, int>>> g(n);
+
+    // djikstra without visited and distance memo
     for (vector<int> edge : flights)
-    {
         g[edge[0]].push_back({edge[1], edge[2]});
-        g[edge[1]].push_back({edge[0], edge[2]});
-    }
-    const int inf = 1e9;
-    vector<bool> vis(n);
-    vector<int> dis(n, inf);
-    dis[src] = 0;
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push({dis[src], src});
-    while (!pq.empty() && K >= 0)
+
+    // st[u] = minimum stops to reach u
+    vector<int> st(n, 1e9);
+
+    // min heap
+    // {dis[u], {u, stops_required}}
+    priority_queue<piii, vector<piii>, greater<piii>> pq;
+    pq.push({0, {src, 0}});
+    while (!pq.empty())
     {
-        int size = pq.size();
-        while (size-- > 0)
-        {
-            pair<int, int> from = pq.top();
-            pq.pop();
-            if (vis[from.second])
-                continue;
-            vis[from.second] = true;
-            for (pair<int, int> to : g[from.second])
-                if (!vis[to.first])
-                {
-                    dis[to.first] = min(dis[to.first], dis[from.second] + to.second);
-                    pq.push({dis[to.first], to.first});
-                }
-        }
-        K--;
+        piii top = pq.top();
+        pq.pop();
+        int dis = top.first, from = top.second.first, stops = top.second.second;
+
+        // return dist[dst] if dst is found
+        if (from == dst)
+            return dis;
+        
+        // atmost k stops
+        // if min_stops <= stops, skip adding vertices
+        if (st[from] <= stops || stops > K)
+            continue;
+        for (pair<int, int> to : g[from])
+            pq.push({dis + to.second, {to.first, stops + 1}});
     }
-    return dis[dst] == inf ? -1 : dis[dst];
+    return -1;
 }
 
 int main()

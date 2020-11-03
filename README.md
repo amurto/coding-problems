@@ -60,9 +60,7 @@ int main() {
 * [Part 1](https://www.1point3acres.com/bbs/thread-307462-1-1.html)
 * [Part 2](https://kraftshala.com/what-questions-to-expect-in-amazon-interview/)
 
-### [DSA Guide](https://drive.google.com/file/d/15PWBaBk54RXkkduleBSSPuTHWcKWcaqW/view)
 
-### [DP is EASY](https://leetcode.com/discuss/general-discussion/822189/DP-IS-EASY!-5-Steps-to-Think-Through-DP-Questions.)
 
 ### Modulo 10^9 + 7
 
