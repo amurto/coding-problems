@@ -16,22 +16,21 @@ int main()
         int x, y;
         cin >> x >> y;
         int d = abs(y - x);
-        int h = d/2;
+        int h = d / 2;
         if (y == x)
             cout << "0\n";
         else if (y > x)
             if (d & 1)
                 cout << "1\n";
-            else if (h&1)
+            else if (h & 1)
                 cout << "2\n";
             else
                 cout << "3\n";
         else if (y < x)
-            if (d&1)    
+            if (d & 1)
                 cout << "2\n";
-            else 
+            else
                 cout << "1\n";
-            
     }
     return 0;
 }
