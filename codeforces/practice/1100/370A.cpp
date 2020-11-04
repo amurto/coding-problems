@@ -61,9 +61,9 @@ int main()
         cout << "2 ";
 
     // bishop
-    if (color(r1, c2) != color(r2, c2) || (r1 == r2 && c1 == c2))
+    if (color(r1, c1) != color(r2, c2) || (r1 == r2 && c1 == c2))
         cout << "0 ";
-    else if (abs(r1 - c1) == abs(r2 - c2))
+    else if (abs(r1 - r2) == abs(c1 - c2))
         cout << "1 ";
     else
         cout << "2 ";
