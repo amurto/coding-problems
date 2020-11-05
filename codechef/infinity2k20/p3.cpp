@@ -1,3 +1,5 @@
+// RUN
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -96,8 +98,6 @@ int main()
             ans = add(ans, i);
             ans = add(ans, mul(i, rem));
             ans = add(ans, rem);
-
-
             res[arr[i].second] = ans;
         }
         for (int val: res)
