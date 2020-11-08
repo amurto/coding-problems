@@ -1,3 +1,6 @@
+// https://www.hackerearth.com/problem/algorithm/zero-sum-array-8bfe2f4e/
+// Zero-sum array
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -34,7 +37,6 @@ int solve()
     }
     if (sum & 1)
         return -1;
-    sort(arr.begin(), arr.end(), greater<int>());
     vector<vector<int>> dp(n, vector<int>(sum + 1, -1));
     int ans = zsa(dp, arr, 0, sum / 2);
     if (ans == inf)
@@ -42,6 +44,7 @@ int solve()
     else
         return ans;
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false);

@@ -1,3 +1,6 @@
+// https://www.hackerearth.com/problem/algorithm/dice-string-001999f7/
+// A dice string
+
 #include <bits/stdc++.h>
 using namespace std;
 
