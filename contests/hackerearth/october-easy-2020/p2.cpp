@@ -1,3 +1,6 @@
+// https://www.hackerearth.com/practice/basic-programming/implementation/basics-of-implementation/practice-problems/algorithm/beauty-factor-bab8f334/
+// A beauty factor
+
 #include<bits/stdc++.h>
 using namespace std;
 

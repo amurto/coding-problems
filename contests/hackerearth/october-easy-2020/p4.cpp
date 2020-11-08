@@ -1,3 +1,6 @@
+// https://www.hackerearth.com/practice/algorithms/string-algorithm/string-searching/practice-problems/algorithm/hidden-leaf-village-790b2618/
+// Number of rotations
+
 #include <bits/stdc++.h>
 using namespace std;
 
