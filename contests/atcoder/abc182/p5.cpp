@@ -10,6 +10,7 @@ bool valid(int r, int c, int h, int w)
 {
     return (r > 0 && r <= h && c > 0 && c <= w);
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false);
