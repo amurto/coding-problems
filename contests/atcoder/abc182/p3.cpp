@@ -12,13 +12,10 @@ int t3(string &N, vector<vector<int>> &dp, int cur, int sum)
         else
             return INT_MIN;
     if (dp[cur][sum] == -1)
-    {
-        int choose = 1 + t3(N, dp, cur + 1, sum + N[cur] - 48);
-        int nochoose = t3(N, dp, cur + 1, sum);
-        dp[cur][sum] = max(choose, nochoose);
-    }
+        dp[cur][sum] = max(1 + t3(N, dp, cur + 1, sum + N[cur] - 48), t3(N, dp, cur + 1, sum));
     return dp[cur][sum];
 }
+
 int solve()
 {
     string N;

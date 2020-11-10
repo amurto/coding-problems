@@ -25,4 +25,5 @@
 
 ## Bit Manipulation
 - [A summary: how to use bit manipulation to solve problems easily and efficiently](https://leetcode.com/problems/sum-of-two-integers/discuss/84278/A-summary%3A-how-to-use-bit-manipulation-to-solve-problems-easily-and-efficiently)
+- [Unmasking Bitmasked Dynamic Programming](https://www.freecodecamp.org/news/unmasking-bitmasked-dynamic-programming-25669312b77b/)
 </div>
