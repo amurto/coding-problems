@@ -12,23 +12,23 @@ void init(vector<int> &parent, int n)
 
 int root(vector<int> &parent, int x)
 {
-    while (parent[x] != x)
-        x = parent[parent[x]];
-    return x;
+    if (x == parent[x])
+        return x; 
+    return parent[x] = root(parent, parent[x]);
 }
 
-bool find(vector<int> &parent, int x, int y)
-{
-    return (root(parent, x) == root(parent, y));
-}
-
-void dsunion(vector<int> &parent, vector<int> &size, int x, int y)
+bool merge(vector<int> &parent, vector<int> &size, int x, int y)
 {
     int rx = root(parent, x), ry = root(parent, y);
+    if (rx == ry)
+        return false;
+    
+    // by size
     if (size[ry] < size[ry])
         swap(rx, ry);
     size[rx] += size[ry];
     parent[ry] = parent[rx];
+    return true;
 }
 
 int main()
@@ -37,7 +37,7 @@ int main()
     cin >> n >> m;
     int pieces = n;
     vector<int> parent(n + 1), size(n + 1, 1);
-    vector<bool> add(m + 1, false);
+    vector<bool> unused(m + 1, false);
     init(parent, n);
     vector<pair<int, int>> edge;
     for (int i = 0; i < m; i++)
@@ -51,28 +51,24 @@ int main()
     {
         cin >> Q[i];
         Q[i]--;
-        add[Q[i]] = true;
+        unused[Q[i]] = true;
     }
     for (int i = 0; i < m; i++)
     {
-        if (!add[i]) {
-            if (!find(parent, edge[i].first, edge[i].second))
-                pieces--;
-            parent[root(parent, edge[i].first)] = parent[root(parent, edge[i].second)];
-        }
+        if (unused[i])
+            continue;
+        if (merge(parent, size, edge[i].first, edge[i].second))
+            pieces--;
     }
     vector<int> res;
     for (int i = q - 1; i >= 0; i--)
     {
         res.push_back(pieces);
-        if (!find(parent, edge[Q[i]].first, edge[Q[i]].second))
-        {
+        if (merge(parent, size, edge[Q[i]].first, edge[Q[i]].second))
             pieces--;
-            dsunion(parent, size, edge[i].first, edge[i].second);
-        }
     }
-    for (int i=res.size()-1; i>=0; i--)
-        cout << res[i] << " ";
-    cout << "\n";
+    cout << res[res.size() - 1];
+    for (int i = res.size() - 2; i >= 0; i--)
+        cout << " " << res[i];
     return 0;
 }

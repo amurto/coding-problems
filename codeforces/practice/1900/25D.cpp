@@ -15,25 +15,21 @@ void init(vector<int> &parent, int n)
 
 int root(vector<int> &parent, int x)
 {
-    while (parent[x] != x)
-        x = parent[parent[x]];
-    return x;
+    if (x == parent[x])
+        return x;
+    return parent[x] = root(parent, parent[x]);
 }
 
-bool find(vector<int> &parent, int x, int y)
-{
-    if (root(parent, x) == root(parent, y))
-        return true;
-    return false;
-}
-
-void dsunion(vector<int> &parent, vector<int> &size, int x, int y)
+bool dsunion(vector<int> &parent, vector<int> &size, int x, int y)
 {
     int rx = root(parent, x), ry = root(parent, y);
+    if (rx == ry)
+        return false;
     if (size[ry] < size[ry])
         swap(rx, ry);
     size[rx] += size[ry];
     parent[ry] = parent[rx];
+    return true;
 }
 
 int main()
@@ -49,10 +45,8 @@ int main()
     for (int i = 0; i < n - 1; i++)
     {
         cin >> x >> y;
-        if (find(parent, x, y))
+        if (!dsunion(parent, size, x, y))
             unused.push({x, y});
-        else
-            dsunion(parent, size, x, y);
     }
     int beg = 1;
     while (parent[beg] != beg)

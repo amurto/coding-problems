@@ -1,7 +1,7 @@
 // https://www.codechef.com/problems/FIRESC/
 // Fire Escape Routes
 // Disjoint Set Union
- 
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -17,19 +17,16 @@ void init(vector<int> &parent, int n)
 
 int root(vector<int> &parent, int x)
 {
-    while (parent[x] != x)
-        x = parent[parent[x]];
-    return x;
-}
-
-bool find(vector<int> &parent, int x, int y)
-{
-    return (root(parent, x) == root(parent, y));
+    if (x == parent[x])
+        return x;
+    return parent[x] = root(parent, parent[x]);
 }
 
 void dsunion(vector<int> &parent, vector<int> &size, int x, int y)
 {
     int rx = root(parent, x), ry = root(parent, y);
+    if (rx == ry)
+        return;
     if (size[rx] < size[ry])
         swap(rx, ry);
     size[rx] += size[ry];
@@ -52,8 +49,6 @@ int main()
         while (m-- > 0)
         {
             cin >> x >> y;
-            if (find(parent, x, y))
-                continue;
             dsunion(parent, size, x, y);
         }
         int routes = 0, ways = 1;
