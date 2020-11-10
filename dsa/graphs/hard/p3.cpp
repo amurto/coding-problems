@@ -1,5 +1,6 @@
 // https://acm.timus.ru/problem.aspx?space=1&num=1671
 // Anansi's Cobweb
+// dsu
 
 #include <bits/stdc++.h>
 using namespace std;

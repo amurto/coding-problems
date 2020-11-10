@@ -1,6 +1,6 @@
 // https://www.codechef.com/problems/FIRESC/
 // Fire Escape Routes
-// Disjoint Set Union
+// dsu
 
 #include <bits/stdc++.h>
 using namespace std;
