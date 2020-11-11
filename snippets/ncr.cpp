@@ -16,6 +16,13 @@ int add(int x, int y)
     return x;
 }
 
+int sub(int x, int y)
+{
+    if (x - y < 0)
+        return x - y + MOD;
+    return x - y;
+}
+
 int mul(int x, int y)
 {
     return (x * 1ll * y) % MOD;
