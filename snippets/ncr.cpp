@@ -28,6 +28,8 @@ int mul(int x, int y)
     return (x * 1ll * y) % MOD;
 }
 
+
+
 // Binary Exponentiation O(logn)
 // n^m mod p
 // p is large prime number
