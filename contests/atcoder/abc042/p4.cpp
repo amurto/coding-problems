@@ -1,10 +1,11 @@
+// Number of paths in a grid from (0, 0) to (H-1, W-1) = ncr(H + W - 2, W - 1)
 #include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1000000007, N = 100001;
+const int MOD = 1000000007, N = 200001;
 
 int add(int x, int y)
 {
@@ -77,20 +78,20 @@ int main()
     init();
     int H, W, A, B;
     cin >> H >> W >> A >> B;
-    int res = ncr(H + W - 2, W - 1);
-    int del = 0;
+    int res = 0;
 
-    for (int c = 1; c <= B; c++)
+    for (int r = 0; r < H - A; r++)
     {
-        // number of rows to reach start = H - A + 1
-        // number of columns to reach start = c
-        int w1 = ncr(H - A + 1 + c - 2, c - 1);
+        // number of rows to reach start = B
+        // number of columns to reach start = r + 1
+        int w1 = ncr(B + r - 1, r);
 
-        // number of rows to reach end = A
-        // number of columns to reach end = W - c + 1
-        int w2 = ncr(A + W - c - 1, W - c);
-        del = add(del, mul(w1, w2));
+        // number of rows to reach end = H - r
+        // number of columns to reach end = W - B
+        int w2 = ncr(H - r + W - B - 2, H - r - 1);
+        res = add(res, mul(w1, w2));
     }
-    cout << res - del << "\n";
+    cout << res << "\n";
     return 0;
 }
+
