@@ -74,8 +74,23 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    init();
     int H, W, A, B;
     cin >> H >> W >> A >> B;
-    cout << mul(fact[H + W - 2], mul(invfact[H - 1], invfact[W - 1])) << "\n";
+    int res = ncr(H + W - 2, W - 1);
+    int del = 0;
+
+    for (int c = 1; c <= B; c++)
+    {
+        // number of rows to reach start = H - A + 1
+        // number of columns to reach start = c
+        int w1 = ncr(H - A + 1 + c - 2, c - 1);
+
+        // number of rows to reach end = A
+        // number of columns to reach end = W - c + 1
+        int w2 = ncr(A + W - c - 1, W - c);
+        del = add(del, mul(w1, w2));
+    }
+    cout << res - del << "\n";
     return 0;
 }
