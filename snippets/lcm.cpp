@@ -1,8 +1,18 @@
-#include <bits/stdc++.h>
-using namespace std;
+// Finding LCM of all elements of array using prime factorisation
+// LCM(arr[0], arr[1], arr[2],......, arr[n-1])
+// LCM can be very big
 
-typedef long long ll;
-#define pb push_back
+// Example
+// arr = {2, 3, 4};
+// 2 -> 2
+// 3 -> 3
+// 4 -> 2 x 2
+
+// LCM = 12
+// 12 -> 2 x 2 x 3 -> 2^2 x 3^1
+
+#include<bits/stdc++.h>
+using namespace std;
 
 const int MOD = 1000000007;
 
@@ -54,11 +64,7 @@ void factor(unordered_map<int, int> &PRIME, int num)
         PRIME[f.first] = max(PRIME[f.first], f.second);
 }
 
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
+int main() {
     int n;
     cin >> n;
     vector<int> arr(n);
@@ -73,9 +79,5 @@ int main()
     int lcm = 1;
     for (auto p : PRIME)
         lcm = mul(lcm, power(p.first, p.second, MOD));
-    int res = 0;
-    for (int num : arr)
-        res = add(res, mul(lcm, power(num, MOD - 2, MOD)));
-    cout << res << "\n";
     return 0;
 }
