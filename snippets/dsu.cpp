@@ -21,7 +21,7 @@ void dsunion(vector<int> &parent, vector<int> &size, int x, int y)
         return;
 
     // by size
-    if (size[ry] < size[ry])
+    if (size[rx] < size[ry])
         swap(rx, ry);
     size[rx] += size[ry];
     parent[ry] = parent[rx];
