@@ -4,19 +4,19 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 1e6 + 5;
+const int N = 5e5 + 1;
 vector<ll> parent(N), color(N);
 
 ll root(ll x)
 {
     if (x == parent[x])
         return x;
-    return root(parent[x]);
+    return root(parent[parent[x]]);
 }
 
 void dsunion(ll x, ll y)
 {
-    ll rx = root(parent[x]), ry = root(parent[y]);
+    ll rx = root(x), ry = root(y);
     if (rx == ry)
         return;
 
@@ -70,9 +70,7 @@ int main()
             color[i] = 0;
         }
         while (q-- > 0)
-        {
             solve();
-        }
     }
     return 0;
 }
