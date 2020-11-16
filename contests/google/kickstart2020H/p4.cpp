@@ -4,14 +4,14 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-int bfs(vector<vector<int>> &g, int a, int b)
+int bfs(vector<vector<int>> &g, vector<string> &S, int a, int b)
 {
-    if (a == b)
-        return 0;
-    int chain = 1;
+    unordered_set<int> target(S[b].begin(), S[b].end());
+    vector<bool> vis(26);
     queue<int> que;
-    vector<bool> vis(g.size());
-    que.push(a);
+    for (char ch : S[a])
+        que.push(ch - 'A');
+    int dis = 0;
     while (!que.empty())
     {
         int len = que.size();
@@ -19,19 +19,19 @@ int bfs(vector<vector<int>> &g, int a, int b)
         {
             int cur = que.front();
             que.pop();
-            if (cur == b)
-                return chain;
+            if (target.count(cur + 'A'))
+                return dis + 2;
             if (vis[cur])
                 continue;
             vis[cur] = true;
-            for (int adj : g[cur])
+            for (int j = 0; j < 26; j++)
             {
-                if (vis[adj])
+                if (g[cur][j] == 0 || vis[j])
                     continue;
-                que.push(adj);
+                que.push(j);
             }
         }
-        chain++;
+        dis++;
     }
     return -1;
 }
@@ -46,39 +46,24 @@ int main()
     for (int ti = 1; ti <= t; ti++)
     {
         int n, q;
-        string s;
         cin >> n >> q;
-        vector<vector<int>> MAP(26);
+        vector<vector<int>> g(26, vector<int>(26));
         vector<string> S(n + 1);
+
+        // create an adjacency matrix from the strings
         for (int i = 1; i <= n; i++)
         {
             cin >> S[i];
-            unordered_set<char> SET(S[i].begin(), S[i].end());
-            for (char x : SET)
-                MAP[x - 'A'].pb(i);
+            for (char c1 : S[i])
+                for (char c2 : S[i])
+                    g[c1 - 'A'][c2 - 'A'] = g[c2 - 'A'][c1 - 'A'] = 1;
         }
-        vector<vector<int>> g(n + 1);
-        for (int i = 1; i <= n; i++)
-        {
-            unordered_set<int> SET;
-            for (char ch : S[i])
-                for (int adj : MAP[ch - 'A'])
-                    SET.insert(adj);
-            for (int x : SET)
-                g[i].pb(x);
-        }
-        map<pair<int, int>, int> store;
         cout << "Case #" << ti << ": ";
         while (q-- > 0)
         {
             int a, b;
             cin >> a >> b;
-            if (store[{a, b}] == 0 && store[{b, a}] == 0)
-            {
-                store[{a, b}] = bfs(g, a, b);
-                store[{b, a}] = store[{a, b}];
-            }
-            cout << store[{a, b}] << " ";
+            cout << bfs(g, S, a, b) << " ";
         }
         cout << "\n";
     }

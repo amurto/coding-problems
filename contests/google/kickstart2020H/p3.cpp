@@ -14,29 +14,22 @@ int main()
     for (int ti = 1; ti <= t; ti++)
     {
         int n;
+        ll moves = 0;
         cin >> n;
-        int minx = 0, maxx = 0, miny = 0, maxy = 0;
-        vector<pair<int, int>> p(n);
+        int mid = (n + 1) / 2 - 1;
+        vector<ll> x(n), y(n);
         for (int i = 0; i < n; i++)
-        {
-            cin >> p[i].first >> p[i].second;
-            minx = min(minx, p[i].first);
-            maxx = max(maxx, p[i].first);
-            miny = min(miny, p[i].second);
-            maxy = max(maxy, p[i].second);
-        }
-        int row = miny, rc= 0;
-        for (int i = miny; i <= maxy; i++)
-        {
-            int cnt=0;
-            for (pair<int, int> po: p)
-                if (po.second == i)
-                    cnt++;
-            if (cnt >= rc)
-                row = i;
-        }
-        
-        cout << row << "\n";
+            cin >> x[i] >> y[i];
+        sort(x.begin(), x.end());
+        sort(y.begin(), y.end());
+        for (ll yv : y)
+            moves += abs(yv - y[mid]);
+        for (int i = 0; i < n; i++)
+            x[i] -= i;
+        for (ll xv : x)
+            moves += abs(xv - x[mid]);
+
+        cout << "Case #" << ti << ": " << moves << "\n";
     }
     return 0;
 }
