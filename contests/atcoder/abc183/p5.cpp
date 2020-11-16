@@ -14,6 +14,7 @@ int add(int x, int y)
         x += MOD;
     return x;
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -49,6 +50,12 @@ int main()
             col[i][j] = add(col[i][j], dp[i][j]);
             diag[i][j] = add(diag[i][j], dp[i][j]);
         }
+    }
+    for (int i = 0; i < h; i++)
+    {
+        for (int j = 0; j < w; j++)
+            cout << col[i][j] << " ";
+        cout << "\n";
     }
     cout << dp[0][0] << "\n";
     return 0;
