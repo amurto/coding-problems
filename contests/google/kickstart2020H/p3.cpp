@@ -16,7 +16,7 @@ int main()
         int n;
         ll moves = 0;
         cin >> n;
-        int mid = (n + 1) / 2 - 1;
+        int mid = (n - 1) / 2;
         vector<ll> x(n), y(n);
         for (int i = 0; i < n; i++)
             cin >> x[i] >> y[i];
@@ -26,9 +26,9 @@ int main()
             moves += abs(yv - y[mid]);
         for (int i = 0; i < n; i++)
             x[i] -= i;
+        sort(x.begin(), x.end());
         for (ll xv : x)
             moves += abs(xv - x[mid]);
-
         cout << "Case #" << ti << ": " << moves << "\n";
     }
     return 0;
