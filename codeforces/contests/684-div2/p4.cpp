@@ -4,6 +4,13 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+char XOR(char x)
+{
+    if (x == '0')
+        return '1';
+    return '0';
+}
+
 int solve(vector<vector<char>> &mat, vector<pair<int, int>> &moves, int i, int j)
 {
     int op = 0;
@@ -19,7 +26,7 @@ int solve(vector<vector<char>> &mat, vector<pair<int, int>> &moves, int i, int j
         int one = store[1].size();
         if (one == 4)
         {
-            for (int c=0; c<3; c++)
+            for (int c = 0; c < 3; c++)
             {
                 moves.pb(store[1].front());
                 store[0].push(store[1].front());
@@ -85,15 +92,99 @@ int main()
             for (int j = 0; j < m; j++)
                 cin >> mat[i][j];
         int res = 0;
-        // every 2x2 cell
+
+        if (n % 2 == 1 && m % 2 == 1)
+        {
+            for (int i = n - 1; i >= 0; i--)
+            {
+                if (mat[i][m - 1] == '0')
+                    continue;
+                moves.pb({i, m - 1});
+                mat[i][m - 1] = '0';
+                moves.pb({i, m - 2});
+                mat[i][m - 2] = XOR(mat[i][m - 2]);
+                if (i == 0)
+                {
+                    moves.pb({i + 1, m - 2});
+                    mat[i + 1][m - 2] = XOR(mat[i + 1][m - 2]);
+                }
+                else
+                {
+                    moves.pb({i - 1, m - 2});
+                    mat[i - 1][m - 2] = XOR(mat[i - 1][m - 2]);
+                }
+                res++;
+            }
+            for (int j = m - 2; j >= 0; j--)
+            {
+                if (mat[n - 1][j] == '0')
+                    continue;
+                moves.pb({n - 1, j});
+                mat[n - 1][j] = '0';
+                moves.pb({n - 2, j});
+                mat[n - 2][j] = XOR(mat[n - 2][j]);
+                if (j == 0)
+                {
+                    moves.pb({n - 2, j + 1});
+                    mat[n - 2][j + 1] = XOR(mat[n - 2][j + 1]);
+                }
+                else
+                {
+                    moves.pb({n - 2, j - 1});
+                    mat[n - 2][j - 1] = XOR(mat[n - 2][j - 1]);
+                }
+                res++;
+            }
+        }
+        else if (n % 2 == 1)
+        {
+            for (int j = m - 1; j >= 0; j--)
+            {
+                if (mat[n - 1][j] == '0')
+                    continue;
+                moves.pb({n - 1, j});
+                mat[n - 1][j] = '0';
+                moves.pb({n - 2, j});
+                mat[n - 2][j] = XOR(mat[n - 2][j]);
+                if (j == 0)
+                {
+                    moves.pb({n - 2, j + 1});
+                    mat[n - 2][j + 1] = XOR(mat[n - 2][j + 1]);
+                }
+                else
+                {
+                    moves.pb({n - 2, j - 1});
+                    mat[n - 2][j - 1] = XOR(mat[n - 2][j - 1]);
+                }
+                res++;
+            }
+        }
+        else if (m % 2 == 1)
+        {
+            for (int i = n - 1; i >= 0; i--)
+            {
+                if (mat[i][m - 1] == '0')
+                    continue;
+                moves.pb({i, m - 1});
+                mat[i][m - 1] = '0';
+                moves.pb({i, m - 2});
+                mat[i][m - 2] = XOR(mat[i][m - 2]);
+                if (i == 0)
+                {
+                    moves.pb({i + 1, m - 2});
+                    mat[i + 1][m - 2] = XOR(mat[i + 1][m - 2]);
+                }
+                else
+                {
+                    moves.pb({i - 1, m - 2});
+                    mat[i - 1][m - 2] = XOR(mat[i - 1][m - 2]);
+                }
+                res++;
+            }
+        }
         for (int i = 0; i < n - 1; i += 2)
             for (int j = 0; j < m - 1; j += 2)
                 res += solve(mat, moves, i, j);
-        for (int i = 0; i < n - 1; i += 2)
-            res += solve(mat, moves, i, m - 2);
-        for (int j = 0; j < m - 1; j += 2)
-            res += solve(mat, moves, n - 2, j);
-        res += solve(mat, moves, n - 2, m - 2);
         cout << res << "\n";
         for (int i = 0; i < moves.size(); i += 3)
         {
