@@ -1,9 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
-#define pb push_back
-
 int minOperations(vector<int> &nums, int x)
 {
     int n = nums.size(), sum=0, L=INT_MAX, R=INT_MAX;

@@ -1,9 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
-#define pb push_back
-
 bool closeStrings(string word1, string word2)
 {
     int n = word1.length(), m = word2.length();
