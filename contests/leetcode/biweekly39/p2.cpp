@@ -6,40 +6,36 @@ typedef long long ll;
 
 int minimumDeletions(string s)
 {
-    int ac = 0, bc = 0, da = 0, db = 0;
-    for (char ch : s)
-        if (ch == 'a')
-            ac++;
-        else
-            bc++;
-    if (ac == 0 || bc == 0)
+    int i = 0, j = s.length() - 1, a = 0, b = 0;
+    while (i < s.length() && s[i] == 'a')
+        i++;
+    // i -> rightmost 'b'
+    while (j >= 0 && s[j] == 'b')
+        j--;
+    // j -> leftmost 'a'
+    if (j < i)
         return 0;
-    int i = 0, j = s.length() - 1;
-    while (s[i] == 'b')
-    {
-        db++;
-        i++;
-    }
-    while (s[i] == 'a')
-        i++;
-    while (s[j] == 'a')
-    {
-        da++;
-        j--;
-    }
-    while (s[j] == 'b')
-        j--;
-
-    int cnta = 0, cntb = 0;
+    for (int k = i; k <= j; k++)
+        if (s[k] == 'a')
+            a++;
+        else 
+            b++;
+    int res = min(a,b), cb=0;
     while (i <= j)
     {
-        if (s[i] == 'a')
-            cnta++;
-        else
-            cntb++;
-        i++;
+        while (i <= j && s[i] == 'b')
+        {
+            cb++;
+            i++;
+        }
+        while (i <= j && s[i] == 'a')
+        {
+            a--;
+            i++;
+        }
+        res = min(res, cb + a);
     }
-    return min({ac, bc, da + cnta, db + cntb});
+    return res;
 }
 
 int main()
