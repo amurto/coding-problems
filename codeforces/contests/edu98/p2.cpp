@@ -14,27 +14,21 @@ int main()
     while (t-- > 0)
     {
         int n;
-        ll MAX = 0, MIN = INT_MAX;
+        ll MAX = 0, sum = 0;
         cin >> n;
         vector<ll> arr(n);
         for (int i = 0; i < n; i++)
         {
             cin >> arr[i];
             MAX = max(MAX, arr[i]);
-            MIN = min(MIN, arr[i]);
+            sum += arr[i];
         }
-        sort(arr.begin(), arr.end());
-        if (MIN == 0)
-        {
-            ll ans = 0;
-            for (int i = 1; i < n; i++)
-                ans += MAX - arr[i];
-            cout << ans << "\n";
-        }
-        else
-        {
-            cout << "tbd\n";
-        }
+        ll target = sum;
+        if (sum < MAX * (n - 1))
+            target = MAX * (n - 1);
+        if (target % (n - 1) != 0)
+            target -= target % (n - 1) + n - 1;
+        cout << target - sum << "\n";
     }
     return 0;
 }
