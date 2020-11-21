@@ -43,7 +43,7 @@ int main()
             {
                 int i = from.second.first + di[dir], j = from.second.second + dj[dir];
                 if (i >= 0 && i < n && j >= 0 && j < m && !vis[i][j])
-                    pq.push({(grid[from.second.first][from.second.second] ^ grid[i][j] + 1)/2, {i, j}});
+                    pq.push({grid[from.second.first][from.second.second] ^ grid[i][j], {i, j}});
             }
         }
         cout << cost << "\n";
