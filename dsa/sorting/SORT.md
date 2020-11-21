@@ -1,4 +1,5 @@
 # Sorting
+
 https://leetcode.com/problems/sort-an-array/
 
 ## Table of Contents
@@ -17,6 +18,7 @@ https://leetcode.com/problems/sort-an-array/
 - [Count Sort](#count-sort)
 - [Radix Sort](#radix-sort)
 - [Pairs with given sum](#pair-sum)
+- [Search a 2D Matrix II](#search-a-2d-matrix-ii)
 
 <div id="sort01s">
 
@@ -380,6 +382,7 @@ int findMin(vector<int> &nums)
 <div id="count-sort">
 
 ## Count Sort
+
 ```cpp
 vector<int> countsort(vector<int> &nums)
 {
@@ -392,7 +395,7 @@ vector<int> countsort(vector<int> &nums)
         MIN = min(MIN, val);
         MAX = max(MAX, val);
     }
-    
+
     // Make Map of range Min to Max
     vector<int> MAP(MAX - MIN + 1, 0);
 
@@ -411,11 +414,13 @@ vector<int> countsort(vector<int> &nums)
     return ans;
 }
 ```
+
 </div>
 
 <div id="radix-sort">
 
 ## Radix Sort
+
 ```cpp
 // Sorts all integers including negative integers
 void countsort(vector<int> &nums, int place)
@@ -459,7 +464,7 @@ void radixsort(vector<int> &nums)
     int MAX = INT_MIN;
     for (int val : nums)
         MAX = max(MAX, abs(val));
-    
+
     // Place iterates from 1 to the largest place possible
     // if MAX is a 4 digit number
     // ddd_
@@ -472,12 +477,15 @@ void radixsort(vector<int> &nums)
         countsort(nums, place);
 }
 ```
+
 </div>
 
 <div id="pair-sum">
 
 ## Count Pairs with given sum
+
 https://practice.geeksforgeeks.org/problems/count-pairs-with-given-sum/0
+
 ```cpp
 // Using Map to store frequency
 int getPairsCount(vector<int> nums, int sum)
@@ -522,4 +530,30 @@ int getPairsCountSort(vector<int> nums, int sum)
     return pairs;
 }
 ```
+
+</div>
+
+<div id="search-a-2d-matrix-ii">
+
+## Search a 2D Matrix II
+
+https://leetcode.com/problems/search-a-2d-matrix-ii/
+
+```cpp
+bool searchMatrix(vector<vector<int>> &matrix, int target)
+{
+    if (matrix.size() == 0)
+        return false;
+    int n = matrix.size(), m = matrix[0].size(), i = 0, j = m - 1;
+    while (i >= 0 && i < n && j >= 0 && j < m && matrix[i][j] != target)
+        if (target < matrix[i][j])
+            j--;
+        else
+            i++;
+    if (i < 0 || i >= n || j < 0 || j >= m || matrix[i][j] != target)
+        return false;
+    return true;
+}
+```
+
 </div>
