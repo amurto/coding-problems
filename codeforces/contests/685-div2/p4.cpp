@@ -13,18 +13,19 @@ int main()
     cin >> t;
     while (t-- > 0)
     {
-        ll d, k;
+        ll d, k, m = 0;
         cin >> d >> k;
-        ll m = 0, p = 0;
-        while (m<= 2*d)
+        string winner = "Ashish";
+        // both players move to (m, m) after which (m+k, m) or (m+k, m+k) is invalid
+        // winner is first player if (m+k, m) and (m, m+k) are valid
+        // winner is second player if (m+k, m) and (m, m+k) are invalid
+        while (2 * m * m <= d * d)
         {
+            if ((m + k) * (m + k) + m * m > d * d)
+                winner = "Utkarsh";
             m += k;
-            p = p ^ 1;
         }
-        if (p == 0)
-            cout << "Ashish\n";
-        else
-            cout << "Utkarsh\n";
+        cout << winner << "\n";
     }
     return 0;
 }
