@@ -32,8 +32,7 @@ int main()
         cout << sum << "\n";
         for (int i = 1; i < m; i++)
             cout << i << " " << i + 1 << "\n";
-        cout << m << " "
-             << "1\n";
+        cout << m << " 1\n";
     }
     return 0;
 }
