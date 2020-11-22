@@ -18,16 +18,16 @@ int waysToMakeFair(vector<int> &nums)
         if (i + 1 < n)
         {
             if (i % 2 == 0)
-                ne += suf[i+1];
+                ne += suf[i + 1];
             else
-                no += suf[i+1];
+                no += suf[i + 1];
         }
         if (i + 2 < n)
         {
             if (i % 2 == 1)
-                ne += suf[i+2];
+                ne += suf[i + 2];
             else
-                no += suf[i+2];
+                no += suf[i + 2];
         }
         if (ne == no)
             ways++;
