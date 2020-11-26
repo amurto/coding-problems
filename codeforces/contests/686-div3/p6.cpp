@@ -8,38 +8,81 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<int> arr(n), pre(n), suf(n);
+    vector<int> arr(n), pre(n), suf(n), Lmin(n), Rmin(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
     pre[0] = arr[0];
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i < n; i++)
         pre[i] = max(pre[i - 1], arr[i]);
     suf[n - 1] = arr[n - 1];
     for (int i = n - 2; i >= 0; i--)
         suf[i] = max(suf[i + 1], arr[i]);
-    int L = 0, R = n - 1;
-    multiset<int> MIN;
-    for (int i = L + 1; i < R; i++)
-        MIN.insert(arr[i]);
-    while (L < R - 1 && pre[L] != *MIN.begin() && pre[L] != suf[R])
+
+    stack<int> st;
+
+    // [Lmin[i] ... Rmin[i]] is range for which arr[i] is minimum
+    for (int i = 0; i < n; i++)
     {
-        if (pre[L] < suf[R]) {
-            L++;
-            MIN.erase(arr[L]);
-        } else if (pre[L] > suf[R]) {
-            R--;
-            MIN.erase(arr[R]);
-        } else {
-            
-        }
+        while (!st.empty() && arr[i] <= arr[st.top()])
+            st.pop();
+        if (st.empty())
+            Lmin[i] = 0;
+        else
+            Lmin[i] = st.top() + 1;
+        st.push(i);
     }
-    if (L >= R - 1)
+    while (!st.empty())
+        st.pop();
+    for (int i = n - 1; i >= 0; i--)
     {
-        cout << "NO\n";
+        while (!st.empty() && arr[i] <= arr[st.top()])
+            st.pop();
+        if (st.empty())
+            Rmin[i] = n - 1;
+        else
+            Rmin[i] = st.top() - 1;
+        st.push(i);
+    }
+    for (int i = 0; i < n - 1; i++)
+    {
+        int L = -1, R = -1;
+        // binary search for left and right boundaries
+
+        int low = Lmin[i] - 1, high = i - 1;
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+            if (pre[mid] == arr[i])
+            {
+                L = mid;
+                low = mid + 1;
+            }
+            else if (pre[mid] > arr[i])
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        low = i + 1, high = Rmin[i] + 1;
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+            if (suf[mid] == arr[i])
+            {
+                R = mid;
+                high = mid - 1;
+            }
+            else if (suf[mid] > arr[i])
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        if (L == -1 || R == -1)
+            continue;
+        cout << "YES\n";
+        cout << L + 1 << " " << R - L - 1 << " " << n - R << "\n";
         return;
     }
-    cout << "YES\n";
-    cout << L + 1 << " " << R - L << n - R << "\n";
+    cout << "NO\n";
 }
 int main()
 {
