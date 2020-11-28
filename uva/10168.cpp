@@ -24,47 +24,40 @@ void sieve()
     }
 }
 
-pair<int, int> solve(int n)
+void goldbach(int n)
 {
-    for (int L = 2, R = n - 2; L <= R; L++, R--)
-        if (P[L] && P[R])
-            return {L, R};
-    return {-1, -1};
+    for (int i = 2;; i++)
+        if (P[i] && P[n - i])
+        {
+            cout << i << " " << n - i << "\n";
+            return;
+        }
 }
 int main()
 {
-    // ios_base::sync_with_stdio(false);
-    // cin.tie(0);
-    // cout.tie(0);
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
     sieve();
     int n;
     while (cin >> n)
     {
-        vector<pair<int, int>> res;
+        if (n < 8)
+        {
+            cout << "Impossible.\n";
+            continue;
+        }
         if (n % 2 == 1)
         {
-            if (n < 9)
-            {
-                cout << "Impossible\n";
-                continue;
-            }
             n -= 5;
-            res.pb({2, 3});
+            cout << 2 << " " << 3 << " ";
         }
         else
         {
-            if (n < 8)
-            {
-                cout << "Impossible\n";
-                continue;
-            }
             n -= 4;
-            res.pb({2, 2});
+            cout << 2 << " " << 2 << " ";
         }
-        res.pb(solve(n));
-        for (pair<int, int> p : res)
-            cout << p.first << " " << p.second << " ";
-        cout << "\n";
+        goldbach(n);
     }
     return 0;
 }
