@@ -14,16 +14,6 @@ int main()
     cout.tie(0);
     int a, b;
     while (cin >> a >> b)
-    {
-        int res = 0;
-        for (int i = 1; i <= max(a, b); i <<= 1)
-        {
-            if ((a & i) && (b & i))
-                continue;
-            if ((a & i) || (b & i))
-                res |= i;
-        }
-        cout << res << "\n";
-    }
+        cout << (a ^ b) << "\n";
     return 0;
 }

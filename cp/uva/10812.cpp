@@ -1,3 +1,6 @@
+// https://onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=1753
+// 10812 - Beat the Spread!
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -15,16 +18,12 @@ int main()
     {
         int sum, diff;
         cin >> sum >> diff;
-        if (diff > sum - 2)
-        {
-            cout << "Impossible\n";
-            continue;
-        }
-        int low = 1, high = sum - 1;
-        while (low <= high) {
-            int mid = (low + high)/2;
-            if (mid + sum-mid )
-        }
+        int a = (sum + diff) / 2;
+        int b = sum - a;
+        if (a >= 0 && b >= 0 && max(a, b) - min(a, b) == diff)
+            cout << a << " " << b << "\n";
+        else
+            cout << "impossible\n";
     }
     return 0;
 }
