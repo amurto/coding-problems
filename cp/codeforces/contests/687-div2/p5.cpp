@@ -11,27 +11,21 @@ int main()
     cout.tie(0);
     int n, k;
     cin >> n >> k;
-    vector<int> arr(n);
+    vector<ll> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
-    sort(arr.begin(), arr.end());
-    for (int v: arr)
-        cout << v << " ";
-    cout << "\n";
-    int sc = 0, b = 0, i;
-    for (i = n - 1; i > k - 1; i--)
+    sort(arr.begin(), arr.end(), greater<ll>());
+    ll res = 0;
+    priority_queue<ll> pq;
+    for (int i = 0; i < k + 1; i++)
+        pq.push(0);
+    for (int i = 0; i < n; i++)
     {
-        sc += b;
-        b += arr[i];
+        ll x = pq.top();
+        res += x;
+        pq.pop();
+        pq.push(x + arr[i]);
     }
-    while (i >= 0)
-    {
-        if (b < 0)
-            b = 0;
-        sc += b;
-        b += arr[i];
-        i--;
-    }
-    cout << sc << "\n";
+    cout << res << "\n";
     return 0;
 }
