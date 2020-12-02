@@ -7,26 +7,16 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool vis[1001][1001][8];
+char board[1001][1001];
+int vis[1001][1001];
 int di[8] = {0, 1, 1, 1, 0, -1, -1, -1}, dj[8] = {1, 1, 0, -1, -1, -1, 0, 1};
 
-int bfs(vector<vector<char>> &board, int n, int m)
+int bfs(int si, int sj, int n, int m)
 {
-    memset(vis, false, sizeof(vis));
+    memset(vis, 0, sizeof(vis));
     queue<pair<int, int>> q;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            if (board[i][j] == 'S')
-            {
-                q.push({i, j});
-                for (int k = 0; k < 8; k++)
-                    vis[i][j][k] = true;
-                break;
-            }
-        }
-    }
+    vis[si][sj] = 256;
+    q.push({si, sj});
     int d = 1;
     while (!q.empty())
     {
@@ -37,16 +27,17 @@ int bfs(vector<vector<char>> &board, int n, int m)
             q.pop();
             for (int dir = 0; dir < 8; dir++)
             {
-                int nr = r + di[dir];
-                int nc = c + dj[dir];
-                while (nr >= 0 && nr < n && nc >= 0 && nc < m && board[nr][nc] != 'X' && !vis[nr][nc][dir])
+                int nr = r + di[dir], nc = c + dj[dir], mask = 1 << dir;
+                while (nr >= 0 && nr < n && nc >= 0 && nc < m && board[nr][nc] != 'X' && !(vis[nr][nc] & mask))
                 {
                     if (board[nr][nc] == 'F')
-                    {
                         return d;
-                    }
-                    vis[nr][nc][dir] = true;
-                    q.push({nr, nc});
+
+                    // main optimization
+                    // if cell was visited by some direction earlier, dont push to queue
+                    if (vis[nr][nc] == 0)
+                        q.push({nr, nc});
+                    vis[nr][nc] |= mask;
                     nr += di[dir];
                     nc += dj[dir];
                 }
@@ -66,13 +57,21 @@ int main()
     cin >> t;
     while (t-- > 0)
     {
-        int n, m;
+        int n, m, si = 0, sj = 0;
         cin >> n >> m;
-        vector<vector<char>> board(n, vector<char>(m));
         for (int i = 0; i < n; i++)
+        {
             for (int j = 0; j < m; j++)
+            {
                 cin >> board[i][j];
-        cout << bfs(board, n, m) << "\n";
+                if (board[i][j] == 'S')
+                {
+                    si = i;
+                    sj = j;
+                }
+            }
+        }
+        cout << bfs(si, sj, n, m) << "\n";
     }
     return 0;
 }
