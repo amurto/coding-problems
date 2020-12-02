@@ -1,3 +1,5 @@
+// N-queen
+
 #include <bits/stdc++.h>
 using namespace std;
 
