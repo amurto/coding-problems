@@ -9,67 +9,72 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    int N = 10;
     int t;
     cin >> t;
     while (t-- > 0)
     {
-        int n, cur;
-        char c;
+        int n, e;
+        char ch;
         cin >> n;
-        vector<vector<int>> mat(n, vector<int>(n));
-        vector<int> T(10, -1), B(10, -1), L(10, -1), R(10, -1);
-        vector<vector<int>> tt(10, vector<int>(n, -1)), bb(10, vector<int>(n, -1)), le(10, vector<int>(n, -1)), rr(10, vector<int>(n, -1));
+        vector<vector<int>> grid(n, vector<int>(n));
+        vector<int> top(N, -1), left(N, -1), bottom(N, -1), right(N, -1), cnt(N), res(N);
+        int st[n][4][N];
+        memset(st, -1, sizeof(st));
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                cin >> c;
-                cur = c - '0';
-                mat[i][j] = cur;
-                if (T[cur] == -1)
-                    T[cur] = i;
-                if (B[cur] == -1)
-                    B[cur] = i;
+                cin >> ch;
+                e = ch - '0';
+                cnt[e]++;
+                if (top[e] == -1)
+                    top[e] = i;
+                bottom[e] = max(bottom[e], i);
+                if (left[e] == -1)
+                    left[e] = j;
                 else
-                    B[cur] = max(B[cur], i);
-                if (L[cur] == -1)
-                    L[cur] = j;
+                    left[e] = min(left[e], j);
+                if (right[e] == -1)
+                    right[e] = j;
                 else
-                    L[cur] = min(L[cur], j);
-                if (R[cur] == -1)
-                    R[cur] = j;
-                else
-                    R[cur] = max(R[cur], j);
-
-                if (tt[cur][j] == -1)
-                    tt[cur][j] = i;
-                if (le[cur][i] == -1)
-                    le[cur][i] = j;
-                bb[cur][j] = max(bb[cur][j], i);
-                rr[cur][i] = max(rr[cur][i], j);
+                    right[e] = max(right[e], j);
+                if (st[j][0][e] == -1)
+                    st[j][0][e] = i;
+                if (st[i][1][e] == -1)
+                    st[i][1][e] = j;
+                st[j][2][e] = i;
+                st[i][3][e] = j;
             }
         }
-        vector<int> res(10);
-        for (int i = 0; i < n; i++)
+        for (int d = 0; d < N; d++)
         {
-            for (int d = 0; d <= 9; d++)
+            if (cnt[d] == 0)
+                continue;
+            int a = 0;
+            for (int i = 0; i < n; i++)
             {
-                if (tt[d][i] > -1)
+                // ith row
+                if (st[i][3][d] != -1)
                 {
-                    res[d] = max(res[d], abs(bb[d][i] - tt[d][i]) * max(i - 0, n - i - 1));
-                    res[d] = max(res[d], max(abs(n - 1 - tt[d][i]), abs(tt[d][i] - 0)) * max(L[d], R[d]));
-                    res[d] = max(res[d], max(abs(n - 1 - bb[d][i]), abs(bb[d][i] - 0)) * max(L[d], R[d]));
+                    int c1 = abs(st[i][3][d] - st[i][1][d]) * max(i, n - i - 1);
+                    int c2 = max(n - st[i][1][d] - 1, st[i][3][d]) * abs(top[d] - i);
+                    int c3 = max(n - st[i][1][d] - 1, st[i][3][d]) * abs(bottom[d] - i);
+                    a = max({a, c1, c2, c3});
                 }
-                if (le[d][i] > -1)
+                // ith column
+                if (st[i][2][d] != -1)
                 {
-                    res[d] = max(res[d], abs(rr[d][i] - le[d][i]) * max(i - 0, n - i - 1));
-                    res[d] = max(res[d], max(abs(n - 1 - le[d][i]), abs(le[d][i] - 0)) * max(T[d], B[d]));
-                    res[d] = max(res[d], max(abs(n - 1 - rr[d][i]), abs(rr[d][i] - 0)) * max(T[d], B[d]));
+                    int c4 = abs(st[i][2][d] - st[i][0][d]) * max(i, n - i - 1);
+                    int c5 = max(n - st[i][0][d] - 1, st[i][2][d]) * abs(left[d] - i);
+                    int c6 = max(n - st[i][0][d] - 1, st[i][2][d]) * abs(right[d] - i);
+                    a = max({a, c4, c5, c6});
                 }
             }
+            res[d] = a;
         }
-        for (int d : res)
-            cout << d << " ";
+        for (int i = 0; i < N; i++)
+            cout << res[i] << " ";
         cout << "\n";
     }
     return 0;

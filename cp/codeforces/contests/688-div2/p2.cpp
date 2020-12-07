@@ -4,13 +4,14 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-ll op(vector<ll> &arr, ll target, int itr)
+ll op(vector<ll> &arr)
 {
     ll m = 0;
-    for (int i = itr; i < arr.size(); i++)
+    for (int i = 1; i < arr.size(); i++)
         m += abs(arr[i] - arr[i - 1]);
     return m;
 }
+
 ll solve()
 {
     int n;
@@ -23,24 +24,10 @@ ll solve()
         itr++;
     if (n == 2 || itr == n)
         return 0;
-    ll d = -1, idx = 0;
-    for (int i = 1; i < n; i++)
-    {
-        if (abs(arr[i] - arr[i - 1]) > d)
-        {
-            d = abs(arr[i] - arr[i]);
-            idx = i;
-        }
-    }
-    ll m = op(arr, arr[1], 1);
-    ll temp = arr[idx];
-    arr[idx] = arr[idx - 1];
-    m = min(m, op(arr, arr[0], 1));
-    arr[idx] = temp;
-    temp = arr[idx - 1];
-    arr[idx - 1] = arr[idx];
-    m = min(m, op(arr, arr[0], 1));
-    return m;
+    ll m = op(arr), rem = max(abs(arr[1] - arr[0]), abs(arr[n - 1] - arr[n - 2]));
+    for (int i = 1; i < n - 1; i++)
+        rem = max(rem, abs(arr[i] - arr[i - 1]) + abs(arr[i + 1] - arr[i]) - abs(arr[i + 1] - arr[i - 1]));
+    return m - rem;
 }
 
 int main()
