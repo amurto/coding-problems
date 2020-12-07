@@ -1,10 +1,5 @@
 ﻿## Coding Problems
 
-```
-practice 
-c1 - 5
-```
-
 ```java
 import java.util.*;
 import java.io.*;
