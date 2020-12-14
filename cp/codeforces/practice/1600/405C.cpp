@@ -14,31 +14,13 @@ int main()
     cout.tie(0);
     int n, q, type, x;
     cin >> n;
-    vector<vector<int>> A(n, vector<int>(n)), P(n, vector<int>(n));
+    int A[n][n];
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             cin >> A[i][j];
-    vector<int> rf(n), cf(n);
-    int dp[n][n][2][2], sum = 0;
+    int sum = 0;
     for (int i = 0; i < n; i++)
-    {
-        dp[i][i][0][0] = dp[i][i][0][1] = dp[i][i][1][0] = dp[i][i][1][1] = 0;
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dp[i][i][0][0] += (A[i][j] * A[j][i]);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dp[i][i][0][1] += (A[i][j] * (A[j][i] ^ 1));
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dp[i][i][1][0] += ((A[i][j] ^ 1) * A[j][i]);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dp[i][i][1][1] += ((A[i][j] ^ 1) * (A[j][i] ^ 1));
-        P[i][i] = dp[i][i][0][0];
-        sum += P[i][i];
-    }
-    vector<int> res;
+        sum += A[i][i];
     cin >> q;
     for (int i = 0; i < q; i++)
     {
@@ -47,13 +29,9 @@ int main()
         {
             cin >> x;
             x--;
-            if (type == 1)
-                rf[x] = (rf[x] + 1) % 2;
-            else
-                cf[x] = (cf[x] + 1) % 2;
-            sum -= P[x][x];
-            P[x][x] = dp[x][x][rf[x]][cf[x]];
-            sum += P[x][x];
+            sum -= A[x][x];
+            A[x][x] ^= 1;
+            sum += A[x][x];
         }
         else
         {
