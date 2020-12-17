@@ -7,14 +7,15 @@ public class C {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
-        int t = n+1;
-        System.out.println(t*3 + 1);
-        int x = 0, y=0;
-        while (t>0) {
+        int t = n + 1;
+        System.out.println(t * 3 + 1);
+        int x = 0, y = 0;
+        while (t > 0) {
             System.out.println(x + " " + y);
-            System.out.println(x + " " + (y+1));
-            System.out.println((x+1) + " " + y);
-            x++;y++;
+            System.out.println(x + " " + (y + 1));
+            System.out.println((x + 1) + " " + y);
+            x++;
+            y++;
             t--;
         }
         System.out.println(x + " " + y);
