@@ -14,29 +14,13 @@ void solve()
     for (int i = 0; i < m; i++)
         cin >> B[i];
 
+    sort(A.begin(), A.end());
     ll g = 0;
-    for (int i = 0; i < n; i++)
-        g = __gcd(g, A[i]);
-    ll num = g;
-    unordered_map<ll, ll> F;
-    for (ll i = 2; i * i <= num; i++)
-    {
-        while (num % i == 0)
-        {
-            num /= i;
-            F[i]++;
-        }
-    }
-    if (num > 1)
-        F[num]++;
-
-    for (int i = 0; i < m; i++)
-    {
-        for (auto x: F) {
-            
-        }
-    }
-    cout << g << "\n";
+    for (int i = 1; i < n; i++)
+        g = __gcd(g, A[i] - A[i - 1]);
+    for (ll b : B)
+        cout << __gcd(A[0] + b, g) << " ";
+    cout << "\n";
 }
 
 int main()
