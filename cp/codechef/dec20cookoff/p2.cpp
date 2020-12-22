@@ -4,21 +4,20 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-void factor(unordered_map<ll, ll> &PRIME, ll num)
+ll gf(ll g, ll n)
 {
-    unordered_map<ll, ll> F;
-    for (ll i = 2; i * i <= num; i++)
+    ll ld = 1;
+    for (ll i = 2; i <= n && i * i <= g; i++)
     {
-        while (num % i == 0)
+        if (g % i == 0)
         {
-            num /= i;
-            F[i]++;
+            if (i <= n)
+                ld = max(ld, i);
+            if (g / i <= n)
+                ld = max(ld, g / i);
         }
     }
-    if (num > 1)
-        F[num]++;
-    for (auto f : F)
-        PRIME[f.first] = max(PRIME[f.first], f.second);
+    return ld;
 }
 
 int solve()
@@ -30,25 +29,12 @@ int solve()
         cin >> p[i];
     if (n == 1)
         return 0;
-    // lcm = product of (prime factor ^ maximum times it divides any arr[i])
-    unordered_map<ll, ll> PRIME;
-    for (ll num : p)
-        factor(PRIME, num);
-
-    ll lcm = 1;
-    for (auto p : PRIME)
-    {
-        ll d = p.first, times = p.second;
-        while (times-- > 0)
-        {
-            lcm *= p.first;
-        }
-    }
-    if (n == lcm)
-        return 0;
-    if (n > lcm)
-        return n - lcm;
-    return n - 1;
+    ll g = 0;
+    for (int i = 0; i < m; i++)
+        g = __gcd(g, p[i]);
+    if (g > n)
+        g = gf(g, n);
+    return n - g;
 }
 int main()
 {
