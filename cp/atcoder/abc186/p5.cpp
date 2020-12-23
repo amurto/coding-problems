@@ -4,18 +4,38 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+ll gcd(ll a, ll b, ll &x, ll &y)
+{
+    if (b == 0)
+    {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    ll x1, y1;
+    ll d = gcd(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - y1 * (a / b);
+    return d;
+}
+
 ll solve()
 {
     ll n, s, k;
     cin >> n >> s >> k;
-    if (s % __gcd(n, k) > 0)
+    ll g = __gcd(n, k);
+    s = n - s;
+    if (s % g)
         return -1;
-    ll req = -s;
-    while (req<0) 
-        req+=n;
-    while (req%k >0) 
-        req+=n;
-    return req/k;
+    n /= g;
+    k /= g;
+    s /= g;
+    ll x, y;
+    gcd(k, n, x, y);
+    x = x * s % n;
+    while (x < 0)
+        x += n;
+    return x;
 }
 
 int main()
