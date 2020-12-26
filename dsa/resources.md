@@ -6,6 +6,7 @@
 - [Bit Manipulation](#bm)
 - [Binary Search](#bs)
 - [Trees](#trees)
+- [Probability](#probability)
 
 <div id="dp">
 
@@ -42,4 +43,10 @@
 
 ## Trees
 - [LCA problems](https://codeforces.com/blog/entry/43917)
+</div>
+
+<div id="probability">
+
+## Probability
+- [Probability Course](https://www.probabilitycourse.com/)
 </div>
