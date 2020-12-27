@@ -16,26 +16,26 @@ int solve()
         if (freq[i] > 0)
             ms.insert(freq[i]);
     int res = 0;
-    while (ms.size() > 1) {
+    while (ms.size() > 1)
+    {
         int l = *ms.begin();
+        ms.erase(ms.begin());
         auto ed = ms.end();
         ed--;
         int r = *ed;
+        ms.erase(ed);
         if (r <= 1)
             break;
-        ms.erase(ms.begin());
-        ms.erase(ed);
         l--;
-        r-=2;
+        r -= 2;
         res++;
-        if (l>0)
+        if (l > 0)
             ms.insert(l);
-        if (r>0)
+        if (r > 0)
             ms.insert(r);
     }
-    auto it = ms.end();
-    it--;
-    res += (*it)/3;
+    if (ms.size() > 0)
+        res += (*ms.rbegin()) / 3;
     return res;
 }
 
