@@ -6,10 +6,16 @@ typedef long long ll;
 
 bool solve()
 {
-    string str;
-    cin >> str;
-    int n = str.length();
-    return (n % 2 == 0 && str[0] != ')' && str[n - 1] != '(');
+    int n;
+    ll x;
+    cin >> n >> x;
+    vector<ll> arr(n + 1);
+    for (int i = 1; i <= n; i++)
+        cin >> arr[i];
+    ll sum = 0;
+    for (int i = 1, j = n; i <= j; i++, j--)
+        sum += max(arr[i], arr[j]);
+    return sum >= x;
 }
 
 int main()

@@ -14,6 +14,7 @@ int op(int x, int h)
     }
     return m;
 }
+
 int main()
 {
     int t;

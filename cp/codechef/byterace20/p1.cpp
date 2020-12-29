@@ -4,14 +4,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool solve()
-{
-    string str;
-    cin >> str;
-    int n = str.length();
-    return (n % 2 == 0 && str[0] != ')' && str[n - 1] != '(');
-}
-
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -20,6 +12,10 @@ int main()
     int t;
     cin >> t;
     while (t-- > 0)
-        solve() ? cout << "YES\n" : cout << "NO\n";
+    {
+        int n, k;
+        cin >> n >> k;
+        cout << k/n << "\n";
+    }
     return 0;
 }
