@@ -12,9 +12,26 @@ bool solve()
     vector<ll> arr(n + 1);
     for (int i = 1; i <= n; i++)
         cin >> arr[i];
-    ll sum = 0;
+    priority_queue<int, vector<int>, greater<int>> pq;
+
     for (int i = 1, j = n; i <= j; i++, j--)
-        sum += max(arr[i], arr[j]);
+    {
+        pq.push(max(arr[i], arr[j]));
+        if (i < j)
+        {
+            if (min(arr[i], arr[j]) > pq.top())
+            {
+                pq.pop();
+                pq.push(min(arr[i], arr[j]));
+            }
+        }
+    }
+    ll sum = 0;
+    while (!pq.empty())
+    {
+        sum += pq.top();
+        pq.pop();
+    }
     return sum >= x;
 }
 
