@@ -34,7 +34,6 @@ int main()
         }
         while (!st.empty())
             st.pop();
-        ll sum = 0;
         for (int i = n - 1; i >= 0; i--)
         {
             while (!st.empty() && A[i] <= A[st.top()])
@@ -42,6 +41,7 @@ int main()
             R[i] = st.empty() ? n - 1 : st.top() - 1;
             st.push(i);
         }
+        ll sum = 0;
         for (int i = 0; i < n; i++)
         {
             int l = lower_bound(B.begin(), B.end(), i) - lower_bound(B.begin(), B.end(), L[i]);
