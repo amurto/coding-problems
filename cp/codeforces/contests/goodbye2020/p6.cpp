@@ -5,16 +5,14 @@ typedef long long ll;
 #define pb push_back
 
 const int N = 5e5 + 1, MOD = 1e9 + 7;
-int g[N][2], parent[N], cap[N];
-bool vis[N];
+int parent[N], cap[N];
 
-void init(int n)
+void init(int m)
 {
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= m; i++)
     {
         parent[i] = i;
-        g[i][0] = g[i][1] = cap[i] = 0;
-        vis[i] = false;
+        cap[i] = 1;
     }
 }
 
@@ -31,6 +29,8 @@ bool merge(int rx, int ry)
     ry = root(ry);
     if (rx == ry)
         return false;
+    if (cap[rx] < cap[ry])
+        swap(rx, ry);
     cap[rx] += cap[ry];
     parent[ry] = parent[rx];
     return true;
@@ -43,38 +43,17 @@ int main()
     cout.tie(0);
     int n, m, k;
     cin >> n >> m;
-    init(n);
-    for (int i = 1; i <= n; i++)
+    init(m + 1);
+    vector<int> res;
+    for (int i = 0; i < n; i++)
     {
         cin >> k;
-        for (int j = 0; j < k; j++)
-            cin >> g[i][j];
-    }
-    vector<int> res;
-    for (int i = 1; i <= n; i++)
-    {
-        if (g[i][1] == 0)
-        {
-            int rt = root(g[i][0]);
-            if (!vis[rt])
-            {
-                res.pb(i);
-                vis[rt] = true;
-            }
-        }
-        else
-        {
-            int rx = root(g[i][0]), ry = root(g[i][1]);
-            if (rx != ry)
-            {
-                if (!vis[rx] || !vis[ry])
-                {
-                    vis[rx] |= vis[ry];
-                    merge(g[i][0], g[i][1]);
-                    res.pb(i);
-                }
-            }
-        }
+        int e1 = m + 1, e2 = m + 1;
+        cin >> e1;
+        if (k > 1)
+            cin >> e2;
+        if (merge(e1, e2))
+            res.pb(i + 1);
     }
     int sz = res.size(), ans = 1;
     for (int i = 0; i < sz; i++)
