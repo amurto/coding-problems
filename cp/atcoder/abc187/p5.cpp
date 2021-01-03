@@ -55,7 +55,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n, u, v, q, t, e, root;
+    int n, u, v, q, t, e, root=1;
     ll inc;
     cin >> n;
     init(n);
@@ -65,15 +65,6 @@ int main()
         cin >> E[i].first >> E[i].second;
         g[E[i].first].pb(E[i].second);
         g[E[i].second].pb(E[i].first);
-    }
-
-    for (int i = 1; i <= n; i++)
-    {
-        if (g[i].size() == 1)
-        {
-            root = i;
-            break;
-        }
     }
     bfs(root);
     cin >> q;
@@ -90,9 +81,7 @@ int main()
             C[n2] -= inc;
         }
         else
-        {
             C[n1] += inc;
-        }
     }
     for (int i = 1; i <= n; i++)
         vis[i] = false;
