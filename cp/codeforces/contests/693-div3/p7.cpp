@@ -15,7 +15,6 @@ void clrvis(int n)
 void bfs(vector<vector<int>> &g, int n)
 {
     int dis = 1;
-    vector<bool> v(n + 1);
     queue<int> q;
     q.push(1);
     vis[1] = true;
