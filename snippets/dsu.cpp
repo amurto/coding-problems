@@ -1,22 +1,24 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void init(vector<int> &parent, int n)
+const int N = 2e5 + 1;
+int parent[N], cap[N];
+void init(int n)
 {
     for (int i = 1; i <= n; i++)
         parent[i] = i;
 }
 
-int root(vector<int> &parent, int x)
+int root(int x)
 {
     if (x == parent[x])
         return x;
-    return parent[x] = root(parent, parent[x]);
+    return parent[x] = root(parent[x]);
 }
 
-void dsunion(vector<int> &parent, vector<int> &cap, int x, int y)
+void dsunion(int x, int y)
 {
-    int rx = root(parent, x), ry = root(parent, y);
+    int rx = root(x), ry = root(y);
     if (rx == ry)
         return;
 
@@ -39,7 +41,6 @@ int main()
     int n;
     cin >> n;
     // fill cap with 0 for rank
-    vector<int> parent(n + 1), cap(n + 1, 1);
-    init(parent, n);
+    init(n);
     return 0;
 }
