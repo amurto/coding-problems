@@ -4,24 +4,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 65;
-ll dp[N][2];
-
-ll exp(vector<string> &arr, int val, int cur, int n)
-{
-    if (cur == n)
-        return val;
-    if (dp[cur][val] == -1)
-    {
-        ll res = 0;
-        if (arr[cur] == "AND")
-            res = exp(arr, val & 1, cur + 1, n) + exp(arr, val & 0, cur + 1, n);
-        else
-            res = exp(arr, val | 1, cur + 1, n) + exp(arr, val | 0, cur + 1, n);
-        dp[cur][val] = res;
-    }
-    return dp[cur][val];
-}
 ll solve()
 {
     int n;
@@ -29,8 +11,22 @@ ll solve()
     vector<string> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
-    memset(dp, -1, sizeof(dp));
-    return exp(arr, 0, 0, n) + exp(arr, 1, 0, n);
+    vector<vector<ll>> dp(n + 1, vector<ll>(2));
+    dp[n][1] = 1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        if (arr[i] == "AND")
+        {
+            dp[i][0] = dp[i + 1][0] + dp[i + 1][0];
+            dp[i][1] = dp[i + 1][0] + dp[i + 1][1];
+        }
+        else
+        {
+            dp[i][0] = dp[i + 1][0] + dp[i + 1][1];
+            dp[i][1] = dp[i + 1][1] + dp[i + 1][1];
+        }
+    }
+    return dp[0][0] + dp[0][1];
 }
 
 int main()
