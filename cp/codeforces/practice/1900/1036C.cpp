@@ -42,6 +42,7 @@ ll solve(ll n)
         num[i] = n % 10;
     return cn(0, true, 0);
 }
+
 int main()
 {
     ios_base::sync_with_stdio(false);
