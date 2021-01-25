@@ -15,15 +15,12 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-
-    int n, k, q, l, r, mn = N, mx = 0;
+    int n, k, q, l, r;
     cin >> n >> k >> q;
     vector<int> arr(n), dep(n);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i] >> dep[i];
-        mn = min(mn, arr[i]);
-        mx = max(mx, dep[i]);
         f[arr[i]]++;
         f[dep[i] + 1]--;
     }
