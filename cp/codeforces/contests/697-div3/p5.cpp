@@ -4,7 +4,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1000000007, N = 300001;
+const int MOD = 1000000007, N = 2000;
 
 int add(int x, int y)
 {
@@ -16,13 +16,6 @@ int add(int x, int y)
     return x;
 }
 
-int sub(int x, int y)
-{
-    if (x - y < 0)
-        return x - y + MOD;
-    return x - y;
-}
-
 int mul(int x, int y)
 {
     return (x * 1ll * y) % MOD;
@@ -30,6 +23,7 @@ int mul(int x, int y)
 
 // Binary Exponentiation O(logn)
 // n^m mod p
+// p is large prime number
 int power(int n, int m, int p)
 {
     int res = 1;
@@ -66,4 +60,34 @@ int ncr(int n, int r)
     if (r > n || n < 0 || r < 0)
         return 0;
     return mul(fact[n], mul(invfact[r], invfact[n - r]));
+}
+
+int solve()
+{
+    int n, k;
+    cin >> n >> k;
+    vector<int> arr(n), f(n + 1), prev(n + 1, -1);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+        f[arr[i]]++;
+    }
+    sort(arr.rbegin(), arr.rend());
+    for (int i = 0; i < n; i++)
+        if (prev[arr[i]] == -1)
+            prev[arr[i]] = i;
+    int r = k - prev[arr[k - 1]];
+    return ncr(f[arr[k - 1]], r);
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    init();
+    int t;
+    cin >> t;
+    while (t-- > 0)
+        cout << solve() << "\n";
+    return 0;
 }
