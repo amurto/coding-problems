@@ -1,10 +1,13 @@
+// https://codeforces.com/problemset/problem/869/C
+// The Intriguing Obsession
+
 #include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1000000007, N = 300001;
+const int MOD = 998244353, N = 5005;
 
 int add(int x, int y)
 {
@@ -59,4 +62,26 @@ int ncr(int n, int r)
     if (r > n || n < 0 || r < 0)
         return 0;
     return mul(fact[n], mul(invfact[r], invfact[n - r]));
+}
+
+int op(int x, int y)
+{
+    if (x > y)
+        swap(x, y);
+    int res = 1;
+    for (int i = 1; i <= x; i++)
+        res = add(res, mul(mul(ncr(x, i), ncr(y, i)), fact[i]));
+    return res;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    init();
+    int a, b, c;
+    cin >> a >> b >> c;
+    cout << mul(op(a, b), mul(op(b, c), op(c, a))) << "\n";
+    return 0;
 }
