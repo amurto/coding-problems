@@ -30,14 +30,14 @@ int solve()
         int cur = 0;
         if (arr[i] != seq[0].back() && arr[i] != seq[1].back())
         {
-            if (st[seq[0].back()].top() < st[seq[1].back()].top())
+            if (st[seq[0].back()].top() > st[seq[1].back()].top())
                 seq[0].pb(arr[i]);
             else
                 seq[1].pb(arr[i]);
             st[arr[i]].pop();
             continue;
         }
-        if (seq[cur].back() == arr[i])
+        if (seq[cur].back() != arr[i])
             cur ^= 1;
         seq[cur].pb(arr[i]);
         st[arr[i]].pop();
