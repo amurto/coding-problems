@@ -8,10 +8,8 @@ ll solve()
 {
     ll x, y, res = 0;
     cin >> x >> y;
-    for (int i = 2; i * i < x && i <= y; i++)
-    {
-        res += i - 1;
-    }
+    for (ll k = 1; min(x / k - 1, y) > k && k * k < x; k++)
+        res += min(x / k - 1, y) - k;
     return res;
 }
 
