@@ -7,12 +7,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool ps(ll v)
-{
-    ll s = floor(sqrt(v));
-    return (s * s == v);
-}
-
 bool fac(ll n, ll v1)
 {
     ll v2 = n / v1;
