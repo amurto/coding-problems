@@ -1,4 +1,5 @@
-// Template copied from HealthyUG
+// https://codeforces.com/contest/1117/problem/D
+// Magic Gems
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -62,7 +63,7 @@ struct Matrix
     }
 };
 
-Matrix mat_exp(Matrix a, int p)
+Matrix mat_exp(Matrix a, ll p)
 {
     Matrix result = Matrix::identity_matrix(a.n_cols);
     while (p > 0)
@@ -80,8 +81,15 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    // Example
-    // vector<vector<int>> arr = {{0}, {0}, {0}, {1}};
-    // Matrix T = Matrix(arr);
+    ll n;
+    int m;
+    cin >> n >> m;
+    vector<vector<int>> T(m, vector<int>(m)), arr(m, vector<int>(1, 1));
+    arr[m - 1][0]++;
+    T[m - 1][0] = T[m - 1][m - 1] = 1;
+    for (int i = 0; i < m - 1; i++)
+        T[i][i + 1] = 1;
+    Matrix res = mat_exp(Matrix(T), n - 1) * Matrix(arr);
+    cout << res.mat[0][0] << "\n";
     return 0;
 }

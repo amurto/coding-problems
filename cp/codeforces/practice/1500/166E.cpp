@@ -1,4 +1,4 @@
-// https://codeforces.com/problemset/problem/166/E
+// https://codeforces.com/contest/166/problem/E
 // Tetrahedron
 
 #include <bits/stdc++.h>
@@ -54,7 +54,6 @@ struct Matrix
                     tmp = add(tmp, mul(mat[i][k], other.mat[k][j]));
                 result[i][j] = tmp;
             }
-
         return move(Matrix(move(result)));
     }
 
@@ -64,7 +63,7 @@ struct Matrix
     }
 };
 
-Matrix exp(Matrix a, int p)
+Matrix mat_exp(Matrix a, int p)
 {
     Matrix result = Matrix::identity_matrix(a.n_cols);
     while (p > 0)
@@ -91,7 +90,7 @@ int main()
         {1, 1, 1, 0},
     };
     vector<vector<int>> arr = {{0}, {0}, {0}, {1}};
-    Matrix res = exp(Matrix(T), n) * Matrix(arr);
-    cout << res.mat[3][0];
+    Matrix res = mat_exp(Matrix(T), n) * Matrix(arr);
+    cout << res.mat[3][0] << "\n";
     return 0;
 }

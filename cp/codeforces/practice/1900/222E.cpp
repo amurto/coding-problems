@@ -1,4 +1,4 @@
-// https://codeforces.com/problemset/problem/222/E
+// https://codeforces.com/contest/222/problem/E
 // Decoding Genome
 
 #include <bits/stdc++.h>
@@ -54,7 +54,6 @@ struct Matrix
                     tmp = add(tmp, mul(mat[i][k], other.mat[k][j]));
                 result[i][j] = tmp;
             }
-
         return move(Matrix(move(result)));
     }
 
@@ -64,7 +63,7 @@ struct Matrix
     }
 };
 
-Matrix exp(Matrix a, ll p)
+Matrix mat_exp(Matrix a, ll p)
 {
     Matrix result = Matrix::identity_matrix(a.n_cols);
     while (p > 0)
@@ -102,7 +101,7 @@ int main()
         cin >> str;
         arr[mp[str[1]]][mp[str[0]]] = 0;
     }
-    Matrix M = exp(Matrix(arr), n-1) * Matrix(col);
+    Matrix M = mat_exp(Matrix(arr), n - 1) * Matrix(col);
     for (int i = 0; i < m; i++)
         res = add(res, M.mat[i][0]);
     cout << res << "\n";
