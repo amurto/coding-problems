@@ -1,3 +1,5 @@
+// Template copied from Hackerrank Editorial
+
 #include <bits/stdc++.h>
 using namespace std;
 

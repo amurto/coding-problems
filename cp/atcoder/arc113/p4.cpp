@@ -2,54 +2,62 @@
 using namespace std;
 
 typedef long long ll;
-typedef pair<int, int> pii;
 #define pb push_back
 
-set<string> st;
-void dfs(vector<vector<int>> &arr, vector<pii> &seq, int cur, int n, int m, int lb, int rb)
+const int MOD = 998244353;
+
+// Binary Exponentiation O(logn)
+// n^m mod p
+int power(int n, int m, int p)
 {
-    if (cur == seq.size())
+    if (n == 0)
+        return 0;
+    int res = 1;
+    while (m > 0)
     {
-        string res;
-        for (int i = 0; i < n; i++)
-        {
-            int mx = 0;
-            for (int j = 0; j < m; j++)
-                mx = max(mx, arr[i][j]);
-            res.pb(char(mx + '0'));
-        }
-        for (int j = 0; j < m; j++)
-        {
-            int mn = 1e5;
-            for (int i = 0; i < n; i++)
-                mn = min(mn, arr[i][j]);
-            res.pb(char(mn + '0'));
-        }
-        st.insert(res);
-        return;
+        if (m & 1)
+            res = (res * 1ll * n) % p;
+        n = (n * 1ll * n) % p;
+        m /= 2;
     }
-    int r = seq[cur].first, c = seq[cur].second;
-    for (int i = lb; i <= rb; i++)
-    {
-        arr[r][c] = i;
-        dfs(arr, seq, cur + 1, n, m, lb, rb);
-        arr[r][c] = 0;
-    }
+    return res;
+}
+
+int add(int x, int y)
+{
+    x += y;
+    while (x >= MOD)
+        x -= MOD;
+    while (x < 0)
+        x += MOD;
+    return x;
+}
+
+int mul(int x, int y)
+{
+    return (x * 1ll * y) % MOD;
+}
+
+int solve()
+{
+    int n, m, k, res = 0;
+    cin >> n >> m >> k;
+    if (n + m == 2)
+        return k;
+    if (n == 1)
+        return power(k, m, MOD);
+    if (m == 1)
+        return power(k, n, MOD);
+    for (int i = 1; i <= k; i++)
+        res = add(res, mul(add(power(i, n, MOD), -power(i - 1, n, MOD)), power(k - i + 1, m, MOD)));
+    return res;
 }
 
 int main()
 {
-    // ios_base::sync_with_stdio(false);
-    // cin.tie(0);
-    // cout.tie(0);
-    int n, m, lb, rb;
-    cin >> n >> m >> lb >> rb;
-    vector<vector<int>> arr(n, vector<int>(m));
-    vector<pii> seq;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            seq.pb({i, j});
-    dfs(arr, seq, 0, n, m, lb, rb);
-    cout << st.size() << "\n";
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    cout << solve() << "\n";
     return 0;
 }

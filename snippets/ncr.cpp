@@ -4,7 +4,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1000000007, N = 300001;
+const int MOD = 1e9 + 7, N = 3e5 + 1;
 
 int add(int x, int y)
 {
