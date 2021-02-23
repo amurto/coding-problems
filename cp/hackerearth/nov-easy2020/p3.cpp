@@ -7,9 +7,9 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const ll MOD = 1000000007, N = 19;
+const int N = 11, MOD = 1e9 + 7;
 
-ll add(ll x, ll y)
+int add(int x, int y)
 {
     x += y;
     while (x >= MOD)
@@ -19,17 +19,16 @@ ll add(ll x, ll y)
     return x;
 }
 
-ll mul(ll x, ll y)
+int mul(int x, int y)
 {
     return (x * 1ll * y) % MOD;
 }
 
 // Binary Exponentiation O(logn)
 // n^m mod p
-// p is large prime number
-ll power(ll n, ll m, ll p)
+int power(int n, ll m, int p)
 {
-    ll res = 1;
+    int res = 1;
     while (m > 0)
     {
         if (m & 1)
@@ -40,22 +39,69 @@ ll power(ll n, ll m, ll p)
     return res;
 }
 
+struct Matrix
+{
+    vector<vector<int>> mat;
+    int n_rows, n_cols;
 
+    Matrix() {}
 
+    Matrix(vector<vector<int>> values) : mat(values), n_rows(values.size()),
+                                         n_cols(values[0].size()) {}
 
-ll solve()
+    static Matrix identity_matrix(int n)
+    {
+        vector<vector<int>> values(n, vector<int>(n, 0));
+        for (int i = 0; i < n; i++)
+            values[i][i] = 1;
+        return values;
+    }
+
+    Matrix operator*(const Matrix &other) const
+    {
+        int n = n_rows, m = other.n_cols;
+        vector<vector<int>> result(n_rows, vector<int>(n_cols, 0));
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+            {
+                int tmp = 0;
+                for (int k = 0; k < n_cols; k++)
+                    tmp = add(tmp, mul(mat[i][k], other.mat[k][j]));
+                result[i][j] = tmp;
+            }
+        return move(Matrix(move(result)));
+    }
+
+    inline bool is_square() const
+    {
+        return n_rows == n_cols;
+    }
+};
+
+Matrix mat_exp(Matrix a, ll p)
+{
+    Matrix result = Matrix::identity_matrix(a.n_cols);
+    while (p > 0)
+    {
+        if (p & 1)
+            result = a * result;
+        a = a * a;
+        p >>= 1;
+    }
+    return result;
+}
+
+int solve()
 {
     ll n;
     cin >> n;
-    if (n == 1)
-        return 0;
-
-    for (int i=1; i<=n;i++) {
-
-    }
-    ll num = power(6, n-1, MOD);
-    ll deno = power(mul(num, 6), MOD-2, MOD);
-    return mul(num, deno);
+    vector<vector<int>> T(N, vector<int>(N)), arr(N, vector<int>(1));
+    arr[0][0] = 1;
+    for (int i = 0; i < N; i++)
+        for (int j = 1; j <= 6; j++)
+            T[(i * 10 + j) % N][i]++;
+    Matrix res = mat_exp(Matrix(T), n) * Matrix(arr);
+    return mul(res.mat[0][0], power(power(6, n, MOD), MOD - 2, MOD));
 }
 
 int main()
@@ -66,8 +112,6 @@ int main()
     int t;
     cin >> t;
     while (t-- > 0)
-    {
         cout << solve() << "\n";
-    }
     return 0;
 }
