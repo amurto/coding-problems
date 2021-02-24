@@ -47,8 +47,6 @@ int main()
     int t;
     cin >> t;
     while (t-- > 0)
-    {
         cout << solve() << "\n";
-    }
     return 0;
 }

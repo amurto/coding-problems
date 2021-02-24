@@ -6,7 +6,10 @@ int parent[N], cap[N];
 void init(int n)
 {
     for (int i = 1; i <= n; i++)
+    {
         parent[i] = i;
+        cap[i] = 1;
+    }
 }
 
 int root(int x)

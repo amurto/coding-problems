@@ -6,7 +6,9 @@ using namespace std;
 
 typedef long long ll;
 #define pb push_back
+
 const int inf = 1e7;
+
 int zsa(vector<vector<int>> &dp, vector<int> &arr, int cur, int rem)
 {
     if (rem == 0)
