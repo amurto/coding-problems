@@ -8,24 +8,11 @@ ll solve()
 {
     int n;
     cin >> n;
-    vector<ll> arr(n);
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    vector<ll> dp(50, 0);
+    ll x, num = 0;
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < 30; j++)
-        {
-            dp[j] += (arr[i] & 1);
-            arr[i] >>= 1;
-        }
-    }
-    ll num = 0, mul = 1;
-    for (int i = 0; i < 50; i++)
-    {
-        if (dp[i] & 1)
-            num += mul;
-        mul <<= 1;
+        cin >> x;
+        num ^= x;
     }
     return num;
 }

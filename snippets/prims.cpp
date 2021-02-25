@@ -22,10 +22,8 @@ int prims(vector<vector<pair<int, int>>> &g, int n, int source)
         cost += from.first;
         vis[from.second] = true;
         for (pair<int, int> to : g[from.second])
-        {
             if (!vis[to.first])
                 pq.push({to.second, to.first});
-        }
     }
     return cost;
 }

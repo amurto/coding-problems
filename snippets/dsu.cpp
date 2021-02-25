@@ -19,7 +19,7 @@ int root(int x)
     return parent[x] = root(parent[x]);
 }
 
-void dsunion(int x, int y)
+void merge(int x, int y)
 {
     int rx = root(x), ry = root(y);
     if (rx == ry)
