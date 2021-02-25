@@ -25,8 +25,8 @@ int main()
         for (int i = 0; i < n; i++)
         {
             sum += arr[i];
-            ans |= arr[i];
-            ans |= sum;
+            ans ^= arr[i];
+            ans ^= sum;
         }
         cout << ans << "\n";
     }
