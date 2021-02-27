@@ -14,14 +14,14 @@ ll mul(ll x, ll y)
 }
 void bfs(vector<vector<int>> &g, vector<int> &arr, int n, int x)
 {
-    int m = 1, inf = 1e7;
+    int m = 0, inf = 1e7;
     vector<int> mark(n + 1), dis(n + 1, inf);
     vector<ll> ways(x + 1);
     for (int i = 1; i <= x; i++)
         mark[arr[i]] = i;
     queue<pair<int, int>> q;
-    for (int i = x - 1; i > 0; i--)
-        q.push({arr[i], arr[i + 1]});
+    for (int i = x; i > 1; i--)
+        q.push({arr[i], arr[i - 1]});
     while (!q.empty())
     {
         int len = q.size();
@@ -29,27 +29,27 @@ void bfs(vector<vector<int>> &g, vector<int> &arr, int n, int x)
         {
             pair<int, int> cur = q.front();
             q.pop();
-            if (cur.first == cur.second)
+            if (cur.first == cur.second && dis[cur.first] >= m)
             {
+                dis[cur.first] = m;
                 ways[mark[cur.first]]++;
                 continue;
             }
-            if (mark[cur.first] > 0 && mark[cur.second] - mark[cur.first] > 1)
+            if (mark[cur.second] > 0 && dis[cur.second] < inf)
                 continue;
             for (int e : g[cur.first])
             {
-                if (m > dis[e])
+                if (e != cur.second && mark[e] > 0)
                     continue;
-                dis[e] = m;
                 q.push({e, cur.second});
             }
         }
         m++;
     }
     ll cost = 0, w = 1;
-    for (int i = 2; i <= x; i++)
+    for (int i = 1; i < x; i++)
     {
-        if (ways[i] == 0)
+        if (dis[arr[i]] >= inf)
         {
             cout << "-1\n";
             return;
@@ -70,7 +70,7 @@ void solve()
     for (int i = 0; i < m; i++)
     {
         cin >> u >> v;
-        g[u].pb(v);
+        g[v].pb(u);
     }
     for (int i = 1; i <= x; i++)
         cin >> arr[i];
