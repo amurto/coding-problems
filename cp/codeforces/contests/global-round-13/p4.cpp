@@ -10,6 +10,19 @@ bool solve()
     cin >> u >> v;
     if (u > v)
         return false;
+    vector<int> ub, vb;
+    for (int b = 0; b <= 30; b++)
+    {
+        if (u & (1 << b))
+            ub.pb(b);
+        if (v & (1 << b))
+            vb.pb(b);
+    }
+    if (ub.size() < vb.size())
+        return false;
+    for (int i = 0; i < vb.size(); i++)
+        if (ub[i] > vb[i])
+            return false;
     return true;
 }
 
@@ -18,15 +31,9 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n;
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= n; j++)
-            if ((i & j) == j)
-                cout << i << " -> " << i + j << "\n";
-    // int t;
-    // cin >> t;
-    // while (t-- > 0)
-    //     solve();
+    int t;
+    cin >> t;
+    while (t-- > 0)
+        solve() ? cout << "YES\n" : cout << "NO\n";
     return 0;
 }
