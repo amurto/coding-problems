@@ -9,7 +9,7 @@ typedef long long ll;
 const int N = 2e7;
 bool P[N];
 
-// O(nlognlogn)
+// O(root(n) * lognlogn)
 void sieve()
 {
     memset(P, true, sizeof(P));
