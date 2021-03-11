@@ -4,34 +4,43 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool solve(vector<vector<char>> grid, vector<char> sym, int n, int req)
+int check(vector<int> &arr, int n)
 {
-    int m = 0;
+    sort(arr.begin(), arr.end());
+    for (int i = 1; i <= n; i++)
+        if (arr[i - 1] != i)
+            return 0;
+    return 1;
+}
+
+void solve()
+{
+    int n;
+    cin >> n;
+    vector<int> arr(n), res(n);
+    multiset<int> ms;
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
-        {
-            if (grid[i][j] == '.' || sym[(i + j) % 3] == '.')
-                continue;
-            if (grid[i][j] != sym[(i + j) % 3])
-            {
-                if (grid[i][j] == 'X')
-                    grid[i][j] = 'O';
-                else
-                    grid[i][j] = 'X';
-                m++;
-            }
-        }
+        cin >> arr[i];
+        ms.insert(arr[i]);
     }
-    if (m > req)
-        return false;
-    for (int i = 0; i < n; i++)
+    int l = 0, r = n - 1, k = 1;
+    while (k < n && *ms.begin() == k)
     {
-        for (int j = 0; j < n; j++)
-            cout << grid[i][j];
-        cout << "\n";
+        ms.erase(ms.begin());
+        res[n - k] = 1;
+        if (arr[l] == k)
+            l++;
+        else if (arr[r] == k)
+            r--;
+        else
+            break;
+        k++;
     }
-    return true;
+    res[0] = check(arr, n);
+    for (int r : res)
+        cout << r;
+    cout << "\n";
 }
 
 int main()
@@ -42,26 +51,6 @@ int main()
     int t;
     cin >> t;
     while (t-- > 0)
-    {
-        int n, cnt = 0;
-        cin >> n;
-        vector<vector<char>> grid(n, vector<char>(n));
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                cin >> grid[i][j];
-                if (grid[i][j] != '.')
-                    cnt++;
-            }
-        }
-        int req = cnt / 3;
-        vector<char> sym = {'.', 'O', 'X'};
-        bool f = false;
-        do
-        {
-            f = solve(grid, sym, n, req);
-        } while (!f && next_permutation(sym.begin(), sym.end()));
-    }
+        solve();
     return 0;
 }
