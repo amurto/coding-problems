@@ -6,31 +6,29 @@ typedef long long ll;
 
 int solve()
 {
-    int n, m;
+    int n, m, x;
     cin >> n >> m;
-    set<int> st;
-    vector<int> arr(n), ms(n);
+    vector<vector<int>> pos(n);
     for (int i = 0; i < n; i++)
-        cin >> arr[i];
+    {
+        cin >> x;
+        pos[x].pb(i);
+    }
     for (int i = 0; i < n; i++)
-        st.insert(i);
-    for (int i = 0; i < m; i++)
     {
-        st.erase(arr[i]);
-        ms[arr[i]]++;
+        if (pos[i].empty())
+            return i;
+        int last = -1;
+        for (int j = 0; j < pos[i].size(); j++)
+        {
+            if (pos[i][j] - last - 1 >= m)
+                return i;
+            last = pos[i][j];
+        }
+        if (n - last - 1 >= m)
+            return i;
     }
-    int res = *st.begin();
-    for (int i = m; i < n; i++)
-    {
-        int l = i - m;
-        ms[arr[l]]--;
-        if (ms[arr[l]] == 0)
-            st.insert(arr[l]);
-        ms[arr[i]]++;
-        st.erase(arr[i]);
-        res = min(res, *st.begin());
-    }
-    return res;
+    return n;
 }
 
 int main()
