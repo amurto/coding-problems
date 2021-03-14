@@ -12,6 +12,6 @@ int main()
     int a, b;
     cin >> a >> b;
     double res = (a - b) * 100 * 1.0 / a;
-    cout << setprecision(12) << fixed << res << "\n";
+    cout << fixed << setprecision(12) << res << "\n";
     return 0;
 }

@@ -32,7 +32,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    cout << setprecision(6) << fixed;
+    cout << fixed << setprecision(6);
     int n, p, s;
     cin >> n;
     vector<vector<int>> cars(n);

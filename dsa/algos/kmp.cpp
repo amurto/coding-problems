@@ -16,7 +16,7 @@ void computeLPS(char *pat, int m, int *LPS)
         if (pat[i] == pat[len])
         {
             LPS[i] = ++len;
-            i++;
+            i++;    
         }
         else
         {
@@ -60,6 +60,7 @@ int KMPSearch(char *text, char *pat, int n, int m)
     }
     return ans;
 }
+
 int main()
 {
     int t;
