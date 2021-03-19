@@ -39,6 +39,27 @@ void linear_sieve()
     }
 }
 
+int cnt[N];
+// O(root(n) * lognlogn)
+// Store number of distinct prime factors for every number
+void distinct_primes()
+{
+    memset(P, true, sizeof(P));
+    memset(cnt, 0, sizeof(cnt));
+    P[0] = P[1] = false;
+    for (int i = 2; i < N; i++)
+    {
+        if (!P[i])
+            continue;
+        cnt[i] = 1;
+        for (int j = 2; i * j < N; j++)
+        {
+            P[i * j] = false;
+            cnt[i * j]++;
+        }
+    }
+}
+
 int main()
 {
     sieve();

@@ -5,43 +5,38 @@ typedef long long ll;
 #define pb push_back
 
 const int N = 2e7 + 5;
+bool P[N];
+int cnt[N];
 
-// O(n)
-vector<int> lp(N + 1), pr;
-void linear_sieve()
+// O(root(n) * lognlogn)
+void sieve()
 {
-    for (int i = 2; i <= N; i++)
+    memset(P, true, sizeof(P));
+    memset(cnt, 0, sizeof(cnt));
+    P[0] = P[1] = false;
+    for (int i = 2; i < N; i++)
     {
-        if (lp[i] == 0)
+        if (!P[i])
+            continue;
+        cnt[i] = 1;
+        for (int j = 2; i * j < N; j++)
         {
-            lp[i] = i;
-            pr.push_back(i);
+            P[i * j] = false;
+            cnt[i * j]++;
         }
-        for (int j = 0; j < (int)pr.size() && pr[j] <= lp[i] && i * pr[j] <= N; ++j)
-            lp[i * pr[j]] = pr[j];
     }
 }
 
-ll f(int c, int d, int r)
+int f(int c, int d, int r)
 {
-    if ((d + r) % c > 0)
-        return 0;
-    int req = (d + r) / c;
-    ll res = 1;
-    while (req > 1)
-    {
-        int div = lp[req];
-        res *= 2;
-        while (req % div == 0)
-            req /= div;
-    }
-    return res;
+    if ((d + r) % c == 0)
+        return 1 << cnt[(d + r) / c];
+    return 0;
 }
 
-ll solve()
+int solve()
 {
-    int c, d, x;
-    ll res = 0;
+    int c, d, x, res = 0;
     cin >> c >> d >> x;
     for (int i = 1; i * i <= x; i++)
     {
@@ -49,10 +44,7 @@ ll solve()
         {
             res += f(c, d, x / i);
             if ((i * i) != x)
-            {
-                int q = x / i;
-                res += f(c, d, x / q);
-            }
+                res += f(c, d, i);
         }
     }
     return res;
@@ -63,7 +55,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    linear_sieve();
+    sieve();
     int t;
     cin >> t;
     while (t-- > 0)
