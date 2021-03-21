@@ -62,6 +62,13 @@ int g(int a, int b, int r, int c)
     return mul(r - a + 1, c - b + 1);
 }
 
+bool cmp(int r, int c, int r1, int c1, int r2, int c2)
+{
+    if (max(r1, c1) == max(r2, c2))
+        return (r - r1 + 1) * 1ll * (c - c1 + 1) > (r - r2 + 1) * 1ll * (c - c2 + 1);
+    return max(r1, c1) < max(r2, c2);
+}
+
 int solve()
 {
     int r, c, l, res = 0, c1 = 0, c2;
@@ -69,13 +76,17 @@ int solve()
     int req = l + 1;
     if (req > r + c)
         return 0;
-    int beg = max(1, req - c), end = min(r, req - 1);
+    int beg = 1, end = min(r, c);
     while (beg < end)
     {
         int m1 = beg + (end - beg) / 3;
         int m2 = end - (end - beg) / 3;
-        
+        if (cmp(r, c, m1, req - m1, m2, req - m2))
+            end = m2 - 1;
+        else
+            beg = m1 + 1;
     }
+    return mul(f(beg, req-beg), g(beg, req-beg, r, c));
 }
 
 int main()
