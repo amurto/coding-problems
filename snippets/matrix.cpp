@@ -1,5 +1,3 @@
-// Template copied from HealthyUG
-
 #include <bits/stdc++.h>
 using namespace std;
 
