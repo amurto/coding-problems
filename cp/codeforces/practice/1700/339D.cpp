@@ -1,11 +1,12 @@
 // https://codeforces.com/contest/339/problem/D
 // Xenia and Bit Operations
+// segtree
 
 #include "bits/stdc++.h"
 using namespace std;
 
-const int N = 1e5 + 5;
-const int INF = 1e9;
+typedef long long ll;
+#define pb push_back
 
 struct node
 {
