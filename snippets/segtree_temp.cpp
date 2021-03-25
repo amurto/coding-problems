@@ -1,36 +1,83 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-typedef long long ll;
-#define pb push_back
+const int N = 1e5 + 5;
+const int INF = 1e9;
+
+/*
+KEYNOTES:
+------------------------------------------
+merge(X,identity_element) = X
+------------------------------------------
+------------------------------------------
+identity_transformation.combine(X) = X
+------------------------------------------
+------------------------------------------
+ALWAYS: older_update.combine(newer_update)
+------------------------------------------
+*/
+
+// example: addition: identity element is 0
+
+// a + 0 = a or 0 + a = a
+
+// min(x,INF) = x
 
 struct node
 {
-    int v = 0; // identity
+    int mn = INF;
+    int freq = 0;
+    // use more variables if you want more information
+    // these default values should be identity_element
     node() {}
     node(int val)
     {
-        v = val;
+        mn = val;
+        freq = 1;
     }
     void merge(const node &l, const node &r)
-    {
+    { // store the thing you wanna query
+
+        mn = min(l.mn, r.mn);
+        freq = 0;
+        if (l.mn == mn)
+            freq += l.freq;
+        if (r.mn == mn)
+            freq += r.freq;
+
+        // if we wanted the maximum, then we would do
+        // like v = max(l.v,r.v)
     }
 };
 
+// example: add on a range: identity transformation = 0
+// old += new
+
+// if old is identity which is 0, then 0 + new which new
+
 struct update
 {
-    int v = 0;
+    int v = 0; // 4
+    // use more variables if you want more information
+    // these default values should be identity_transformation
     update() {}
     update(int val)
     {
+        v = val; // 5
     }
-    // combine the current update with the other update
+    // combine the current update with the other update (see keynotes)
     void combine(update &other, const int32_t &tl, const int32_t &tr)
     {
+        v += other.v; // 6
+
+        // you can be sure that the "other" is newer than current
     }
     // store the correct information in the node x
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
+
+        // no change in freq
+        x.mn += v;
     }
 };
 
@@ -136,85 +183,33 @@ public:
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    segtree<node, update> s(n);
-    s.build(arr);
+
+    segtree<node, update> s(1000); // create a segment tree of length 1000
+    vector<int> v(1000);
+    v[10] = 35;
+    v[13] = 3;
+
+    s.build(v);
+
+    s.rupd(2, 5, 8);
+
+    s.rupd(1, 3, -4);
+
+    for (int i = 0; i < 15; i++)
+        cout << s.query(i, i).mn << " ";
+    cout << "\n\n"
+         << s.query(2, 4).mn << " " << s.query(2, 4).freq;
+
     return 0;
 }
 
-// X-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------X
+// how to define the behaviour or the nature of the
+// updates and queries
 
-// Merge Sort Tree
-struct mstree
-{
-    int len;
-    vector<vector<int>> t;
-    mstree(int l)
-    {
-        len = l;
-        t.resize(4 * len);
-    }
+// this segtree was sum in range and add on range
 
-    vector<int> merge(int l, int r)
-    {
-        int sz1 = t[l].size(), sz2 = t[r].size();
-        vector<int> arr(sz1 + sz2);
-        int i = 0, j = 0, idx = 0;
-        while (i < sz1 && j < sz2)
-        {
-            arr[idx++] = (t[l][i] < t[r][j]) ? t[l][i++] : t[r][j++];
-        }
-        while (i < sz1)
-        {
-            arr[idx++] = t[l][i++];
-        }
-        while (j < sz2)
-        {
-            arr[idx++] = t[r][j++];
-        }
-        return arr;
-    }
+// let's change it to -> (sum on range) and (set all values on range)
 
-    template <typename T>
-    void build(const T &arr, const int32_t &v, const int32_t &tl, const int32_t &tr)
-    {
-        if (tl == tr)
-        {
-            t[v].pb(arr[tl]);
-            return;
-        }
-        int32_t tm = (tl + tr) >> 1;
-        build(arr, v << 1, tl, tm);
-        build(arr, v << 1 | 1, tm + 1, tr);
-        t[v] = merge(v << 1, v << 1 | 1);
-    }
+// let's make the one from the question earlier
 
-    // number of elements less than e in given range
-    int query(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, int e)
-    {
-        if (l > tr || r < tl)
-            return 0;
-        if (tl >= l && tr <= r)
-            return lower_bound(t[v].begin(), t[v].end(), e) - t[v].begin();
-        int32_t tm = (tl + tr) >> 1;
-        return query(v << 1, tl, tm, l, r, e) + query(v << 1 | 1, tm + 1, tr, l, r, e);
-    }
-
-public:
-    template <typename T>
-    void build(const T &arr)
-    {
-        build(arr, 1, 0, len - 1);
-    }
-    int query(const int32_t &l, const int32_t &r, int e)
-    {
-        return query(1, 0, len - 1, l, r, e);
-    }
-};
+// get min element and frequency of min element on a range AND add on a range
