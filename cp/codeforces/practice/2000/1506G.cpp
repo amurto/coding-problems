@@ -1,3 +1,6 @@
+// https://codeforces.com/contest/1506/problem/G
+// Maximize the Remaining String
+
 #include <bits/stdc++.h>
 using namespace std;
 
