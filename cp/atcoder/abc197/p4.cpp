@@ -4,21 +4,24 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-double dis(double x1, double y1, double x2, double y2)
+const long double PI = 3.14159265358979;
+
+pair<double, double> rotate(double px, double py, double ox, double oy, double theta)
 {
-    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    double x = cos(theta) * (px - ox) - sin(theta) * (py - oy) + ox;
+    double y = sin(theta) * (px - ox) + cos(theta) * (py - oy) + oy;
+    return {x, y};
 }
 
 void solve()
 {
     int n;
-    cin >> n;
     double x0, y0, xh, yh;
-    cin >> x0 >> y0 >> xh >> yh;
-    double d = dis(x0, y0, xh, yh);
-    cout << d << "\n";
-    double s = d / 2.0 * 2.0 * sin(180.0 / n);
-    cout << s << "\n";
+    cin >> n >> x0 >> y0 >> xh >> yh;
+    double xm = (x0 + xh) / 2.0, ym = (y0 + yh) / 2.0;
+    double theta = 2.0 * PI / (n * 1.0);
+    pair<double, double> p1 = rotate(x0, y0, xm, ym, theta);
+    cout << p1.first << " " << p1.second << "\n";
 }
 
 int main()

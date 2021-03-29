@@ -82,3 +82,13 @@ public:
         return Triangle(p1, p3, p2).contains(p) || Triangle(p1, p3, p4).contains(p);
     }
 };
+
+const long double PI = 3.14159265358979;
+
+// Rotate (px, py) around (ox, oy) by angle theta(in radians)
+pair<double, double> rotate(double px, double py, double ox, double oy, double theta)
+{
+    double x = cos(theta) * (px - ox) - sin(theta) * (py - oy) + ox;
+    double y = sin(theta) * (px - ox) + cos(theta) * (py - oy) + oy;
+    return {x, y};
+}
