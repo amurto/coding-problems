@@ -4,22 +4,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 998244353, N = 3e5 + 5;
-// O(n)
-vector<int> lp(N + 1), pr;
-void linear_sieve()
-{
-    for (int i = 2; i <= N; i++)
-    {
-        if (lp[i] == 0)
-        {
-            lp[i] = i;
-            pr.push_back(i);
-        }
-        for (int j = 0; j < (int)pr.size() && pr[j] <= lp[i] && i * pr[j] <= N; ++j)
-            lp[i * pr[j]] = pr[j];
-    }
-}
+const int MOD = 998244353, N = 5e3 + 5;
 
 int add(int x, int y)
 {
@@ -76,26 +61,29 @@ int ncr(int n, int r)
     return mul(fact[n], mul(invfact[r], invfact[n - r]));
 }
 
+int game(vector<vector<int>> &dp, int cur, int carry, int n, int m)
+{
+    if (carry > m)
+        return 0;
+    if (cur == 14)
+        return carry == 0;
+    if (dp[cur][carry] == -1)
+    {
+        int res = 0;
+        for (int i = 0; i <= n; i += 2)
+            if (((carry + i) & 1) == ((m >> cur) & 1))
+                res = add(res, mul(ncr(n, i), game(dp, cur + 1, (carry + i) >> 1, n, m)));
+        dp[cur][carry] = res;
+    }
+    return dp[cur][carry];
+}
+
 int solve()
 {
     int n, m, res = 0;
     cin >> n >> m;
-    for (int i = 1; i <= m; i++)
-    {
-        int f = 1, cur = i;
-        while (cur > 1)
-        {
-            int p = lp[cur], cnt = 0;
-            while (cur % p == 0)
-            {
-                cur /= p;
-                cnt++;
-            }
-            f = mul(f, ncr(cnt + n - 1, cnt));
-        }
-        res = add(res, f);
-    }
-    return res;
+    vector<vector<int>> dp(14, vector<int>(m + 5, -1));
+    return game(dp, 0, 0, n, m);
 }
 
 int main()
@@ -103,7 +91,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    linear_sieve();
     init();
     cout << solve() << "\n";
     return 0;
