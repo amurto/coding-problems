@@ -18,37 +18,36 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<pii> arr(n);
-    vector<int> inc(n + 1);
+    vector<int> arr(n), inc(n + 1);
     for (int i = 0; i < n; i++)
+        cin >> inc[i + 1];
+    iota(arr.begin(), arr.end(), 1);
+    auto cmp = [&](int &i1, int &i2) {
+        return inc[i1] < inc[i2];
+    };
+    sort(arr.begin(), arr.end(), cmp);
+    int last = -1;
+    for (int i = 0; i < n && inc[arr[i]] == 0; i++)
     {
-        arr[i].second = i + 1;
-        cin >> arr[i].first;
-        inc[i + 1] = arr[i].second;
+        for (int j = i + 1; j < n; j++)
+            inc[arr[j]]--;
+        last = i;
     }
-    sort(arr.begin(), arr.end());
-    int e = n - 1, last = -1;
-    for (int i = 0; i < n; i++)
+    vector<pii> edge;
+    for (int i = last + 1; i < n; i++)
+        for (int j = i + 1; j < n; j++)
+            edge.pb({arr[j], arr[i]});
+    auto cmpp = [&](pii &p1, pii &p2) {
+        return abs(inc[p1.first] - inc[p1.second]) > abs(inc[p2.first] - inc[p2.second]);
+    };
+    sort(edge.begin(), edge.end(), cmpp);
+    for (pii p : edge)
     {
-        int outdeg = e - arr[i].first;
-        if (outdeg == e)
+        if (query(p.first, p.second))
         {
-            for (int j = i + 1; j < n; j++)
-                arr[j].first--;
-            e--;
-            last = i;
-            continue;
-        }
-        for (int j = n - 1; j > last; j--)
-        {
-            if (j == i)
-                continue;
-            if (query(arr[j].second, arr[i].second))
-            {
-                cout << "! " << arr[i].second << " " << arr[j].second << "\n";
-                fflush(stdout);
-                return;
-            }
+            cout << "! " << p.first << " " << p.second << "\n";
+            fflush(stdout);
+            return;
         }
     }
     cout << "! 0 0\n";
