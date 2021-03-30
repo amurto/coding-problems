@@ -6,24 +6,43 @@ typedef pair<ll, ll> pii;
 #define pb push_back
 
 const ll d = 1e5;
+void upd(ll &a, ll num, ll den)
+{
+    a = (a * num + den - 1) / den;
+}
+
 void solve()
 {
-    int n, m;
-    cin >> n, m;
-    vector<ll> t(n), y(n);
-    vector<pii> x(n);
+    int n, m, t;
+    cin >> n >> m;
+    ll num, den, y;
+    vector<int> vis(m + 1, -1);
+    vis[0] = 0;
     for (int i = 0; i < n; i++)
     {
-        cin >> t[i] >> x[i].first >> y[i];
-        if (t[i] == 1)
-            x[i].first = (x[i].first + d - 1) / d;
+        cin >> t >> num >> y;
+        if (t == 1)
+        {
+            num = (num + d - 1) / d;
+            for (ll j = 0; j <= m; j++)
+                if (vis[j] >= 0 && vis[j] < i + 1)
+                    for (ll a = j + num, cnt = 0; cnt < y && a <= m && vis[a] < 0; a += num, cnt++)
+                        vis[a] = i + 1;
+        }
         else
         {
-            ll g = __gcd(x[i].first, d);
-            x[i].first /= g;
-            x[i].second = d / g;
+            ll g = __gcd(num, d);
+            num /= g;
+            den = d / g;
+            for (ll j = 1; j <= m; j++)
+                if (vis[j] >= 0 && vis[j] < i + 1)
+                    for (ll a = (j * num + den - 1) / den, cnt = 0; cnt < y && a <= m && vis[a] < 0; cnt++, upd(a, num, den))
+                        vis[a] = i + 1;
         }
     }
+    for (int i = 1; i <= m; i++)
+        cout << vis[i] << " ";
+    cout << "\n";
 }
 
 int main()
@@ -31,9 +50,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int t;
-    cin >> t;
-    while (t-- > 0)
-        solve();
+    solve();
     return 0;
 }
