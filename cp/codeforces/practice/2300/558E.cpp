@@ -1,54 +1,75 @@
+// https://codeforces.com/contest/558/problem/E
+// A Simple Task
+
 #include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-const ll inf = 1e18;
-class interval
-{
-public:
-    int l, r;
-    ll v;
-    interval() {}
-    interval(int l, int r, ll v) : l(l), r(r), v(v) {}
-    bool operator<(const interval &j) const
-    {
-        return r < j.r;
-    }
-};
-
 struct node
 {
-    ll v = -inf; // identity
-    node() {}
-    node(ll val)
+    vector<int> arr;
+    int k = 0;
+    node()
     {
-        v = val;
+        arr.resize(26);
     }
     void merge(const node &l, const node &r)
     {
-        v = max(l.v, r.v);
+        for (int i = 0; i < 26; i++)
+            arr[i] = l.arr[i] + r.arr[i];
     }
 };
 
 struct update
 {
-    ll v = 0;
-    update() {}
-    update(ll val)
+    vector<int> arr;
+    int k = 0;
+    update()
     {
-        v += val;
+        arr.resize(26);
+    }
+    update(vector<int> tmp, int kk)
+    {
+        arr.resize(26);
+        arr = tmp;
+        k = kk;
+    }
+    void purge(const int32_t &frnt, const int32_t &bck)
+    {
+        vector<int> tp = {frnt, bck};
+        if (k == 0)
+            swap(tp[0], tp[1]);
+        for (int j = 0; j < 2; j++)
+        {
+            for (int i = 0; tp[j] > 0 && i < 26; i++)
+            {
+                if (arr[i] < tp[j])
+                {
+                    tp[j] -= arr[i];
+                    arr[i] = 0;
+                }
+                else
+                {
+                    arr[i] -= tp[j];
+                    tp[j] = 0;
+                }
+            }
+            reverse(arr.begin(), arr.end());
+        }
     }
     // combine the current update with the other update
     void combine(update &other, const int32_t &tl, const int32_t &tr)
     {
-        v += other.v;
+        k = other.k;
+        arr = other.arr;
     }
     // store the correct information in the node x
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
-        x.v += v;
+        x.k = k;
+        x.arr = arr;
     }
 };
 
@@ -56,16 +77,14 @@ template <typename node, typename update>
 struct segtree
 {
     int len;
-    ll k = 0;
     vector<node> t;
     vector<update> u;
     vector<bool> lazy;
     node identity_element;
     update identity_transformation;
-    segtree(int l, ll kk)
+    segtree(int l)
     {
         len = l;
-        k = kk;
         t.resize(4 * len);
         u.resize(4 * len);
         lazy.resize(4 * len);
@@ -78,8 +97,11 @@ struct segtree
         if (!lazy[v])
             return;
         int32_t tm = (tl + tr) >> 1;
-        apply(v << 1, tl, tm, u[v]);
-        apply(v << 1 | 1, tm + 1, tr, u[v]);
+        update u1 = u[v], u2 = u[v];
+        u1.purge(0, tr - tm);
+        u2.purge(tm + 1 - tl, 0);
+        apply(v << 1, tl, tm, u1);
+        apply(v << 1 | 1, tm + 1, tr, u2);
         u[v] = identity_transformation;
         lazy[v] = 0;
     }
@@ -95,16 +117,16 @@ struct segtree
     }
 
     template <typename T>
-    void build(const T &arr, const int32_t &v, const int32_t &tl, const int32_t &tr)
+    void build(const T &str, const int32_t &v, const int32_t &tl, const int32_t &tr)
     {
         if (tl == tr)
         {
-            t[v].v = arr[tl] * 1ll * k;
+            t[v].arr[str[tl]]++;
             return;
         }
         int32_t tm = (tl + tr) >> 1;
-        build(arr, v << 1, tl, tm);
-        build(arr, v << 1 | 1, tm + 1, tr);
+        build(str, v << 1, tl, tm);
+        build(str, v << 1 | 1, tm + 1, tr);
         t[v].merge(t[v << 1], t[v << 1 | 1]);
     }
 
@@ -122,12 +144,13 @@ struct segtree
     }
 
     // rupd = range update
-    void rupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, const update &upd)
+    void rupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, update upd)
     {
         if (l > tr || r < tl)
             return;
         if (tl >= l && tr <= r)
         {
+            upd.purge(tl - l, r - tr);
             apply(v, tl, tr, upd);
             return;
         }
@@ -140,58 +163,45 @@ struct segtree
 
 public:
     template <typename T>
-    void build(const T &arr)
+    void build(const T &str)
     {
-        build(arr, 1, 0, len - 1);
+        build(str, 1, 0, len - 1);
     }
     node query(const int32_t &l, const int32_t &r)
     {
         return query(1, 0, len - 1, l, r);
     }
-    void rupd(const int32_t &l, const int32_t &r, const update &upd)
+    void rupd(const int32_t &l, const int32_t &r, update upd)
     {
         rupd(1, 0, len - 1, l, r, upd);
     }
 };
-
-ll solve()
-{
-    int n, x, y;
-    ll k, v;
-    cin >> n >> k;
-    vector<interval> iv;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> x >> y >> v;
-        iv.pb(interval(x, y, v));
-    }
-    sort(iv.begin(), iv.end());
-    set<int> st;
-    for (int i = 0; i < n; i++)
-    {
-        st.insert(iv[i].l);
-        st.insert(iv[i].r);
-    }
-    vector<int> seq(st.begin(), st.end());
-    int sz = seq.size();
-    segtree<node, update> s(sz, k);
-    s.build(seq);
-    ll res = 0;
-    for (int i = 0; i < n; i++)
-    {
-        int ldx = lower_bound(seq.begin(), seq.end(), iv[i].l) - seq.begin();
-        s.rupd(0, ldx, update(iv[i].v));
-        int rdx = lower_bound(seq.begin(), seq.end(), iv[i].r) - seq.begin();
-        res = max(res, -iv[i].r * k + s.query(0, rdx).v);
-    }
-    return res;
-}
 
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    cout << solve() << "\n";
+    int n, q, l, r, k;
+    cin >> n >> q;
+    string str;
+    cin >> str;
+    vector<int> tmp(n);
+    for (int i = 0; i < n; i++)
+        tmp[i] = str[i] - 'a';
+    segtree<node, update> s(n);
+    s.build(tmp);
+    while (q-- > 0)
+    {
+        cin >> l >> r >> k;
+        s.rupd(l-1, r-1, update(s.query(l-1, r-1).arr, k));
+    }
+    for (int i = 0; i < n; i++)
+    {
+        vector<int> ch = s.query(i, i).arr;
+        for (int j = 0; j < 26; j++)
+            if (ch[j])
+                cout << char('a' + j);
+    }
     return 0;
 }
