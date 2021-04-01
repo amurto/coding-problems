@@ -1,0 +1,198 @@
+// https://codeforces.com/contest/501/problem/D
+// Misha and Permutations Summation
+
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+#define pb push_back
+
+struct node
+{
+    int v = 0; // identity
+    node() {}
+    node(int val)
+    {
+        v = val;
+    }
+    void merge(const node &l, const node &r)
+    {
+        v = l.v + r.v;
+    }
+};
+
+struct update
+{
+    int v = 0;
+    update() {}
+    update(int val)
+    {
+        v += val;
+    }
+    // combine the current update with the other update
+    void combine(update &other, const int32_t &tl, const int32_t &tr)
+    {
+        v += other.v;
+    }
+    // store the correct information in the node x
+    void apply(node &x, const int32_t &tl, const int32_t &tr)
+    {
+        x.v += v;
+    }
+};
+
+template <typename node, typename update>
+struct segtree
+{
+    int len;
+    vector<node> t;
+    vector<update> u;
+    vector<bool> lazy;
+    node identity_element;
+    update identity_transformation;
+    segtree(int l)
+    {
+        len = l;
+        t.resize(4 * len);
+        u.resize(4 * len);
+        lazy.resize(4 * len);
+        identity_element = node();
+        identity_transformation = update();
+    }
+
+    void pushdown(const int32_t &v, const int32_t &tl, const int32_t &tr)
+    {
+        if (!lazy[v])
+            return;
+        int32_t tm = (tl + tr) >> 1;
+        apply(v << 1, tl, tm, u[v]);
+        apply(v << 1 | 1, tm + 1, tr, u[v]);
+        u[v] = identity_transformation;
+        lazy[v] = 0;
+    }
+
+    void apply(const int32_t &v, const int32_t &tl, const int32_t &tr, update upd)
+    {
+        if (tl != tr)
+        {
+            lazy[v] = 1;
+            u[v].combine(upd, tl, tr);
+        }
+        upd.apply(t[v], tl, tr);
+    }
+
+    template <typename T>
+    void build(const T &arr, const int32_t &v, const int32_t &tl, const int32_t &tr)
+    {
+        if (tl == tr)
+        {
+            t[v] = tl;
+            return;
+        }
+        int32_t tm = (tl + tr) >> 1;
+        build(arr, v << 1, tl, tm);
+        build(arr, v << 1 | 1, tm + 1, tr);
+    }
+
+    node query(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r)
+    {
+        if (l > tr || r < tl)
+            return identity_element;
+        if (tl >= l && tr <= r)
+            return t[v];
+        pushdown(v, tl, tr);
+        int32_t tm = (tl + tr) >> 1;
+        node a = query(v << 1, tl, tm, l, r), b = query(v << 1 | 1, tm + 1, tr, l, r), ans;
+        ans.merge(a, b);
+        return ans;
+    }
+
+    // rupd = range update
+    void rupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, const update &upd)
+    {
+        if (l > tr || r < tl)
+            return;
+        if (tl >= l && tr <= r)
+        {
+            apply(v, tl, tr, upd);
+            return;
+        }
+        pushdown(v, tl, tr);
+        int32_t tm = (tl + tr) >> 1;
+        rupd(v << 1, tl, tm, l, r, upd);
+        rupd(v << 1 | 1, tm + 1, tr, l, r, upd);
+    }
+
+public:
+    template <typename T>
+    void build(const T &arr)
+    {
+        build(arr, 1, 0, len - 1);
+    }
+    node query(const int32_t &l, const int32_t &r)
+    {
+        return query(1, 0, len - 1, l, r);
+    }
+    void rupd(const int32_t &l, const int32_t &r, const update &upd)
+    {
+        rupd(1, 0, len - 1, l, r, upd);
+    }
+};
+
+vector<int> f(vector<int> &p, int n)
+{
+    segtree<node, update> s(n);
+    s.build(p);
+    vector<int> seq(n);
+    for (int i = 0; i < n; i++)
+    {
+        seq[i] = s.query(p[i], p[i]).v;
+        if (p[i] < n - 1)
+            s.rupd(p[i] + 1, n - 1, -1);
+    }
+    return seq;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int n;
+    cin >> n;
+    vector<int> p1(n), p2(n), seq(n);
+    for (int i = 0; i < n; i++)
+        cin >> p1[i];
+    vector<int> s1 = f(p1, n);
+    for (int i = 0; i < n; i++)
+        cin >> p2[i];
+    vector<int> s2 = f(p2, n);
+    ll carry = 0;
+    for (int i = n - 1, c = 1; i >= 0; i--, c++)
+    {
+        ll sum = 1ll * s1[i] + 1ll * s2[i] + carry;
+        seq[i] = sum % c;
+        carry = sum / c;
+    }
+    segtree<node, update> s(n);
+    s.build(seq);
+    for (int i = 0; i < n; i++)
+    {
+        int l = 0, r = n;
+        while (l < r)
+        {
+            int mid = l + (r - l) / 2;
+            if (s.query(mid, mid).v <= seq[i])
+                l = mid + 1;
+            else
+                r = mid;
+        }
+        seq[i] = l - 1;
+        if (l < n)
+            s.rupd(l, n - 1, -1);
+    }
+    for (int sq : seq)
+        cout << sq << " ";
+    cout << "\n";
+    return 0;
+}
