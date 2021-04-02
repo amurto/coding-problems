@@ -9,14 +9,11 @@ typedef long long ll;
 
 struct node
 {
-    int v = 0; // identity
+    int v = 0, idx = 0; // identity
     node() {}
-    node(int val)
-    {
-        v = val;
-    }
     void merge(const node &l, const node &r)
     {
+        idx = (l.v > r.v) ? l.idx : r.idx;
         v = max(l.v, r.v);
     }
 };
@@ -47,18 +44,19 @@ struct segtree
     }
 
     // rupd = range update
-    void rupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, const int &upd)
+    void rupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, const pair<int, int> &p)
     {
         if (l > tr || r < tl)
             return;
         if (tl >= l && tr <= r)
         {
-            t[v] = upd;
+            t[v].v = p.first;
+            t[v].idx = p.second;
             return;
         }
         int32_t tm = (tl + tr) >> 1;
-        rupd(v << 1, tl, tm, l, r, upd);
-        rupd(v << 1 | 1, tm + 1, tr, l, r, upd);
+        rupd(v << 1, tl, tm, l, r, p);
+        rupd(v << 1 | 1, tm + 1, tr, l, r, p);
         t[v].merge(t[v << 1], t[v << 1 | 1]);
     }
 
@@ -67,7 +65,7 @@ public:
     {
         return query(1, 0, len - 1, l, r);
     }
-    void rupd(const int32_t &l, const int32_t &r, const int &upd)
+    void rupd(const int32_t &l, const int32_t &r, const pair<int, int> &upd)
     {
         rupd(1, 0, len - 1, l, r, upd);
     }
@@ -78,39 +76,34 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n, cur = 1;
+    int n;
     ll d;
     cin >> n >> d;
-    vector<ll> h(n + 1), st(n + 1);
-    segtree<node> s(n + 1);
+    vector<ll> h(n + 1), st;
+    vector<int> dp(n + 1), dir(n + 1);
     for (int i = 1; i <= n; i++)
     {
         cin >> h[i];
-        st[i] = h[i];
+        st.pb(h[i]);
     }
     sort(st.begin(), st.end());
-    vector<int> l(n + 1), r(n + 1), dp(n + 1, 1), dir(n + 1);
+    st.resize(unique(st.begin(), st.end()) - st.begin());
+    int m = st.size();
+    segtree<node> s(m);
     for (int i = n; i > 0; i--)
     {
         int idx = lower_bound(st.begin(), st.end(), h[i]) - st.begin();
         int ldx = upper_bound(st.begin(), st.end(), h[i] - d) - st.begin();
-        ldx--;
         int rdx = lower_bound(st.begin(), st.end(), h[i] + d) - st.begin();
-        if (ldx >= 0)
-            l[i] = s.query(0, ldx).v;
-        if (rdx <= n)
-            r[i] = s.query(rdx, n).v;
-        s.rupd(idx, idx, i);
+        node l = (ldx - 1 >= 0) ? s.query(0, ldx - 1) : node();
+        node r = (rdx < m) ? s.query(rdx, m - 1) : node();
+        node ans = node();
+        ans.merge(l, r);
+        dp[i] = ans.v + 1;
+        dir[i] = ans.idx;
+        s.rupd(idx, idx, {dp[i], i});
     }
-    for (int i = 1; i <= n; i++)
-    {
-        int mx = 0;
-        if (l[i] > 0 && dp[i] + 1 > dp[l[i]])
-            dp[l[i]] = dp[i] + 1;
-        if (r[i] > 0 && dp[i] + 1 > dp[r[i]])
-            dp[r[i]] = dp[i] + 1;
-        vector<int> st;
-    }
+    int cur = s.query(0, m - 1).idx;
     cout << dp[cur] << "\n";
     while (cur > 0)
     {
