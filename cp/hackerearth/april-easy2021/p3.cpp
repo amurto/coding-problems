@@ -5,7 +5,7 @@ typedef long long ll;
 #define pb push_back
 
 const int N = 150;
-ll nxt[N];
+ll nxt[N], last[N];
 vector<vector<int>> g(N);
 ll f(ll n)
 {
@@ -19,53 +19,24 @@ ll f(ll n)
     return sum;
 }
 
-ll ff(ll n)
+ll recur(ll n, ll k)
 {
-    ll sum = 0;
-    while (n > 0)
-    {
-        sum += n % 10;
-        n /= 10;
-    }
-    return sum * sum * sum;
-}
-
-ll s(ll n, ll k)
-{
-    ll last = 0;
-    while (last != n && k > 0)
-    {
-        last = n;
-        n = ff(n);
-        k--;
-    }
-    return n;
+    int sz = g[n].size();
+    if (k > sz)
+        return (last[n] == n) ? g[n][(k - 1) % sz] : recur(last[n], k - sz + (g[n].back() == last[n]));
+    return g[n][k - 1];
 }
 
 ll solve()
 {
-    ll n, k;
+    ll n, k, d = 0;
     cin >> n >> k;
-    cout << s(n, k) << "\n";
-    k--;
-    ll d = 0;
     while (n > 0)
     {
         d += n % 10;
         n /= 10;
     }
-    ll sz = g[d].size();
-    if (k < sz)
-        d = g[d][k];
-    else
-    {
-        k %= sz;
-        if (nxt[g[d].back()] == g[d].back())
-            d = g[d].back();
-        else
-            d = g[d][k];
-    }
-
+    d = recur(d, k);
     return d * d * d;
 }
 
@@ -86,11 +57,8 @@ int main()
             vis[cur] = true;
             cur = nxt[cur];
         }
+        last[i] = cur;
     }
-    cout << nxt[28] << "\n";
-    for (int x : g[13])
-        cout << x << " ";
-    cout << "\n";
     int t;
     cin >> t;
     while (t-- > 0)
