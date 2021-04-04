@@ -1,53 +1,53 @@
+// https://codeforces.com/contest/242/problem/E
+// XOR on Segment
+
 #include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
-const ll inf = 2e18 + 7;
-class interval
-{
-public:
-    ll l, r, v;
-    interval() {}
-    interval(ll l, ll r, ll v) : l(l), r(r), v(v) {}
-    bool operator<(const interval &j) const
-    {
-        return (r < j.r);
-    }
-};
-
+const int b = 21;
 struct node
 {
-    ll v = -inf; // identity
-    node() {}
-    node(ll val)
+    vector<int> arr; // identity
+    node()
     {
-        v = val;
+        arr.resize(b);
+    }
+    node(int val)
+    {
+        arr.resize(b);
+        for (int i = 0; i < b; i++)
+            arr[i] += ((val >> i) & 1);
     }
     void merge(const node &l, const node &r)
     {
-        v = max(l.v, r.v);
+        for (int i = 0; i < b; i++)
+            arr[i] = l.arr[i] + r.arr[i];
     }
 };
 
 struct update
 {
-    ll v = 0;
+    int v = 0;
     update() {}
-    update(ll val)
+    update(int val)
     {
         v = val;
     }
     // combine the current update with the other update
     void combine(update &other, const int32_t &tl, const int32_t &tr)
     {
-        v += other.v;
+        v ^= other.v;
     }
     // store the correct information in the node x
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
-        x.v += v;
+        int len = tr - tl + 1;
+        for (int i = 0; i < b; i++)
+            if ((v >> i) & 1)
+                x.arr[i] = len - x.arr[i];
     }
 };
 
@@ -96,7 +96,7 @@ struct segtree
     {
         if (tl == tr)
         {
-            t[v] = arr[tl];
+            t[v] = node(arr[tl]);
             return;
         }
         int32_t tm = (tl + tr) >> 1;
@@ -156,35 +156,33 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n;
-    ll k, x, y, v;
-    cin >> n >> k;
-    vector<interval> arr;
-    vector<ll> unq;
+    int n, m, t, l, r, x;
+    cin >> n;
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
+        cin >> arr[i];
+    segtree<node, update> s(n);
+    s.build(arr);
+    cin >> m;
+    while (m-- > 0)
     {
-        cin >> x >> y >> v;
-        arr.pb(interval(x, y, v));
-        unq.pb(x);
-        unq.pb(y);
+        cin >> t >> l >> r;
+        l--;
+        r--;
+        if (t == 1)
+        {
+            ll sum = 0;
+            node res = s.query(l, r);
+            for (int i = 0; i < b; i++)
+                if (res.arr[i] > 0)
+                    sum += res.arr[i] * 1ll * (1ll << i);
+            cout << sum << "\n";
+        }
+        else
+        {
+            cin >> x;
+            s.rupd(l, r, x);
+        }
     }
-    sort(unq.begin(), unq.end());
-    unq.resize(unique(unq.begin(), unq.end()) - unq.begin());
-    int sz = unq.size();
-    vector<ll> vk(sz);
-    for (int i = 0; i < sz; i++)
-        vk[i] = unq[i] * k;
-    segtree<node, update> s(sz);
-    s.build(vk);
-    sort(arr.begin(), arr.end());
-    ll res = -inf;
-    for (int i = 0; i < n; i++)
-    {
-        int ldx = lower_bound(unq.begin(), unq.end(), arr[i].l) - unq.begin();
-        int rdx = lower_bound(unq.begin(), unq.end(), arr[i].r) - unq.begin();
-        s.rupd(0, ldx, arr[i].v);
-        res = max(res, s.query(0, rdx).v - arr[i].r * k);
-    }
-    cout << res << "\n";
     return 0;
 }
