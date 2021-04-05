@@ -12,6 +12,7 @@ ll mul(ll x, ll y)
     y %= MOD;
     return (x * y) % MOD;
 }
+
 void bfs(vector<vector<int>> &g, vector<int> &arr, int n, int x)
 {
     int m = 0, inf = 1e7;

@@ -5,21 +5,21 @@ typedef long long ll;
 #define pb push_back
 
 const int mxn = 26;
-vector<int> arr(mxn);
 string fix(string &str, vector<int> &arr, int n, int p)
 {
     string res = "";
     for (int i = 0; i < n; i++)
         if (arr[str[i] - 'a'] >= p)
             res.pb(str[i]);
-    return str;
+    return res;
 }
+
 string solve()
 {
     int n, k;
     string str;
     cin >> n >> k >> str;
-    vector<int> freq(mxn), ord(mxn), rem(mxn);
+    vector<int> arr(mxn), freq(mxn), ord(mxn), rem(n);
     vector<bool> vis(n);
     for (int i = 0; i < mxn; i++)
         cin >> arr[i];
@@ -36,10 +36,7 @@ string solve()
         int cur = 0;
         p = arr[ord[itr]];
         while (itr < mxn && arr[ord[itr]] == p)
-        {
-            cur += freq[ord[itr]];
-            itr++;
-        }
+            cur += freq[ord[itr++]];
         tmp -= cur;
     }
     if (tmp == 0)
@@ -63,9 +60,6 @@ string solve()
     int idx = 0;
     while (idx < n && req > 0)
     {
-        for (int i = 0; i < mxn; i++)
-            while (!qv[i].empty() && qv[i].front() < idx)
-                qv[i].pop();
         while (!qx.empty() && qx.front() < idx)
             qx.pop();
         bool f = false;
@@ -73,6 +67,8 @@ string solve()
         int id = qx.empty() ? n : qx.front();
         for (int j = 0; !f && j < mxn; j++)
         {
+            while (!qv[j].empty() && qv[j].front() < idx)
+                qv[j].pop();
             if (j == nxt)
             {
                 if (rem[id] >= req)
