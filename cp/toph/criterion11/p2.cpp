@@ -38,12 +38,18 @@ int power(int n, int m, int p)
 
 // factorial and inverse factorial
 int fact[N], invfact[N];
+double flog[N];
 void init()
 {
     fact[0] = fact[1] = 1;
+    flog[0] = 0;
+    flog[1] = logl(1);
     int i;
     for (i = 2; i < N; i++)
+    {
         fact[i] = (fact[i - 1] * 1ll * i) % MOD;
+        flog[i] = flog[i - 1] + logl(i);
+    }
     i--;
     // Fermat's Little Theorem
     // 1/(a! % mod) = a^mod-2 % mod
@@ -62,11 +68,9 @@ int g(int a, int b, int r, int c)
     return mul(r - a + 1, c - b + 1);
 }
 
-bool cmp(int r, int c, int r1, int c1, int r2, int c2)
+long double calc(int a, int b, int r, int c, int l)
 {
-    if (max(r1, c1) == max(r2, c2))
-        return (r - r1 + 1) * 1ll * (c - c1 + 1) > (r - r2 + 1) * 1ll * (c - c2 + 1);
-    return max(r1, c1) < max(r2, c2);
+    return log(r - a + 1) + log(c - b + 1) + flog[l - 1] - flog[a - 1] - flog[b - 1];
 }
 
 int solve()
@@ -74,19 +78,19 @@ int solve()
     int r, c, l, res = 0, c1 = 0, c2;
     cin >> r >> c >> l;
     int req = l + 1;
-    if (req > r + c)
+    if (r + c - 1 < l)
         return 0;
-    int beg = 1, end = min(r, c);
+    int beg = 1, end = min(l, r);
     while (beg < end)
     {
         int m1 = beg + (end - beg) / 3;
         int m2 = end - (end - beg) / 3;
-        if (cmp(r, c, m1, req - m1, m2, req - m2))
+        if (calc(m1, l + 1 - m1, r, c, l) > calc(m2, l + 1 - m2, r, c, l))
             end = m2 - 1;
         else
             beg = m1 + 1;
     }
-    return mul(f(beg, req-beg), g(beg, req-beg, r, c));
+    return mul(f(beg, l + 1 - beg), g(beg, l + 1 - beg, r, c));
 }
 
 int main()
