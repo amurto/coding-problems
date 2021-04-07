@@ -92,3 +92,12 @@ pair<double, double> rotate(double px, double py, double ox, double oy, double t
     double y = sin(theta) * (px - ox) + cos(theta) * (py - oy) + oy;
     return {x, y};
 }
+
+// https://www.mathsisfun.com/geometry/regular-polygons.html
+// All exterior angles of a regular polygon add upto 360 degree.
+// Angle of a regular polygon = PI - 2PI/n
+
+// Law of cosines
+// a^2 = b^2 + c^2 - 2bc*cos(A) // angle A opposite to a
+// b^2 = a^2 + c^2 - 2ac*cos(B) // angle B opposite to b
+// c^2 = a^2 + b^2 - 2ab*cos(C) // angle C opposite to c
