@@ -4,48 +4,56 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int M = 100, P = 1e5 + 5;
-int dp[M][P], p[M], cnt[M];
+const int M = 100;
+const ll LIM = 3500;
+ll dp[M][LIM], p[M], cnt[M];
 
-int primetime(int cur, int m, int val)
+ll calc(int m, ll sumB, ll tot)
 {
-    if (cur == m)
+    if (tot - sumB == 0)
+        return 0;
+    ll prod = tot - sumB, sumA = 0;
+    for (int i = 0; i < m; i++)
     {
-        if (val == 1)
-            return 0;
-        int sum = 0, x = val;
-        for (int i = 0; i < m; i++)
+        ll c = cnt[i];
+        while (prod % p[i] == 0)
         {
-            int c = cnt[i];
-            while (val % p[i] == 0)
-            {
-                val /= p[i];
-                c--;
-            }
-            sum += c * p[i];
+            prod /= p[i];
+            c--;
         }
-        if (sum == x)
-            cout << sum << "\n";
-        return sum == x ? x : 0;
+        if (c < 0)
+            return 0;
+        sumA += c * p[i];
     }
-    if (dp[cur][val] == -1)
-    {
-        int res = 0, x = val;
-        for (int i = 0; i <= cnt[cur]; i++, x *= p[cur])
-            res = max(res, primetime(cur + 1, m, x));
-        dp[cur][val] = res;
-    }
-    return dp[cur][val];
+    return (prod == 1 && sumA == tot - sumB) ? sumA : 0;
 }
 
-int solve()
+ll primetime(int cur, int m, ll sumB, ll tot)
+{
+    if (cur == m)
+        return calc(m, sumB, tot);
+    if (dp[cur][sumB] == -1)
+    {
+        ll res = 0, x = sumB;
+        for (ll i = 0; x <= LIM && i <= cnt[cur]; i++, x += p[cur])
+            res = max(res, primetime(cur + 1, m, x, tot));
+        dp[cur][sumB] = res;
+    }
+    return dp[cur][sumB];
+}
+
+ll solve()
 {
     int m;
     cin >> m;
+    ll tot = 0;
     for (int i = 0; i < m; i++)
+    {
         cin >> p[i] >> cnt[i];
+        tot += p[i] * cnt[i];
+    }
     memset(dp, -1, sizeof(dp));
-    return primetime(0, m, 1);
+    return primetime(0, m, 0, tot);
 }
 
 int main()

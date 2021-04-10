@@ -23,6 +23,23 @@ int dfs(vector<vector<int>> &g, vector<int> &arr, int cur, int last, int t, int 
     return vis2[cur];
 }
 
+// Diameter of tree
+int diam_dfs(vector<vector<int>> &g, int cur, int last, int &diam)
+{
+    int mx = 0;
+    for (int e : g[cur])
+    {
+        if (e != last)
+        {
+            dep[e] = dep[cur] + 1;
+            int st = diam_dfs(g, e, cur, diam);
+            diam = max(diam, mx + st);
+            mx = max(mx, st);
+        }
+    }
+    return mx + 1;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
