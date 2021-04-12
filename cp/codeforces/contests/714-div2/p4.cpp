@@ -181,9 +181,7 @@ ll solve()
     }
     ll sum = 0;
     for (int i = 0; i < n - 1; i++)
-    {
         sum += s.query(i, i).v;
-    }
     return sum;
 }
 

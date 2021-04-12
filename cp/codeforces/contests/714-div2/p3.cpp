@@ -4,14 +4,11 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 2e5 + 25;
-const ll MOD = 1e9 + 7;
-ll seq[N];
+const int N = 2e5 + 25, MOD = 1e9 + 7;
+int seq[N];
 
-ll add(ll x, ll y)
+int add(int x, int y)
 {
-    x %= MOD;
-    y %= MOD;
     x += y;
     while (x >= MOD)
         x -= MOD;
@@ -20,21 +17,14 @@ ll add(ll x, ll y)
     return x;
 }
 
-int mul(int x, int y)
-{
-    x %= MOD;
-    y %= MOD;
-    return (x * 1ll * y) % MOD;
-}
-
 void init()
 {
-    vector<ll> cnt(10);
+    vector<int> cnt(10);
     cnt[0] = seq[0] = 1;
     for (int i = 1; i < N; i++)
     {
         seq[i] = 0;
-        vector<ll> tmp(10);
+        vector<int> tmp(10);
         for (int j = 0; j < 9; j++)
             tmp[j + 1] = cnt[j];
         tmp[0] = add(tmp[0], cnt[9]);
@@ -45,11 +35,11 @@ void init()
     }
 }
 
-ll solve()
+int solve()
 {
     int n, m;
     cin >> n >> m;
-    ll res = 0;
+    int res = 0;
     while (n > 0)
     {
         int d = n % 10;

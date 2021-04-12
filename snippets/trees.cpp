@@ -15,11 +15,8 @@ int dfs(vector<vector<int>> &g, vector<int> &arr, int cur, int last, int t, int 
         return vis1[cur];
     int mx = vis1[cur];
     for (int e : g[cur])
-    {
-        if (e == last)
-            continue;
-        vis2[cur] = dfs(g, arr, e, cur, vis2[cur] + 1, lvl + 1);
-    }
+        if (e != last)
+            vis2[cur] = dfs(g, arr, e, cur, vis2[cur] + 1, lvl + 1);
     return vis2[cur];
 }
 
