@@ -8,8 +8,7 @@ void solve()
 {
     int n, q, t;
     cin >> n >> q;
-    vector<int> arr(n);
-    vector<int> st(51);
+    vector<int> arr(n), st(51);
     for (int i = 1; i <= n; i++)
     {
         cin >> arr[i];
