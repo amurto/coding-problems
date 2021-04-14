@@ -46,7 +46,7 @@ void init()
         fact[i] = (fact[i - 1] * 1ll * i) % MOD;
     i--;
     // Fermat's Little Theorem
-    // 1/(a! % mod) = a^mod-2 % mod
+    // 1/(a! % mod) = a!^mod-2 % mod
     invfact[i] = power(fact[i], MOD - 2, MOD);
     for (i--; i >= 0; i--)
         invfact[i] = (invfact[i + 1] * 1ll * (i + 1)) % MOD;
