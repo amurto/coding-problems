@@ -96,12 +96,14 @@ void solve()
         cin >> a >> b;
         a--;
         b--;
-        int l = max(a, b), r = n - 1, res = b, mn = min(arr[a], arr[b]);
+        if (a > b)
+            swap(a, b);
+        int rmx = s.query(a, b).v, l = b, r = n - 1, res = -1;
         while (l <= r)
         {
             int mid = l + (r - l) / 2;
             int mx = s.query(b, mid).v;
-            if (mx <= mn)
+            if (mx <= rmx)
             {
                 res = max(res, mid);
                 l = mid + 1;
@@ -109,7 +111,7 @@ void solve()
             else
                 r = mid - 1;
         }
-        cout << vis[res] << "\n";
+        res == -1 ? cout << "0\n" : cout << vis[res] << "\n";
     }
 }
 
