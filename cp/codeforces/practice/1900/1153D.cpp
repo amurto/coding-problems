@@ -10,18 +10,18 @@ typedef long long ll;
 int dfs(vector<vector<int>> &g, vector<int> &op, int cur, int last, int k)
 {
     if (g[cur].size() == 1 && g[cur][0] == last)
-        return k;
-    int mx = 0, sum = 0;
+        return 1;
+    int mn = k, sum = 0;
     for (int e : g[cur])
     {
         if (e != last)
         {
             int x = dfs(g, op, e, cur, k);
-            mx = max(mx, x);
-            sum += k - mx + 1;
+            mn = min(mn, x);
+            sum += x;
         }
     }
-    return op[cur] == 0 ? k - sum + 1 : mx;
+    return op[cur] == 0 ? sum : mn;
 }
 
 int main()
@@ -44,6 +44,6 @@ int main()
     for (int i = 2; i <= n; i++)
         if (g[i].size() == 1)
             k++;
-    cout << dfs(g, op, 1, -1, k) << "\n";
+    cout << k - dfs(g, op, 1, -1, k) + 1 << "\n";
     return 0;
 }
