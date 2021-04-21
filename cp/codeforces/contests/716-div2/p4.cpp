@@ -2,32 +2,90 @@
 using namespace std;
 
 typedef long long ll;
-const int N = 3e5 + 5, M = 3e5 + 5;
-const int SQN = sqrt(N) + 1;
+#define pb push_back
 
-struct query
+struct node
 {
-    int l, r;
-    int idx;
-    int block;
-    query() {}
-    query(int _l, int _r, int _id)
+    int v = 0, freq = 0; // identity
+    node() {}
+    node(int val, int cnt)
     {
-        l = _l;
-        r = _r;
-        block = _l / SQN;
-        idx = _id;
+        v = val;
+        freq = cnt;
     }
-    bool operator<(const query &b) const
+    void merge(const node &l, const node &r)
     {
-        if (block != b.block)
-            return block < b.block;
-        return r < b.r;
+        if (l.v == r.v)
+        {
+            v = l.v;
+            freq = l.freq + r.freq;
+        }
+        else
+        {
+            if (l.freq > r.freq)
+            {
+                v = l.v;
+                freq = l.freq - r.freq;
+            }
+            else
+            {
+                v = r.v;
+                freq = r.freq - l.freq;
+            }
+        }
     }
 };
 
-query Q[M];
-int ans[M], arr[N], freq[N], counter[N];
+template <typename node>
+struct segtree
+{
+    int len;
+    vector<node> t;
+    node identity_element;
+    segtree(int l)
+    {
+        len = l;
+        t.resize(4 * len);
+        identity_element = node();
+    }
+
+    template <typename T>
+    void build(const T &arr, const int32_t &v, const int32_t &tl, const int32_t &tr)
+    {
+        if (tl == tr)
+        {
+            t[v] = node(arr[tl], 1);
+            return;
+        }
+        int32_t tm = (tl + tr) >> 1;
+        build(arr, v << 1, tl, tm);
+        build(arr, v << 1 | 1, tm + 1, tr);
+        t[v].merge(t[v << 1], t[v << 1 | 1]);
+    }
+
+    node query(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r)
+    {
+        if (l > tr || r < tl)
+            return identity_element;
+        if (l <= tl && tr <= r)
+            return t[v];
+        int32_t tm = (tl + tr) >> 1;
+        node a = query(v << 1, tl, tm, l, r), b = query(v << 1 | 1, tm + 1, tr, l, r), ans;
+        ans.merge(a, b);
+        return ans;
+    }
+
+public:
+    template <typename T>
+    void build(const T &arr)
+    {
+        build(arr, 1, 0, len - 1);
+    }
+    node query(const int32_t &l, const int32_t &r)
+    {
+        return query(1, 0, len - 1, l, r);
+    }
+};
 
 int main()
 {
@@ -36,66 +94,28 @@ int main()
     cout.tie(0);
     int n, q;
     cin >> n >> q;
-    for (int i = 1; i <= n; i++)
+    vector<int> arr(n);
+    vector<vector<int>> st(n + 1);
+    for (int i = 0; i < n; i++)
+    {
         cin >> arr[i];
-    for (int i = 1; i <= q; i++)
+        st[arr[i]].pb(i);
+    }
+    segtree<node> s(n);
+    s.build(arr);
+    while (q-- > 0)
     {
         int l, r;
         cin >> l >> r;
-        Q[i] = query(l, r, i);
+        l--;
+        r--;
+        node e = s.query(l, r);
+        int lb = lower_bound(st[e.v].begin(), st[e.v].end(), l) - st[e.v].begin();
+        int ub = upper_bound(st[e.v].begin(), st[e.v].end(), r) - st[e.v].begin();
+        int cnt = ub - lb;
+        int rem = r - l + 1 - cnt;
+        int u = min(cnt, rem + 1);
+        cout << 1 + cnt - u << "\n";
     }
-    sort(Q + 1, Q + 1 + q);
-    int curl = 1, curr = 0;
-    int t_ans = 0;
-    for (int i = 1; i <= q; i++)
-    {
-        int l = Q[i].l;
-        int r = Q[i].r;
-        int idx = Q[i].idx;
-        while (curr < r)
-        {
-            ++curr;
-            int val = arr[curr];
-            int c = freq[val];
-            counter[c]--;
-            freq[val]++;
-            counter[freq[val]]++;
-            t_ans = max(t_ans, freq[val]);
-        }
-        while (curl > l)
-        {
-            --curl;
-            int val = arr[curl];
-            int c = freq[val];
-            counter[c]--;
-            freq[val]++;
-            counter[freq[val]]++;
-            t_ans = max(t_ans, freq[val]);
-        }
-        while (curr > r)
-        {
-            int val = arr[curr];
-            int c = freq[val];
-            counter[c]--;
-            freq[val]--;
-            counter[freq[val]]++;
-            while (counter[t_ans] == 0)
-                t_ans--;
-            --curr;
-        }
-        while (curl < l)
-        {
-            int val = arr[curl];
-            counter[freq[val]]--;
-            freq[val]--;
-            counter[freq[val]]++;
-            while (counter[t_ans] == 0)
-                t_ans--;
-            ++curl;
-        }
-        ans[idx] = 1 + t_ans - min(r - l - t_ans + 2, t_ans);
-    }
-    for (int i = 1; i <= q; i++)
-        cout << ans[i] << "\n";
     return 0;
 }
