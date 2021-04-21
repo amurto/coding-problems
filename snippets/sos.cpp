@@ -10,11 +10,11 @@ typedef long long ll;
 // O(n^2)
 bool possible(vector<int> &arr, int n, int sum)
 {
-    vector<vector<int>> dp(n + 1, vector<int>(1005));
+    vector<vector<int>> dp(n + 1, vector<int>(sum + 5));
     for (int i = 0; i <= n; i++)
         dp[i][sum] = 1;
     for (int i = n - 1; i >= 0; i--)
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j <= sum - arr[i]; j++)
             dp[i][j] = dp[i + 1][j] || dp[i + 1][j + arr[i]];
     return dp[0][0];
 }
