@@ -54,6 +54,7 @@ int query(int x, int v, int bit)
 }
 
 // smallest non-negative integer not present in array
+// remove running sum, else this will not work
 int mex(int v, int bit)
 {
     if (bit == -1)
