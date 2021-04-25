@@ -42,15 +42,26 @@ bool remove(int x, int v, int bit)
     return !(t[v][0] | t[v][1]);
 }
 
+// min xor with x
+int min_xor_query(int x, int v, int bit)
+{
+    if (bit == -1)
+        return 0;
+    int child = (x >> bit) & 1;
+    if (t[v][child] > 0)
+        return min_xor_query(x, t[v][child], bit - 1);
+    return (1 << bit) | min_xor_query(x, t[v][child ^ 1], bit - 1);
+}
+
 // max xor with x
-int query(int x, int v, int bit)
+int max_xor_query(int x, int v, int bit)
 {
     if (bit == -1)
         return 0;
     int child = (x >> bit) & 1;
     if (t[v][child ^ 1] > 0)
-        return (1 << bit) | query(x, t[v][child ^ 1], bit - 1);
-    return query(x, t[v][child], bit - 1);
+        return (1 << bit) | max_xor_query(x, t[v][child ^ 1], bit - 1);
+    return max_xor_query(x, t[v][child], bit - 1);
 }
 
 // smallest non-negative integer not present in array
@@ -124,7 +135,7 @@ int main()
         else if (ch == '-')
             remove(x, 1, LGN);
         else
-            cout << query(x, 1, LGN) << "\n";
+            cout << max_xor_query(x, 1, LGN) << "\n";
     }
     return 0;
 }

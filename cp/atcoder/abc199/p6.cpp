@@ -21,6 +21,21 @@ int mul(int x, int y)
     return (x * 1ll * y) % MOD;
 }
 
+// Binary Exponentiation O(logn)
+// n^m mod p
+int power(int n, int m, int p)
+{
+    int res = 1;
+    while (m > 0)
+    {
+        if (m & 1)
+            res = (res * 1ll * n) % p;
+        n = (n * 1ll * n) % p;
+        m /= 2;
+    }
+    return res;
+}
+
 struct Matrix
 {
     vector<vector<int>> mat;
@@ -78,9 +93,33 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    // Example
-    // vector<vector<int>> arr = {{0}, {0}, {0}, {1}};
-    // Matrix T = Matrix(arr);
-    // Matrix res = mat_exp(Matrix(identity), n - 1) * Matrix(col);
+    int n, m, k, u, v;
+    cin >> n >> m >> k;
+    vector<int> arr(n), d(n);
+    vector<vector<int>> g(n, vector<int>(n)), col(n, vector<int>(1));
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+        col[i][0] = arr[i];
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cin >> u >> v;
+        u--;
+        v--;
+        d[u]++;
+        d[v]++;
+        g[u][v] = g[v][u] = 1;
+    }
+    int den = power(mul(2, m), MOD - 2, MOD);
+    for (int i = 0; i < n; i++)
+        g[i][i] = mul(add(mul(2, m), -d[i]), den);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            if (i != j && g[i][j] == 1)
+                g[i][j] = den;
+    Matrix res = mat_exp(Matrix(g), k) * Matrix(col);
+    for (int i = 0; i < n; i++)
+        cout << res.mat[i][0] << "\n";
     return 0;
 }
