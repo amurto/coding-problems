@@ -9,6 +9,12 @@ typedef long long ll;
 const int N = 2e5 + 5, LGN = 30;
 int t[N * LGN][2], cnt[N * LGN], mask = 1;
 
+void init()
+{
+    memset(t, 0, sizeof(t));
+    memset(cnt, 0, sizeof(cnt));
+}
+
 void insert(int x, int v, int bit)
 {
     if (bit == -1)
@@ -121,8 +127,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    memset(t, 0, sizeof(t));
-    memset(cnt, 0, sizeof(cnt));
+    init();
     int q, x;
     cin >> q;
     char ch;
@@ -138,4 +143,27 @@ int main()
             cout << max_xor_query(x, 1, LGN) << "\n";
     }
     return 0;
+}
+
+// String Trie
+const int N = 1e5 + 5, K = 26;
+int t[N][K], cnt[N], mask = 1;
+
+void init()
+{
+    memset(t, 0, sizeof(t));
+    memset(cnt, 0, sizeof(cnt));
+}
+
+void insert(string &str)
+{
+    int cur = 1, i = 0;
+    while (i < str.length())
+    {
+        if (t[cur][str[i] - 'a'] == 0)
+            t[cur][str[i] - 'a'] = ++mask;
+        cur = t[cur][str[i] - 'a'];
+        i++;
+    }
+    cnt[cur]++;
 }
