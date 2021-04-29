@@ -4,6 +4,9 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+const int N = 1e3 + 5, ninf = -1e6;
+int dp[N][N];
+
 struct AhoCorasick
 {
     struct Node
@@ -60,8 +63,8 @@ struct AhoCorasick
     // Compute suffix link for current state
     int get_suffix_link(int cur)
     {
-        if (T[cur].parent == 0)
-            return T[cur].suf = 0;
+        if (cur == 0 || T[cur].parent == 0)
+            return 0;
         if (T[cur].suf == -1)
             T[cur].suf = transition(get_suffix_link(T[cur].parent), T[cur].ch);
         return T[cur].suf;
@@ -88,7 +91,7 @@ struct AhoCorasick
         s.pb(ch);
         return s;
     }
-    
+
     void display(int cur, string s)
     {
         if (T[cur].leaf > 0)
@@ -99,35 +102,41 @@ struct AhoCorasick
     }
 };
 
+int kuniya(AhoCorasick &A, string &str, int cur, int state)
+{
+
+    vector<int> tmp;
+    A.traverse(state, tmp);
+    if (!tmp.empty())
+        return ninf;
+    if (cur == str.length())
+        return 0;
+    if (dp[cur][state] == -1)
+        dp[cur][state] = max(kuniya(A, str, cur + 1, state), 1 + kuniya(A, str, cur + 1, A.transition(state, str[cur])));
+    return dp[cur][state];
+}
+
+int solve()
+{
+    int n;
+    string str;
+    cin >> str >> n;
+    vector<string> sub(n);
+    AhoCorasick A;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> sub[i];
+        A.insert(sub[i], i);
+    }
+    memset(dp, -1, sizeof(dp));
+    return kuniya(A, str, 0, 0);
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int t, q;
-    string str, tmp;
-    cin >> t;
-    while (t-- > 0)
-    {
-        AhoCorasick A;
-        cin >> str >> q;
-        for (int i = 0; i < q; i++)
-        {
-            cin >> tmp;
-            A.insert(tmp, i);
-        }
-        vector<int> st;
-        vector<bool> vis(q);
-        int cur = 0;
-        for (int j = 0; j < str.length(); j++)
-        {
-            cur = A.transition(cur, str[j]);
-            A.traverse(cur, st);
-        }
-        for (int e : st)
-            vis[e] = true;
-        for (bool v : vis)
-            v ? cout << "y\n" : cout << "n\n";
-    }
+    cout << solve() << "\n";
     return 0;
 }

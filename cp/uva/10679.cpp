@@ -68,7 +68,7 @@ struct AhoCorasick
         if (T[cur].next[mask(c)] >= 0)
             return T[cur].next[mask(c)];
         if (T[cur].parent == 0)
-            return T[cur].next[mask(c)] >= 0 ? T[cur].next[mask(c)] : 0;
+            return T[0].next[mask(c)] >= 0 ? T[0].next[mask(c)] : 0;
         if (T[cur].go[mask(c)] >= 0)
             return T[cur].go[mask(c)];
         return T[cur].go[mask(c)] = transition(get_suffix_link(cur), c);
