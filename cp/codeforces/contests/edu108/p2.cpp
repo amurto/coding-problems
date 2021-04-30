@@ -8,8 +8,7 @@ bool solve()
 {
     ll n, m, k;
     cin >> n >> m >> k;
-    ll sum = m - 1 + m * (n - 1);
-    return sum==k;
+    return n * m - 1 == k;
 }
 
 int main()
