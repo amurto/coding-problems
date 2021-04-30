@@ -6,7 +6,7 @@ typedef long long ll;
 
 bool solve()
 {
-    ll n, m, k;
+    int n, m, k;
     cin >> n >> m >> k;
     return n * m - 1 == k;
 }
