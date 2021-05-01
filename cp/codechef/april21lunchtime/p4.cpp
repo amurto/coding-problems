@@ -7,7 +7,7 @@ typedef pair<int, int> pii;
 
 const int N = 2e5 + 5, LGN = 19;
 vector<int> g[N];
-int up[N][LGN + 1], tin[N], tout[N], dep[N], sub[N], near[N], timer = 0;
+int up[N][LGN + 1], tin[N], tout[N], dep[N], sub[N], timer = 0;
 bool sp[N];
 
 void init(int n)
@@ -17,19 +17,14 @@ void init(int n)
     {
         g[i].clear();
         sp[i] = false;
-        near[i] = -1;
     }
 }
 
 int dfs(int cur, int last, int d)
 {
     sub[cur] = 0;
-    near[cur] = near[last];
     if (sp[cur])
-    {
-        sub[cur]++;
-        near[cur] = cur;
-    }
+        sub[cur] = cur;
     tin[cur] = ++timer;
     dep[cur] = d;
     up[cur][0] = last;
@@ -37,7 +32,7 @@ int dfs(int cur, int last, int d)
         up[cur][i] = up[up[cur][i - 1]][i - 1];
     for (int e : g[cur])
         if (e != last)
-            sub[cur] += dfs(e, cur, d + 1);
+            sub[cur] = max(sub[cur], dfs(e, cur, d + 1));
     tout[cur] = timer;
     return sub[cur];
 }
@@ -73,36 +68,14 @@ int k_ancestor(int u, int k)
     return (d - dep[u] == tmp) ? u : -1;
 }
 
-int inside(vector<int> &f, vector<int> &tmp, int b)
+int bs(int b)
 {
-    int lb = lower_bound(tmp.begin(), tmp.end(), tin[b]) - tmp.begin();
-    if (lb < tmp.size() && is_ancestor(b, f[lb]))
-        return f[lb];
-    return -1;
-}
-
-int outside(vector<int> &f, vector<int> &tmp, int b)
-{
-    if (tmp[0] < tin[b])
-        return f[0];
-    if (tmp.back() > tout[b])
-        return f.back();
-    return -1;
-}
-
-int outsideLR(vector<int> &f, vector<int> &tmp, int l, int r)
-{
-    if (tin[l] > tin[r])
-        swap(l, r);
-    if (tmp[0] < tin[l])
-        return f[0];
-    if (tmp.back() > tout[r])
-        return f.back();
-    int b = lower_bound(tmp.begin(), tmp.end(), tin[r]) - tmp.begin();
-    b--;
-    if (b >= 0 && tmp[b] > tout[l])
-        return f[b];
-    return -1;
+    if (sub[b] > 0)
+        return b;
+    for (int i = LGN; i >= 0; i--)
+        if (sub[up[b][i]] == 0)
+            b = up[b][i];
+    return up[b][0];
 }
 void solve()
 {
@@ -122,112 +95,16 @@ void solve()
         g[u].pb(v);
         g[v].pb(u);
     }
-    dfs(1, 1, 0);
-    sort(f.begin(), f.end(), [&](int &i1, int &i2) {
-        return tin[i1] <= tin[i2];
-    });
-    for (int i = 0; i < k; i++)
-        tmp[i] = tin[f[i]];
-    int mn = f[0];
-    for (int e : f)
-        if (dep[e] <= dep[mn])
-            mn = e;
+    dfs(a, a, 0);
     for (int b = 1; b <= n; b++)
     {
         if (a == b)
-        {
             res.pb({0, f[0]});
-            continue;
-        }
-        int anc = lca(a, b);
-        int dis = dep[a] - dep[anc] + dep[b] - dep[anc];
-        int mx = -dis, p = f[0];
-        if (anc == a)
-        {
-            if (sub[b] > 0)
-            {
-                mx = dis;
-                p = inside(f, tmp, b);
-            }
-            else if (near[b] >= 0 && dep[near[b]] >= dep[a])
-            {
-                mx = dep[near[b]] - dep[a] - (dep[b] - dep[near[b]]);
-                p = near[b];
-            }
-            else
-            {
-                mx = -dis;
-                p = f[0];
-            }
-        }
-        else if (anc == b)
-        {
-            int l = k_ancestor(a, dep[a] - dep[b] - 1);
-            if (outside(f, tmp, l) >= 0)
-            {
-                mx = dis;
-                p = outside(f, tmp, l);
-            }
-            else if (dep[mn] <= dep[a])
-            {
-                mx = dep[a] - dep[mn] - (dep[mn] - dep[b]);
-                p = mn;
-            }
-            else
-            {
-                mx = -dis;
-                p = f[0];
-            }
-        }
         else
         {
-            if (sub[b] > 0)
-            {
-                mx = dis;
-                p = inside(f, tmp, b);
-            }
-            else
-            {
-                int l = k_ancestor(a, dep[a] - dep[anc] - 1), r = k_ancestor(b, dep[b] - dep[anc] - 1);
-                int o = outsideLR(f, tmp, l, r);
-                if (o >= 0)
-                {
-                    mx = dis;
-                    p = o;
-                }
-                else
-                {
-                    int cl = near[b];
-                    if (cl >= 0)
-                    {
-                        if (dep[cl] >= dep[anc])
-                        {
-                            mx = dis - 2 * (dep[b] - dep[cl]);
-                            p = near[b];
-                        }
-                        else
-                        {
-                            mx = dep[a] - dep[anc] - (dep[b] - dep[anc]);
-                            p = near[b];
-                        }
-                    }
-                    else
-                    {
-                        if (dep[mn] < dep[a])
-                        {
-                            mx = dep[a] - dep[mn] - (dep[mn] - dep[anc] + dep[b] - dep[anc]);
-                            p = mn;
-                        }
-                        else
-                        {
-                            mx = -dis;
-                            p = f[0];
-                        }
-                    }
-                }
-            }
+            int p = bs(b);
+            res.pb({2 * dep[p] - dep[b], sub[p]});
         }
-        res.pb({mx, p});
     }
     for (int i = 0; i < n; i++)
         cout << res[i].first << " ";
