@@ -14,6 +14,7 @@ void init()
     memset(cnt, 0, sizeof(cnt));
 }
 
+// O(len(str))
 void insert(string &str)
 {
     int cur = 1, i = 0;
