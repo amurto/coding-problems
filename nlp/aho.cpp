@@ -1,6 +1,3 @@
-// https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1620
-// 10679 - I Love Strings!!
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -43,6 +40,7 @@ struct AhoCorasick
         T.pb(Node());
     }
 
+    // O(len(str))
     // Insert a string and store its id in leaf node
     void insert(string str, int id)
     {
@@ -61,6 +59,8 @@ struct AhoCorasick
         T[cur].leaf++;
     }
 
+    // prefix
+    // ch = r -> ch = e
     // Transition from current state to next state using character
     // If current state doesn't have character as child, use suffix link
     int transition(int cur, char c)
@@ -84,6 +84,7 @@ struct AhoCorasick
         return T[cur].suf;
     }
 
+    // a b c
     // Traverse through exit links for dictionary matching
     // st stores all matching strings
     int traverse(int cur, vector<int> &st)
@@ -116,30 +117,28 @@ int main()
     cout.tie(0);
     int t, q;
     string str, tmp;
-    cin >> t;
-    while (t-- > 0)
+    AhoCorasick A;
+    cin >> str >> q;
+    vector<string> arr(q);
+    for (int i = 0; i < q; i++)
     {
-        AhoCorasick A;
-        cin >> str >> q;
-        vector<string> arr(q);
-        for (int i = 0; i < q; i++)
-        {
-            cin >> arr[i];
-            A.insert(arr[i], i);
-        }
-        vector<int> st;
-        vector<bool> vis(q);
-        int cur = 0;
-        for (int j = 0; j < str.length(); j++)
-        {
-            cur = A.transition(cur, str[j]);
-            A.traverse(cur, st);
-        }
-        for (int e : st)
-            vis[e] = true;
-        for (int i = 0; i < q; i++)
-            if (vis[i])
-                cout << arr[i] << "\n";
+        cin >> arr[i];
+        A.insert(arr[i], i);
     }
+    vector<int> st;
+    vector<bool> vis(q);
+    int cur = 0;
+    for (int j = 0; j < str.length(); j++)
+    {
+        cur = A.transition(cur, str[j]);
+        A.traverse(cur, st);
+    }
+    for (int e : st)
+        vis[e] = true;
+    cout << "\n";
+    for (int i = 0; i < q; i++)
+        if (vis[i])
+            cout << arr[i] << "\n";
+    // O(len(str) + sum of (characters in set))
     return 0;
 }
