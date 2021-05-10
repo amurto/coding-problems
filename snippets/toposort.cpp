@@ -37,7 +37,7 @@ void toposort(int n)
 void solve()
 {
     int n, m, u, v;
-    cin >> n;
+    cin >> n >> m;
     for (int i = 1; i <= n; i++)
         deg[i] = 0;
     for (int i = 0; i < m; i++)
