@@ -4,15 +4,15 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const ll inf = 1e18;
-ll solve()
+const int inf = 1e9;
+int solve()
 {
     int n, cnt = 0, pre = 0;
     cin >> n;
     vector<int> arr(n), st(n + 1);
-    vector<ll> pdp(n + 1, inf);
+    vector<int> pdp(n + 1, inf);
     pdp[0] = 0;
-    vector<vector<ll>> dp(n + 1, vector<ll>(n + 1));
+    vector<vector<int>> dp(n + 1, vector<int>(n + 1));
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
