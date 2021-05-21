@@ -12,7 +12,7 @@ ll solve()
     vector<int> arr(n + 1);
     for (int i = 1; i <= n; i++)
         cin >> arr[i];
-    map<int, ll> mp, cnt;
+    map<int, ll> cnt;
     for (int i = 1; i <= n; i++)
     {
         res += cnt[arr[i]] * (n - i + 1);
