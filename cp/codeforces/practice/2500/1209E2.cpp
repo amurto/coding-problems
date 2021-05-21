@@ -7,41 +7,19 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 13, M = 2005, ninf = -1e9;
-int grid[N][M];
-
-void rotate(int &mask, int n)
+int rotate(int mask, int n)
 {
     int last = (mask & 1);
     mask >>= 1;
     mask |= (last << (n - 1));
-}
-
-int dfs(vector<vector<int>> &dp, vector<vector<int>> &sum, vector<int> &cols, int cur, int mask, int n, int m)
-{
-    if (mask == ((1 << n) - 1))
-        return 0;
-    if (cur == min(n, m))
-        return -1e8;
-    if (dp[cur][mask] <= ninf)
-    {
-        int res = -1e8;
-        for (int i = 0; i < (1 << n); i++)
-        {
-            int j = i;
-            for (int k = 0; k < n; k++, rotate(j, n))
-                if ((mask & j) == 0)
-                    res = max(res, sum[cur][i] + dfs(dp, sum, cols, cur + 1, mask | j, n, m));
-        }
-        dp[cur][mask] = res;
-    }
-    return dp[cur][mask];
+    return mask;
 }
 
 int solve()
 {
     int n, m;
     cin >> n >> m;
+    vector<vector<int>> grid(n, vector<int>(m));
     vector<int> cols(m), cmx(m);
     for (int i = 0; i < n; i++)
     {
@@ -54,13 +32,26 @@ int solve()
     iota(cols.begin(), cols.end(), 0);
     sort(cols.begin(), cols.end(), [&](int &i1, int &i2)
          { return cmx[i1] > cmx[i2]; });
-    vector<vector<int>> dp(n, vector<int>(1 << n, ninf)), sum(m, vector<int>(1 << n));
-    for (int i = 0; i < m; i++)
+    vector<vector<int>> dp(n, vector<int>(1 << n)), sum(m, vector<int>(1 << n));
+    for (int i = 0; i < min(n, m); i++)
+    {
         for (int mask = 0; mask < (1 << n); mask++)
+        {
+            int val = 0, rmask = mask;
             for (int j = 0; j < n; j++)
                 if ((mask >> j) & 1)
-                    sum[i][mask] += grid[j][cols[i]];
-    return dfs(dp, sum, cols, 0, 0, n, m);
+                    val += grid[j][cols[i]];
+            for (int r = 0; r < n; r++, rmask = rotate(rmask, n))
+                sum[i][rmask] = max(sum[i][rmask], val);
+        }
+    }
+    for (int mask = 0; mask < (1 << n); mask++)
+        dp[0][mask] = sum[0][mask];
+    for (int i = 1; i < min(n, m); i++)
+        for (int mask = 0; mask < (1 << n); mask++)
+            for (int j = mask; j < (1 << n); j = (j + 1) | mask)
+                dp[i][j] = max(dp[i][j], sum[i][j ^ mask] + dp[i - 1][mask]);
+    return dp[min(n, m) - 1][(1 << n) - 1];
 }
 
 int main()

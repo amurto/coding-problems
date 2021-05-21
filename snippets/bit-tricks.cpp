@@ -1,8 +1,23 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
+
+// Traverse through all supersets in 2 ^ (count of zeros)
+// Example: Supersets of 1010 are 1010, 1011, 1110, 1111.
+void supersets(int n)
+{
+	for (int mask = 0; mask < (1 << n); mask++)
+	{
+		for (int j = mask; j < (1 << n); j = (j + 1) | mask)
+		{
+			// mask is original set
+			// j is superset
+			// j ^ mask is added subset
+		}
+	}
+}
 
 // Formula for prefix xors 0 ^ 1 ^ .... ^ k:
 int xorUpToK(int k)
