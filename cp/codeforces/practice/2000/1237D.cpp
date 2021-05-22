@@ -7,7 +7,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 2e5 + 5, LGN = 18;
+const int N = 6e5 + 5, LGN = 18;
 int sp[N][LGN], hp[N];
 
 void init()
@@ -40,16 +40,16 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<int> arr(2 * n), nxt(2 * n + 1), fin(2 * n + 1);
+    vector<int> arr(3 * n), nxt(3 * n + 1), fin(3 * n + 1);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
         arr[i + n] = arr[i];
+        arr[i + 2 * n] = arr[i];
     }
-    init();
-    build(arr, 2 * n);
+    build(arr, 3 * n);
     stack<int> st;
-    for (int i = 0; i < 2 * n; i++)
+    for (int i = 0; i < 3 * n; i++)
     {
         while (!st.empty() && arr[st.top()] < arr[i])
         {
@@ -60,17 +60,17 @@ void solve()
     }
     while (!st.empty())
     {
-        nxt[st.top()] = 2 * n;
+        nxt[st.top()] = 3 * n;
         st.pop();
     }
-    fin[2 * n] = -2;
-    for (int i = 2 * n - 1; i >= 0; i--)
+    fin[3 * n] = -1;
+    for (int i = 3 * n - 1; i >= 0; i--)
     {
-        int low = i + 1, high = 2 * n - 1, res = 2 * n;
+        int low = i + 1, high = 3 * n - 1, res = 3 * n;
         while (low <= high)
         {
             int mid = low + (high - low) / 2;
-            if (query(i, mid) <= arr[i] / 2)
+            if (2 * query(i, mid) < arr[i])
             {
                 res = min(res, mid);
                 high = mid - 1;
@@ -78,13 +78,17 @@ void solve()
             else
                 low = mid + 1;
         }
-        if (res <= nxt[i])
+        if (res < nxt[i])
             fin[i] = res;
         else
             fin[i] = fin[nxt[i]];
     }
     for (int i = 0; i < n; i++)
-        cout << fin[i] + 1 << " ";
+    {
+        if (fin[i] >= 0)
+            fin[i] -= i;
+        cout << fin[i] << " ";
+    }
 }
 
 int main()
@@ -92,6 +96,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    init();
     solve();
     return 0;
 }
