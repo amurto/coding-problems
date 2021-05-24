@@ -56,8 +56,13 @@ void solve()
             cin >> x >> y;
             x--;
             y--;
-            swap(con[x], con[y]);
-            swap(pos[x], pos[y]);
+            int last = m;
+            last %= szc[con[x]];
+            int p1 = g[con[x]][pos[x] - last];
+            last = m;
+            last %= szc[con[y]];
+            int p2 = g[con[y]][pos[y] - last];
+            swap(arr[p1], arr[p2]);
         }
         else
         {
