@@ -6,16 +6,26 @@ typedef long long ll;
 
 const int N = 1e6 + 5;
 vector<int> g[N];
-int token[N];
+int token[N], branch[N];
 
-ll dfs(stack<int> &st, int cur, int last, int d)
+void precompute(int cur)
+{
+    branch[cur] = token[cur];
+    for (int e : g[cur])
+        precompute(e);
+    for (int e : g[cur])
+        branch[cur] = max(branch[cur], token[cur] + branch[e]);
+    sort(g[cur].begin(), g[cur].end(), [&](int &e1, int &e2)
+         { return branch[e1] > branch[e2]; });
+}
+
+ll dfs(stack<int> &st, int cur, int d)
 {
     ll dis = 0;
     if (token[cur] == 1)
         st.push(d);
     for (int e : g[cur])
-        if (e != last)
-            dis += dfs(st, e, cur, d + 1);
+        dis += dfs(st, e, d + 1);
     int sz = st.size();
     if (sz == d)
     {
@@ -31,17 +41,20 @@ ll solve()
     string str;
     cin >> n >> str;
     for (int i = 1; i <= n; i++)
+    {
         g[i].clear();
+        branch[i] = 0;
+    }
     for (int i = 1; i <= n; i++)
         token[i] = (str[i - 1] - '0');
     for (int i = 2; i <= n; i++)
     {
         cin >> p;
         g[p].pb(i);
-        g[i].pb(p);
     }
+    precompute(1);
     stack<int> st;
-    return dfs(st, 1, 1, 1);
+    return dfs(st, 1, 1);
 }
 
 int main()
