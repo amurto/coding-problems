@@ -14,29 +14,26 @@ void solve()
         cin >> arr[i];
     while (!is_sorted(arr.begin(), arr.end()))
     {
-        // for (int i = 1; i <= n; i++)
-        //     cout << arr[i] << " ";
-        // cout << "\n";
-        vector<vector<int>> req(2);
-        vector<int> fix;
-        for (int i = 2; i <= n; i++)
+        vector<int> req, fix;
+        for (int i = 1; i < n; i++)
         {
-            if (i - 1 < arr[i - 1] || i > arr[i])
-                req[(i - 1) & 1].pb(i - 1);
-            if (i - 1 == arr[i - 1] && i == arr[i])
-                fix.pb(i - 1);
+            if ((i & 1) == cur)
+            {
+                if (arr[i] > arr[i + 1])
+                    req.pb(i);
+                else
+                    fix.pb(i);
+            }
         }
-        if (req[cur].empty())
+        if (req.empty())
         {
-            swap(arr[fix[0]], arr[fix[0] + 1]);
-            op.pb(fix[0]);
+            swap(arr[fix.back()], arr[fix.back() + 1]);
+            op.pb(fix.back());
         }
         else
         {
-            sort(req[cur].begin(), req[cur].end(), [&](int &i1, int &i2)
-                 { return arr[i1 + 1] < arr[i2 + 1]; });
-            swap(arr[req[cur][0]], arr[req[cur][0] + 1]);
-            op.pb(req[cur][0]);
+            swap(arr[req[0]], arr[req[0] + 1]);
+            op.pb(req[0]);
         }
         cur ^= 1;
     }

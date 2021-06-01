@@ -5,63 +5,49 @@ typedef long long ll;
 typedef pair<int, int> pii;
 #define pb push_back
 
-const int inf = 2e9 + 20;
-map<pii, int> ids;
-map<int, int> mask;
-vector<vector<int>> cols;
-void dfs(vector<bool> &vis, int i, int j, int m)
+const int inf = INT_MAX;
+map<pii, int> vis;
+map<int, vector<int>> cols;
+void dfs(int i, int j, int m)
 {
-    vis[ids[{i, j}]] = true;
+    vis[{i, j}] = 1;
     int nxt = inf;
-    int tmp = mask[j];
-    int ub = upper_bound(cols[tmp].begin(), cols[tmp].end(), i) - cols[tmp].begin();
-    if (ub < cols[tmp].size())
-        nxt = cols[tmp][ub];
+    int ub = upper_bound(cols[j].begin(), cols[j].end(), i) - cols[j].begin();
+    if (ub < cols[j].size())
+        nxt = cols[j][ub];
     vector<int> seq = {-1, 1};
     for (int d : seq)
     {
         int c = j - d;
-        if (mask[c] == 0)
+        if (cols[c].empty())
             continue;
-        int msk = mask[c];
-        int ub = upper_bound(cols[msk].begin(), cols[msk].end(), i) - cols[msk].begin();
-        for (int itr = ub; itr < cols[msk].size() && cols[msk][itr] <= nxt; itr++)
-            if (!vis[ids[{cols[msk][itr], c}]])
-                dfs(vis, cols[msk][itr], c, m);
+        int rb = upper_bound(cols[c].begin(), cols[c].end(), i) - cols[c].begin();
+        for (int itr = rb; itr < cols[c].size() && cols[c][itr] <= nxt; itr++)
+            if (vis[{cols[c][itr], c}] == 0)
+                dfs(cols[c][itr], c, m);
     }
 }
+
 int solve()
 {
     int n, m, res = 0;
     cin >> n >> m;
-    vector<int> ys;
-    vector<pii> pts(m + 1);
-    vector<bool> vis(m + 1);
-    ys.pb(-1);
-    for (int i = 1; i <= m; i++)
-    {
+    vector<pii> pts(m);
+    for (int i = 0; i < m; i++)
         cin >> pts[i].first >> pts[i].second;
-        ys.pb(pts[i].second);
-    }
-    sort(ys.begin(), ys.end());
-    ys.resize(unique(ys.begin(), ys.end()) - ys.begin());
-    int sz = ys.size();
-    cols.resize(sz);
-    for (int i = 0; i < sz; i++)
-        mask[ys[i]] = i;
-    sort(pts.begin(), pts.end());
-    for (int i = 1; i <= m; i++)
-    {
-        ids[{pts[i].first, pts[i].second}] = i;
-        cols[mask[pts[i].second]].pb(pts[i].first);
-    }
-    // for (int i = 0; i < sz; i++)
-    //     if (!cols[i].empty())
-    //         cout << cols[i].size() << "\n";
-    dfs(vis, 0, n, m);
-    for (int i = 0; i < sz; i++)
-        if (!cols[i].empty())
-            res += (vis[ids[{cols[i].back(), ys[i]}]]);
+    sort(pts.begin(), pts.end(), [&](pii &p1, pii &p2)
+         {
+             if (p1.second == p2.second)
+                 return p1.first < p2.first;
+             return p1.second < p2.second;
+         });
+    cols[n].pb(0);
+    for (int i = 0; i < m; i++)
+        cols[pts[i].second].pb(pts[i].first);
+    dfs(0, n, m);
+    for (auto c : cols)
+        if (!c.second.empty() && vis[{c.second.back(), c.first}] == 1)
+            res++;
     return res;
 }
 
