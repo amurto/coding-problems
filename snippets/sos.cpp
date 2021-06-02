@@ -44,3 +44,17 @@ bool possibleSqrt(vector<int> &arr, int n, int sum)
     }
     return vis[sum];
 }
+
+// Sum over Subsets Dynamic Programming
+// https://codeforces.com/blog/entry/45223
+void sos()
+{
+    int n;
+    vector<int> arr(1 << n), dp(1 << n);
+    for (int i = 0; i < (1 << n); ++i)
+        dp[i] = arr[i];
+    for (int i = 0; i < n; ++i)
+        for (int mask = 0; mask < (1 << n); ++mask)
+            if (mask & (1 << i))
+                dp[mask] += dp[mask ^ (1 << i)];
+}
