@@ -4,34 +4,13 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool dfs(vector<int> &nxt, vector<bool> &vis, vector<int> &arr, stack<int> &st, int l, int r)
+int dfs(vector<int> &arr, vector<int> &nxt, stack<int> &st, int l, int r)
 {
-    vis[l] = true;
-    stack<int> del;
     for (int i = l + 1; i < r;)
-    {
-        if (nxt[i] == -1)
-        {
-            del.push(i);
-            i++;
-        }
-        else
-        {
-            if (nxt[i] > r || !dfs(nxt, vis, arr, st, i, nxt[i]))
-                return false;
-            i = nxt[i];
-        }
-    }
-    while (!del.empty())
-    {
-        vis[del.top()] = true;
-        arr[del.top()] = st.top();
-        del.pop();
-        st.pop();
-    }
+        i = dfs(arr, nxt, st, i, nxt[i]);
     arr[l] = st.top();
     st.pop();
-    return true;
+    return r;
 }
 
 void solve()
@@ -39,31 +18,33 @@ void solve()
     int n;
     cin >> n;
     vector<int> nxt(n + 1), arr(n + 1);
-    vector<bool> vis(n + 1);
     for (int i = 1; i <= n; i++)
         cin >> nxt[i];
-    stack<int> st;
-    for (int i = n; i >= 1; i--)
-        st.push(i);
+    for (int i = 1; i <= n; i++)
+        if (nxt[i] == -1)
+            nxt[i] = i + 1;
+    stack<int> border, st;
     for (int i = 1; i <= n; i++)
     {
-        if (!vis[i])
+        while (!border.empty() && i == border.top())
+            border.pop();
+        if (border.empty())
+            border.push(nxt[i]);
+        else
         {
-            if (nxt[i] != -1)
+            if (nxt[i] > border.top())
             {
-                if (!dfs(nxt, vis, arr, st, i, nxt[i]))
-                {
-                    cout << "-1\n";
-                    return;
-                }
+                cout << "-1\n";
+                return;
             }
             else
-            {
-                arr[i] = st.top();
-                st.pop();
-            }
+                border.push(nxt[i]);
         }
     }
+    for (int i = n; i > 0; i--)
+        st.push(i);
+    for (int i = 1; i <= n;)
+        i = dfs(arr, nxt, st, i, nxt[i]);
     for (int i = 1; i <= n; i++)
         cout << arr[i] << " ";
     cout << "\n";
