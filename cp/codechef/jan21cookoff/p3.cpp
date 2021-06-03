@@ -16,35 +16,64 @@ int add(int x, int y)
     return x;
 }
 
+int mul(int x, int y)
+{
+    return (x * 1ll * y) % MOD;
+}
+
+// Binary Exponentiation O(logn)
+// n^m mod p
+int power(int n, int m, int p)
+{
+    int res = 1;
+    while (m > 0)
+    {
+        if (m & 1)
+            res = (res * 1ll * n) % p;
+        n = (n * 1ll * n) % p;
+        m /= 2;
+    }
+    return res;
+}
+
+int find_mex(vector<int> &arr, int n)
+{
+    set<int> st;
+    for (int i = 1; i <= n; i++)
+        st.insert(arr[i]);
+    for (int i = 0; i < n; i++)
+        if (st.find(i) == st.end())
+            return i;
+    return n;
+}
+
 int solve()
 {
-    int n, m = 0;
+    int n;
     cin >> n;
-    vector<int> arr(n + 1), last(n + 1), dp(n + 1), pre(n + 1);
+    vector<int> arr(n + 1), dp(n + 1), pdp(n + 1);
     for (int i = 1; i <= n; i++)
         cin >> arr[i];
-    arr[0] = arr[n];
-    unordered_set<int> st(arr.begin(), arr.end());
-    while (st.count(m))
-        m++;
-    multiset<int> ms;
-    for (int i = 0; i < m; i++)
-        ms.insert(0);
-    dp[0] = pre[0] = 1;
+    int mex = find_mex(arr, n);
+    if (mex == 0)
+        return power(2, n - 1, MOD);
+    vector<int> last(mex, -1);
+    multiset<int> ids;
+    for (int i = 0; i < mex; i++)
+        ids.insert(-1);
+    dp[0] = pdp[0] = 1;
     for (int i = 1; i <= n; i++)
     {
-        if (arr[i] < m)
+        if (arr[i] < mex)
         {
-            ms.erase(ms.find(last[arr[i]]));
+            ids.erase(ids.lower_bound(last[arr[i]]));
             last[arr[i]] = i;
-            ms.insert(i);
+            ids.insert(last[arr[i]]);
         }
-        int f = *ms.begin();
-        if (f > 0)
-            dp[i] = pre[f - 1];
-        if (m == 0)
-            dp[i] = pre[i - 1];
-        pre[i] = add(pre[i - 1], dp[i]);
+        int low = *ids.begin();
+        if (low != -1)
+            dp[i] = add(dp[i], pdp[low - 1]);
+        pdp[i] = add(pdp[i - 1], dp[i]);
     }
     return dp[n];
 }

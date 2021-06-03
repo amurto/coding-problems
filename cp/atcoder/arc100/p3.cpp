@@ -1,6 +1,3 @@
-// https://atcoder.jp/contests/arc100/tasks/arc100_c
-// Or Plus Max
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -15,24 +12,25 @@ void solve()
     vector<int> arr(sz);
     vector<vector<int>> f(sz, vector<int>(2));
     for (int i = 0; i < sz; i++)
+    {
         cin >> arr[i];
+        f[i][0] = arr[i];
+    }
     for (int b = 0; b < n; b++)
+    {
         for (int mask = 0; mask < sz; mask++)
         {
             if ((mask >> b) & 1)
             {
-                vector<int> seq = {f[mask][0], f[mask][1], f[mask ^ (1 << b)][0], f[mask ^ (1 << b)][1], arr[mask ^ (1 << b)]};
+                vector<int> seq = {f[mask][0], f[mask][1], f[mask ^ (1 << b)][0], f[mask ^ (1 << b)][1]};
                 sort(seq.rbegin(), seq.rend());
                 f[mask][0] = seq[0];
                 f[mask][1] = seq[1];
             }
         }
-    for (int i = 1; i < sz; i++)
-    {
-        vector<int> seq = {arr[i], f[i][0], f[i][1]};
-        sort(seq.rbegin(), seq.rend());
-        arr[i] = seq[0] + seq[1];
     }
+    for (int i = 1; i < sz; i++)
+        arr[i] = f[i][0] + f[i][1];
     for (int i = 1; i < sz; i++)
         arr[i] = max(arr[i - 1], arr[i]);
     for (int i = 1; i < sz; i++)

@@ -57,4 +57,10 @@ void sos()
         for (int mask = 0; mask < (1 << n); ++mask)
             if (mask & (1 << i))
                 dp[mask] += dp[mask ^ (1 << i)];
+
+    // sum of supersets
+    // for (int i = 0; i < n; i++)
+    //     for (int mask = (1 << n) - 1; mask >= 0; mask--)
+    //         if (!((mask >> i) & 1))
+    //             dp[mask] += dp[mask ^ (1 << i)];
 }
