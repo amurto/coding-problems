@@ -5,8 +5,7 @@ typedef long long ll;
 #define pb push_back
 
 const int N = (1 << 19);
-vector<int> g[N];
-vector<int> tin(N), tout(N), dep(N), sub(N);
+vector<int> g[N], tin(N), tout(N), dep(N), sub(N);
 
 bool is_ancestor(int u, int v)
 {
