@@ -1,3 +1,6 @@
+// https://codeforces.com/contest/842/problem/D
+// Vitya and Strange Lesson
+
 #include <bits/stdc++.h>
 using namespace std;
 
