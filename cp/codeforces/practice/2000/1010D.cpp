@@ -21,7 +21,6 @@ int calc(int cur)
     return bit[g[cur][0]] ^ 1;
 }
 
-// Entry and Exit time for Segment Tree
 void dfs(int cur)
 {
     if (op[cur] != "IN")
