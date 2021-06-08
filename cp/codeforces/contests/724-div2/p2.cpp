@@ -31,7 +31,7 @@ void increase(string &cur)
     }
 }
 
-bool not_substr(string &str, string &cur, int n)
+bool is_substr(string &str, string &cur, int n)
 {
     int sz = cur.length();
     for (int i = 0; i < n - sz + 1; i++)
@@ -45,7 +45,7 @@ string solve()
     int n;
     string str, cur = "a";
     cin >> n >> str;
-    while (not_substr(str, cur, n))
+    while (is_substr(str, cur, n))
         increase(cur);
     return cur;
 }
