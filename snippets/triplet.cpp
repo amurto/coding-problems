@@ -7,11 +7,11 @@ public:
     int first, second, third;
     triplet() {}
     triplet(int first, int second, int third) : first(first), second(second), third(third) {}
-    bool operator<(const triplet &j) const
+    bool operator<(const triplet &other) const
     {
-        if (first == j.first)
-            return (second <= j.second);
+        if (first == other.first)
+            return (second <= other.second);
         else
-            return (first <= j.first);
+            return (first <= other.first);
     }
 };

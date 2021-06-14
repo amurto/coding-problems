@@ -19,59 +19,78 @@ int query(vector<int> arr)
 
 int solve()
 {
-    int n, k, res = 0;
+    int n, k, d = 1, res = 0;
     cin >> n >> k;
-    if (n % k == 0)
+    vector<bool> vis(n + 1);
+    vector<int> dis(n + 1), last(n + 1), op(n + 1);
+    vis[n] = true;
+    dis[n] = 0;
+    last[n] = -1;
+    queue<int> q;
+    q.push(n);
+    while (!q.empty() && !vis[0] && d <= 500)
     {
-        for (int i = 0; i < n; i += k)
+        int sz = q.size();
+        while (sz-- > 0)
         {
-            vector<int> tmp;
-            for (int j = i; j < i + k; j++)
-                tmp.pb(j + 1);
-            res ^= query(tmp);
-        }
-        return res;
-    }
-    int mn = 501, c = 0, tm = 0;
-    for (int p = 1; p < k; p++)
-    {
-        int rem = n - p, u = k - p;
-        for (int j = 1; j <= 500; j += 2)
-        {
-            int w = rem - u * j;
-            if (w >= 0 & w % k == 0)
+            int cur = q.front();
+            q.pop();
+            int e = cur, o = n - cur;
+            for (int p = 0; p <= k; p++)
             {
-                int op = j + w / k;
-                if (op < mn)
+                if (p <= e && k - p <= o)
                 {
-                    mn = op;
-                    c = p;
-                    tm = j;
+                    int st = e - p + k - p;
+                    if (!vis[st])
+                    {
+                        vis[st] = true;
+                        dis[st] = d;
+                        last[st] = cur;
+                        op[st] = p;
+                        q.push(st);
+                    }
                 }
             }
         }
+        d++;
     }
-    if (mn == 501)
+    if (!vis[0])
         return -1;
-    int cur = c;
-    for (int i = 0; i < tm; i++)
+    vector<int> seq;
+    int cur = 0;
+    while (cur != n)
     {
-        int u = k - c;
-        vector<int> tmp;
-        for (int j = 0; j < c; j++)
-            tmp.pb(j + 1);
-        for (int j = cur; j < cur + u; j++)
-            tmp.pb(j + 1);
-        cur += u;
-        res ^= query(tmp);
+        seq.pb(op[cur]);
+        cur = last[cur];
     }
-    while (cur < n)
+    reverse(seq.begin(), seq.end());
+    vector<int> u(n + 1);
+    for (int v : seq)
     {
-        vector<int> tmp;
-        for (int j = cur; j < cur + k; j++)
-            tmp.pb(j + 1);
-        res ^= query(tmp);
-        cur += k;
+        int e = v, o = k - v;
+        vector<int> ids;
+        for (int j = 1; (e > 0 || o > 0) && j <= n; j++)
+        {
+            if (u[j] % 2 == 1)
+            {
+                if (o > 0)
+                {
+                    ids.pb(j);
+                    u[j] ^= 1;
+                    o--;
+                }
+            }
+            else
+            {
+                if (e > 0)
+                {
+                    ids.pb(j);
+                    u[j] ^= 1;
+                    e--;
+                }
+            }
+        }
+        res ^= query(ids);
     }
     return res;
 }
