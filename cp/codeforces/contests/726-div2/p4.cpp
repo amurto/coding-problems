@@ -4,11 +4,15 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-void solve()
+string solve()
 {
-    ll n, m, i, j;
-    cin >> n >> m >> i >> j;
-    cout << 1 << " " << 1 << " " << n << " " << m << "\n";
+    int n;
+    cin >> n;
+    for (int i = 1; i < 30; i += 2)
+        if (1 << i == n)
+            return "Bob";
+    vector<string> seq = {"Alice", "Bob"};
+    return seq[n & 1];
 }
 
 int main()
@@ -19,6 +23,6 @@ int main()
     int t;
     cin >> t;
     while (t-- > 0)
-        solve();
+        cout << solve() << "\n";
     return 0;
 }

@@ -4,18 +4,16 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-ll solve()
+int solve()
 {
-    ll n, sum = 0;
+    int n, sum = 0;
     cin >> n;
-    vector<ll> arr(n);
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
         sum += arr[i];
     }
-    if (sum == n)
-        return 0;
     if (sum < n)
         return 1;
     return sum - n;
