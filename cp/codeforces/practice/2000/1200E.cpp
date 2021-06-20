@@ -7,30 +7,20 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-int prefix(string &str1, string &str2)
+vector<int> prefix_function(string s)
 {
-    int sz = str1.length(), len = str2.length(), cur = 0;
-    vector<int> lps(sz);
-    if (str1[0] == str2[0])
-        lps[0] = ++cur;
-    for (int j = 1; j < sz;)
+    int n = (int)s.length();
+    vector<int> pre(n);
+    for (int i = 1; i < n; i++)
     {
-        if (cur == len)
-            cur = 0;
-        if (str1[j] == str2[cur])
-        {
-            lps[j] = ++cur;
+        int j = pre[i - 1];
+        while (j > 0 && s[i] != s[j])
+            j = pre[j - 1];
+        if (s[i] == s[j])
             j++;
-        }
-        else
-        {
-            if (cur == 0)
-                lps[j++] = 0;
-            else
-                cur = lps[cur - 1];
-        }
+        pre[i] = j;
     }
-    return lps.back();
+    return pre;
 }
 
 string solve()
@@ -40,13 +30,29 @@ string solve()
     vector<string> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
-    vector<int> pre(n);
-    for (int i = 1; i < n; i++)
-        pre[i] = prefix(arr[i - 1], arr[i]);
     string res = arr[0];
     for (int i = 1; i < n; i++)
-        for (int j = pre[i]; j < arr[i].length(); j++)
-            res.pb(arr[i][j]);
+    {
+        vector<int> pre = prefix_function(arr[i]);
+        int sz = res.length(), m = arr[i].length();
+        int id = max(0, sz - m), j = 0;
+        string tmp = res.substr(id, min(sz, m));
+        for (char ch : tmp)
+        {
+            if (j == m)
+                j = pre[j - 1];
+            if (ch == arr[i][j])
+                j++;
+            else
+            {
+                while (j > 0 && ch != arr[i][j])
+                    j = pre[j - 1];
+                j += (ch == arr[i][j]);
+            }
+        }
+        if (j < m)
+            res += arr[i].substr(j, m - j);
+    }
     return res;
 }
 

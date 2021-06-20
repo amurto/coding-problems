@@ -6,58 +6,54 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-void computeLPS(string &pat, vector<int> &lps, int m)
+// Prefix Function from cp-algorithms
+vector<int> prefix_function(string s)
 {
-    lps[0] = 0;
-    int len = 0, i = 1;
-    while (i < m)
+    int n = (int)s.length();
+    vector<int> pre(n);
+    for (int i = 1; i < n; i++)
     {
-        if (pat[i] == pat[len])
-        {
-            lps[i] = ++len;
-            i++;
-        }
-        else
-        {
-            if (len == 0)
-                lps[i++] = 0;
-            else
-                len = lps[len - 1];
-        }
+        int j = pre[i - 1];
+        while (j > 0 && s[i] != s[j])
+            j = pre[j - 1];
+        if (s[i] == s[j])
+            j++;
+        pre[i] = j;
     }
+    return pre;
 }
 
-// Find occurences of "pat" in "text"
-int KMPSearch(string &text, string &pat)
+// Count frequency of pat in tex
+int KMPSearch(string text, string pat)
 {
-    int n = text.length(), m = pat.length();
-    vector<int> lps(m);
-    computeLPS(pat, lps, m);
-    int i = 0, j = 0, res = 0;
-    while (i < n)
+    int m = pat.length(), j = 0, cnt = 0;
+    vector<int> pre = prefix_function(pat);
+    for (char ch : text)
     {
-        if (text[i] == pat[j])
-        {
-            i++;
-            j++;
-        }
+        // If current matching has reached end of pat, use link to previous prefix
         if (j == m)
         {
-            j = lps[j - 1];
-            res++;
+            j = pre[j - 1];
+            cnt++;
         }
-        else if (i < n && text[i] != pat[j])
+        // Same character, then increase current match
+        if (ch == pat[j])
+            j++;
+        else
         {
-            if (j > 0)
-                j = lps[j - 1];
-            else
-                i++;
+            // Iterate over previous prefix matches 
+            while (j > 0 && ch != pat[j])
+                j = pre[j - 1];
+            // Update j if a valid match is found, else no prefix exists at current char
+            j += (ch == pat[j]);
         }
     }
-    return res;
+    cnt += (j == m);
+    return cnt;
 }
 
-int main() {
+int main()
+{
     string s1, s2;
     cin >> s1 >> s2;
     // Count of string s2 in s1
