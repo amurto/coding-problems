@@ -22,6 +22,7 @@ ll solve()
         dp[arr[i]]++;
         cnt[arr[i]]++;
     }
+    // SOS dp
     for (int b = 0; b < LGN; b++)
         for (int mask = 0; mask < (1 << LGN); mask++)
             if ((mask >> b) & 1)
