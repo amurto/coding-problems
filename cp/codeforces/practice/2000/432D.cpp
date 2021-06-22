@@ -24,6 +24,15 @@ vector<int> prefix_function(string s)
     return pre;
 }
 
+int dfs(vector<vector<int>> &g, vector<int> &sum, int cur, int last)
+{
+    sum[cur] = 1;
+    for (int e : g[cur])
+        if (e != last)
+            sum[cur] += dfs(g, sum, e, cur);
+    return sum[cur];
+}
+
 void solve()
 {
     string str;
@@ -36,32 +45,25 @@ void solve()
         return;
     }
     vector<int> pre = prefix_function(str);
-    int cur = pre[n - 1];
     vector<bool> vis(n);
+    int cur = pre[n - 1] - 1;
+    while (cur > 0)
+    {
+        vis[cur] = true;
+        cur = pre[cur] - 1;
+    }
+    if (str[0] == str[n - 1])
+        vis[0] = true;
+    vis[n - 1] = true;
+    vector<vector<int>> g(n + 1);
     for (int i = 0; i < n; i++)
-        cout << pre[i] << " ";
-    // while (cur > 0)
-    // {
-    //     cout << cur << "\n";
-    //     vis[cur - 1] = true;
-    //     cur = pre[cur]-1;
-    // }
-    // vector<int> diff(n + 1);
-    // for (int i = 1; i < n; i++)
-    // {
-    //     if (pre[i] > 0)
-    //     {
-    //         diff[0]++;
-    //         diff[pre[i]]--;
-    //     }
-    // }
-    // for (int i = 1; i < n; i++)
-    //     diff[i] += diff[i - 1];
-    // diff[n - 1]++;
-    // vis[n-1] = true;
-    // for (int i = 0; i < n; i++)
-    //     if (vis[i])
-    //         cout << i + 1 << " " << diff[i] << "\n";
+        g[pre[i]].pb(i + 1);
+    vector<int> sum(n + 1);
+    dfs(g, sum, 0, 0);
+    cout << count(vis.begin(), vis.end(), true) << "\n";
+    for (int i = 0; i < n; i++)
+        if (vis[i])
+            cout << i + 1 << " " << sum[i + 1] << "\n";
 }
 
 int main()
