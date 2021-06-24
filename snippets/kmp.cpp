@@ -23,6 +23,28 @@ vector<int> prefix_function(string s)
     return pre;
 }
 
+const int N = 1e5 + 5;
+int t[N][26];
+int transition(vector<int> &pre, string &pat, int k, char ch)
+{
+    if (t[k][ch - 'A'] == -1)
+    {
+        int v = k;
+        if (v == pat.length())
+            v = pre[v - 1];
+        if (ch == pat[v])
+            v++;
+        else
+        {
+            while (v > 0 && ch != pat[v])
+                v = pre[v - 1];
+            v += (ch == pat[v]);
+        }
+        t[k][ch - 'A'] = v;
+    }
+    return t[k][ch - 'A'];
+}
+
 // Count frequency of pat in tex
 int KMPSearch(string text, string pat)
 {
@@ -41,7 +63,7 @@ int KMPSearch(string text, string pat)
             j++;
         else
         {
-            // Iterate over previous prefix matches 
+            // Iterate over previous prefix matches
             while (j > 0 && ch != pat[j])
                 j = pre[j - 1];
             // Update j if a valid match is found, else no prefix exists at current char

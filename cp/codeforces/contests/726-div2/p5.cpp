@@ -4,31 +4,42 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-string dup(string cur, int n)
+vector<int> z_function(string s)
 {
-    string d = "";
-    int sz = cur.length(), id = 0;
-    for (int i = 0; i < n; i++, id++)
+    int n = (int)s.length();
+    vector<int> z(n);
+    for (int i = 1, l = 0, r = 0; i < n; ++i)
     {
-        id %= sz;
-        d.pb(cur[id]);
+        if (i <= r)
+            z[i] = min(r - i + 1, z[i - l]);
+        while (i + z[i] < n && s[z[i]] == s[i + z[i]])
+            ++z[i];
+        if (i + z[i] - 1 > r)
+            l = i, r = i + z[i] - 1;
     }
-    return d;
+    return z;
 }
 
 string solve()
 {
     int n, k;
-    string str, cur = "";
+    string str;
     cin >> n >> k >> str;
-    vector<string> arr;
-    for (int i = 0; i < n; i++)
+    str.pb(char('z' + 1));
+    vector<int> z = z_function(str);
+    int best = n - 1;
+    for (int i = 1; i <= n; i++)
     {
-        cur.pb(str[i]);
-        arr.pb(dup(cur, k));
+        if (str[z[i]] < str[i + z[i]])
+        {
+            best = i;
+            break;
+        }
     }
-    sort(arr.begin(), arr.end());
-    return arr[0];
+    string res = "";
+    for (int i = 0; i < k; i++)
+        res.pb(str[i % best]);
+    return res;
 }
 
 int main()
