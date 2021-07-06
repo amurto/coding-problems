@@ -4,7 +4,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 998244353, N = 3e5 + 1;
+const int MOD = 998244353;
 
 int add(int x, int y)
 {
@@ -36,40 +36,33 @@ int power(int n, int m, int p)
     return res;
 }
 
-// factorial and inverse factorial
-int fact[N], invfact[N];
-void init()
-{
-    fact[0] = fact[1] = 1;
-    int i;
-    for (i = 2; i < N; i++)
-        fact[i] = (fact[i - 1] * 1ll * i) % MOD;
-    i--;
-    // Fermat's Little Theorem
-    // 1/(a! % mod) = a!^mod-2 % mod
-    invfact[i] = power(fact[i], MOD - 2, MOD);
-    for (i--; i >= 0; i--)
-        invfact[i] = (invfact[i + 1] * 1ll * (i + 1)) % MOD;
-}
-
-// NCR
-// n!/r!*(n-r)!
-int ncr(int n, int r)
-{
-    if (r > n || n < 0 || r < 0)
-        return 0;
-    return mul(fact[n], mul(invfact[r], invfact[n - r]));
-}
-
 int solve()
 {
-    int n, m;
+    int n, m, res = 0;
     cin >> n >> m;
-    vector<vector<int>> arr(n, vector<int>(m));
+    int fac = 1;
+    for (int i = 1; i <= n; i++)
+        fac = mul(fac, i);
+    vector<vector<int>> dis(n, vector<int>(m));
     for (int i = 0; i < n; i++)
         for (int j = 0; j < m; j++)
-            cin >> arr[i][j];
-    return 1;
+            cin >> dis[i][j];
+    for (int j = 0; j < m; j++)
+    {
+        vector<int> seq(n + 2);
+        for (int i = 0; i < n; i++)
+            seq[n - dis[i][j] + 2]++;
+        int p = 1, cur = 0;
+        for (int i = 1; i <= n; i++)
+        {
+            cur += seq[i];
+            p = mul(p, cur);
+            cur--;
+        }
+        res = add(res, add(fac, -p));
+    }
+    res = mul(res, power(fac, MOD - 2, MOD));
+    return res;
 }
 
 int main()
@@ -77,7 +70,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    init();
     cout << solve() << "\n";
     return 0;
 }

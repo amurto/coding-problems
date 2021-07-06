@@ -12,8 +12,6 @@ int dfs(vector<int> &arr, int cur, int last, int t, int lvl)
 {
     vis1[cur] = vis2[cur] = t;
     dep[cur] = lvl;
-    if (g[cur].size() == 1 && g[cur][0] == last)
-        return vis1[cur];
     int mx = vis1[cur];
     for (int e : g[cur])
         if (e != last)
