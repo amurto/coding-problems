@@ -55,7 +55,7 @@ int solve()
     for (int i = 0; i < n; i++)
     {
         int tmp = mul(cur, p[i]), tmq = mul(cur, q[i]);
-        res = add(res, add(tmp, tmq));
+        res = add(res, cur);
         x = add(x, tmq);
         cur = tmp;
     }
