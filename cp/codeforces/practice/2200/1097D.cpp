@@ -7,7 +7,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1e9 + 7, N = 2e4 + 5;
+const int MOD = 1e9 + 7;
 
 int add(int x, int y)
 {
@@ -39,46 +39,19 @@ int power(int n, int m, int p)
     return res;
 }
 
-// factorial and inverse factorial
-int fact[N], invfact[N];
-void init()
-{
-    fact[0] = fact[1] = 1;
-    int i;
-    for (i = 2; i < N; i++)
-        fact[i] = (fact[i - 1] * 1ll * i) % MOD;
-    i--;
-    // Fermat's Little Theorem
-    // 1/(a! % mod) = a!^mod-2 % mod
-    invfact[i] = power(fact[i], MOD - 2, MOD);
-    for (i--; i >= 0; i--)
-        invfact[i] = (invfact[i + 1] * 1ll * (i + 1)) % MOD;
-}
-
-// NCR
-// n!/r!*(n-r)!
-int ncr(int n, int r)
-{
-    if (r > n || n < 0 || r < 0)
-        return 0;
-    return mul(fact[n], mul(invfact[r], invfact[n - r]));
-}
-
 map<ll, int> primes, divs;
 vector<ll> st;
+int pre[15][55];
 
-void dfs(int cur, ll d, int v, ll n, int k)
+int dfs(int cur, ll d, int p)
 {
     if (cur == st.size())
-    {
-        divs[n / d] = v;
-        cout << n / d << " " << v << "\n";
-        return;
-    }
+        return mul(d % MOD, p);
     ll tmp = d;
-    int mx = primes[st[cur]];
+    int mx = primes[st[cur]], res = 0;
     for (int i = 0; i <= mx; i++, tmp *= st[cur])
-        dfs(cur + 1, tmp, mul(v, ncr(i + k, i)), n, k);
+        res = add(res, dfs(cur + 1, tmp, mul(p, pre[cur][i])));
+    return res;
 }
 
 int solve()
@@ -106,17 +79,18 @@ int solve()
         st.pb(x);
         primes[x] = 1;
     }
-    // for (int i = 0; i < st.size(); i++)
-    //     cout << st[i] << " -> " << primes[st[i]] << "\n";
-    dfs(0, 1, 1, n, k);
-    int num = 0, den = 0;
-    for (auto d : divs)
+    for (int i = 0; i < st.size(); i++)
     {
-        int cur = d.first % MOD;
-        num = add(num, mul(cur, d.second));
-        den = add(den, d.second);
+        int cnt = primes[st[i]];
+        vector<vector<int>> dp(k + 1, vector<int>(cnt + 2));
+        dp[0][cnt] = 1;
+        for (int j = 1; j <= k; j++)
+            for (int c = cnt; c >= 0; c--)
+                dp[j][c] = add(mul(power(c + 1, MOD - 2, MOD), dp[j - 1][c]), dp[j][c + 1]);
+        for (int j = 0; j <= cnt; j++)
+            pre[i][j] = dp[k][j];
     }
-    return mul(num, power(den, MOD - 2, MOD));
+    return dfs(0, 1, 1);
 }
 
 int main()
@@ -124,7 +98,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    init();
     cout << solve() << "\n";
     return 0;
 }
