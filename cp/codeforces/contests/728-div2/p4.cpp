@@ -87,7 +87,7 @@ int sub(vector<bool> &vis, int cur, int last)
 
 int solve()
 {
-    int n, u, v, res = 0;
+    int n, u, v, num = 0;
     cin >> n;
     for (int i = 0; i < n - 1; i++)
     {
@@ -122,6 +122,7 @@ int solve()
                 cur = up[cur][0];
             }
             seq.pb(cur);
+            vis[cur] = true;
             cur = j;
             while (cur != l)
             {
@@ -129,15 +130,11 @@ int solve()
                 vis[cur] = true;
                 cur = up[cur][0];
             }
-            cout << i << " " << j << " -> ";
             for (int e : seq)
-                cout << e << " ";
-            cout << "\n";
-            for (int e : seq)
-                res = add(res, mul(den, mul(sub(vis, e, e), dp[dis[i][e]][dis[j][e]])));
+                num = add(num, mul(sub(vis, e, e), dp[dis[i][e]][dis[j][e]]));
         }
     }
-    return res;
+    return mul(num, den);
 }
 
 int main()
