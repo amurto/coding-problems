@@ -72,9 +72,7 @@ void solve()
     for (int i = 0; i < m; i++)
         cin >> skill[i];
     for (int i = 0; i < m; i++)
-    {
         res[i] = remove_skill(skill[i]);
-    }
     for (int i = 0; i < m; i++)
         cout << res[i] << " ";
     cout << "\n";

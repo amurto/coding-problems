@@ -5,33 +5,26 @@ typedef long long ll;
 #define pb push_back
 
 const int N = 2e5 + 5;
-vector<int> g[N];
-int cnt[N], dp[N][2];
-bool vis[N][2];
-string ans[3] = {"Takahashi", "Aoki", "Draw"};
-map<string, int> mp;
-int id(string str)
-{
-    return mp[str];
-}
+vector<int> g[N], gt[N];
+int deg[N];
+bool vis[N], win[N], lose[N];
 
-int dfs(int cur, int p)
+void dfs(int cur)
 {
-    if (dp[cur][p] == -1)
+    vis[cur] = true;
+    for (int e : gt[cur])
     {
-        dp[cur][p] = 2;
-        int res = p ^ 1;
-        for (int e : g[cur])
+        if (!vis[e])
         {
-            int v = dfs(e, p ^ 1);
-            if (v == p)
-                res = p;
-            else if (res != p && v == 2)
-                res = 2;
+            if (lose[cur])
+                win[e] = true;
+            else if (--deg[e] == 0)
+                lose[e] = true;
+            else
+                continue;
+            dfs(e);
         }
-        dp[cur][p] = res;
     }
-    return dp[cur][p];
 }
 
 void solve()
@@ -50,23 +43,17 @@ void solve()
     }
     sort(st.begin(), st.end());
     st.resize(unique(st.begin(), st.end()) - st.begin());
+    map<string, int> mp;
     for (int i = 0; i < st.size(); i++)
         mp[st[i]] = i;
     int len = st.size();
-    memset(dp, -1, sizeof(dp));
-    for (int i = 0; i < len; i++)
-    {
-        cnt[i] = 0;
-        vis[i][0] = vis[i][1] = false;
-    }
     for (int i = 0; i < n; i++)
     {
         int sz = arr[i].length();
         st.pb(arr[i].substr(0, 3));
         st.pb(arr[i].substr(sz - 3, 3));
-        int i1 = id(l[i]), i2 = id(r[i]);
+        int i1 = mp[l[i]], i2 = mp[r[i]];
         g[i1].pb(i2);
-        cnt[i1]++;
     }
     for (int i = 0; i < len; i++)
     {
@@ -76,15 +63,32 @@ void solve()
             g[i].resize(unique(g[i].begin(), g[i].end()) - g[i].begin());
         }
     }
+    vector<int> nodes;
     for (int i = 0; i < len; i++)
     {
-        dfs(i, 0);
-        dfs(i, 1);
+        vis[i] = win[i] = lose[i] = false;
+        for (int e : g[i])
+            gt[e].pb(i);
+        if (g[i].empty())
+        {
+            lose[i] = 1;
+            nodes.pb(i);
+        }
     }
+    for (int i = 0; i < len; i++)
+        deg[i] = (int)g[i].size();
+    for (int x : nodes)
+        if (!vis[x])
+            dfs(x);
     for (int i = 0; i < n; i++)
     {
-        int w = dfs(id(r[i]), 1);
-        cout << ans[w] << "\n";
+        int id = mp[r[i]];
+        if (win[id])
+            cout << "Aoki\n";
+        else if (lose[id])
+            cout << "Takahashi\n";
+        else
+            cout << "Draw\n";
     }
 }
 
