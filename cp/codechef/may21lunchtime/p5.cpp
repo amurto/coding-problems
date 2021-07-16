@@ -5,7 +5,7 @@ typedef long long ll;
 #define pb push_back
 
 const int N = 1e6 + 5;
-int vis1[N], vis2[N], dep[N], ver[N];
+int vis1[N], vis2[N], dep[N], ver[N], token[N];
 vector<int> g[N];
 
 struct node
@@ -21,7 +21,9 @@ struct node
     void merge(const node &l, const node &r)
     {
         v = max(l.v, r.v);
-        if (l.v > r.v)
+        if (l.v == r.v)
+            id = max(l.id, r.id);
+        else if (l.v > r.v)
             id = l.id;
         else
             id = r.id;
@@ -111,19 +113,19 @@ int set_timer(int cur, int t, int lvl)
     return vis2[cur];
 }
 
-ll dfs(segtree<node> &s, vector<int> &token, int cur)
+ll dfs(segtree<node> &s, int cur)
 {
     ll res = 0;
     for (int e : g[cur])
-        res += dfs(s, token, e);
+        res += dfs(s, e);
     if (token[cur] == 0)
     {
         node mx = s.query(vis1[cur], vis2[cur]);
         if (mx.v > dep[cur])
         {
             res += mx.v - dep[cur];
-            s.rupd(vis1[mx.id], vis2[mx.id], 0);
-            s.rupd(vis1[cur], vis2[cur], dep[cur]);
+            s.rupd(vis1[mx.id], vis1[mx.id], 0);
+            s.rupd(vis1[cur], vis1[cur], dep[cur]);
             token[cur] = 1;
             token[mx.id] = 0;
         }
@@ -138,7 +140,6 @@ ll solve()
     cin >> n >> str;
     for (int i = 1; i <= n; i++)
         g[i].clear();
-    vector<int> token(n + 1);
     for (int i = 2; i <= n; i++)
     {
         cin >> p;
@@ -153,7 +154,7 @@ ll solve()
         if (token[ver[i]])
             tmp[i] = dep[ver[i]];
     s.build(tmp);
-    return dfs(s, token, 1);
+    return dfs(s, 1);
 }
 
 int main()
