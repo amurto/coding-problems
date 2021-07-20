@@ -30,11 +30,14 @@ void solve()
     vector<int> nxt(p);
     for (int i = 0; i < p; i++)
         nxt[i] = mul(i, a, p);
-    for (int i = 1; i <= p; i++)
-    {
-        e = nxt[e];
-        cout << e << " ";
-    }
+    // for (int i = 1; i <= p; i++)
+    // {
+    //     e = nxt[e];
+    //     cout << e << " ";
+    // }
+
+    for (int i = 1; i < p; i++)
+        cout << a << " x " << i << " -> " << mul(a, i, p) << "\n";
 }
 
 int main()
