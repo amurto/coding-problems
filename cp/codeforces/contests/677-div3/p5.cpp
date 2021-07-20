@@ -11,10 +11,16 @@ int main()
     cout.tie(0);
     int n;
     cin >> n;
-    ll fac = 1;
-    for (int i = 1; i < n; i++)
-        fac = i * fac;
-    ll ans = 2 * fac / n;
+    vector<ll> fac(n + 1);
+    fac[0] = 1;
+    for (int i = 1; i <= n; i++)
+        fac[i] = fac[i - 1] * i;
+    ll ans = fac[n];
+    ans /= fac[n / 2];
+    ans /= fac[n / 2];
+    ans /= 2;
+    ans *= fac[n / 2 - 1];
+    ans *= fac[n / 2 - 1];
     cout << ans << "\n";
     return 0;
 }
