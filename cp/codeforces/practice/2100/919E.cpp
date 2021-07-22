@@ -42,7 +42,7 @@ ll solve()
         int c = mul(b, power(seq[i], p - 2, p), p);
         ll cur = i + 1ll * ((i - c + p) % p) * (p - 1);
         if (cur <= x)
-            res += (x - cur) / (den) + 1;
+            res += (x - cur) / den + 1;
     }
     return res;
 }
