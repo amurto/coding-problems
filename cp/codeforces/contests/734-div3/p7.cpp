@@ -1,0 +1,118 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+#define pb push_back
+
+const int MOD = 1e9 + 7, N = 105;
+vector<int> g[N];
+int dis[N][N];
+int add(int x, int y)
+{
+    x += y;
+    while (x >= MOD)
+        x -= MOD;
+    while (x < 0)
+        x += MOD;
+    return x;
+}
+
+int mul(int x, int y)
+{
+    return (x * 1ll * y) % MOD;
+}
+
+// Binary Exponentiation O(logn)
+// n^m mod p
+int power(int n, int m, int p)
+{
+    int res = 1;
+    while (m > 0)
+    {
+        if (m & 1)
+            res = (res * 1ll * n) % p;
+        n = (n * 1ll * n) % p;
+        m /= 2;
+    }
+    return res;
+}
+
+// factorial and inverse factorial
+int fact[N], invfact[N];
+void init()
+{
+    fact[0] = fact[1] = 1;
+    int i;
+    for (i = 2; i < N; i++)
+        fact[i] = (fact[i - 1] * 1ll * i) % MOD;
+    i--;
+    // Fermat's Little Theorem
+    // 1/(a! % mod) = a!^mod-2 % mod
+    invfact[i] = power(fact[i], MOD - 2, MOD);
+    for (i--; i >= 0; i--)
+        invfact[i] = (invfact[i + 1] * 1ll * (i + 1)) % MOD;
+}
+
+// NCR
+// n!/r!*(n-r)!
+int ncr(int n, int r)
+{
+    if (r > n || n < 0 || r < 0)
+        return 0;
+    return mul(fact[n], mul(invfact[r], invfact[n - r]));
+}
+
+void dfs(int cur, int rt, int last, int d)
+{
+    dis[rt][cur] = d;
+    for (int e : g[cur])
+        if (e != last)
+            dis[rt][cur] = max(dis[rt][cur], dfs(e, rt, cur, d + 1);
+}
+int solve()
+{
+    int n, k, u, v, res = 0;
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++)
+        g[i].clear();
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            dis[i][j] = -1;
+    for (int i = 0; i < n - 1; i++)
+    {
+        cin >> u >> v;
+        g[u].pb(v);
+        g[v].pb(u);
+    }
+    if (k == 2)
+        res = add(res, ncr(n - 1, 2));
+    for (int i = 1; i <= n; i++)
+    {
+        dfs(i, i, i, 0);
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        vector<int> st(n + 1);
+        for (int j = 1; j <= n; j++)
+            st[dis[i][j]]++;
+        cout << i << "\n";
+        for (int j = 1; j <= n; j++)
+            cout << j << " : " << st[j] << "\n";
+        for (int j = 1; j <= n; j++)
+            res = add(res, ncr(st[j], k));
+    }
+    return res;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    init();
+    int t;
+    cin >> t;
+    while (t-- > 0)
+        cout << solve() << "\n";
+    return 0;
+}
