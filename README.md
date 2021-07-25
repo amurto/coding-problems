@@ -22,7 +22,7 @@ public class A {
 ```c++
 #ifdef amurto
 #define TERMINAL
-#include "Headers/debug.cpp"
+#include "headers/debug.cpp"
 #else
 #define d(...) 0
 #endif
@@ -55,3 +55,19 @@ int main()
 ```cpp
 g++ test.cpp -std=c++17 -Damurto -DDEBUG
 ```
+
+"": {
+  "prefix": "",
+  "body": [
+    "#ifdef amurto",
+    "#define TERMINAL",
+    "#include \"headers/debug.cpp\"",
+    "#else",
+    "#define d(...) 0",
+    "#endif",
+    "#include <bits/stdc++.h>",
+    "using namespace std;",
+    ""
+  ],
+  "description": ""
+}
