@@ -10,10 +10,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 105;
-int adj[N][N], col[N];
-bool vis[N][N];
-
 // W -> 1
 // B -> 0
 int query(int v)
@@ -30,16 +26,8 @@ void solve()
 {
     int n;
     cin >> n;
-    for (int i = 1; i <= n; i++)
-    {
-        col[i] = -1;
-        for (int j = 1; j <= n; j++)
-        {
-            adj[i][j] = 0;
-            vis[i][j] = false;
-        }
-        vis[i][i] = true;
-    }
+    vector<vector<int>> adj(n+1, vector<int>(n+1));
+    vector<int> col(n+1,-1);
     int cnt = (n * (n - 1)) / 2;
     col[1] = query(1);
     for (int i = 2; i <= n; i++)
