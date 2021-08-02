@@ -28,7 +28,6 @@ int dis(pii p1, pii p2)
 
 ll ncr(int n, int r)
 {
-    d(n, r);
     if (r == 0)
         return 1;
     if (r > n || n < 0 || r < 0)
