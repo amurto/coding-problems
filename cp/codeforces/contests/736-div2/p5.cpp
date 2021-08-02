@@ -69,11 +69,26 @@ int ncr(int n, int r)
 
 void solve()
 {
-    int n, q;
-    cin >> n;
+    int n, q, m;
+    cin >> n >> q;
+    vector<vector<int>> dp(3 * n + 1, vector<int>(3));
+    for (int i = 0; i < 3; i++)
+        dp[0][i] = n;
+    int inv3 = power(3, MOD - 2, MOD);
+    for (int x = 1; x < 3 * n; x++)
+    {
+        int sum = ncr(3 * n, x + 1);
+        dp[x][2] = mul(add(sum, add(dp[x - 1][0], mul(2, dp[x - 1][1]))), inv3);
+        dp[x][1] = add(dp[x][2], -dp[x - 1][1]);
+        dp[x][0] = add(sum, -add(dp[x][1], dp[x][2]));
+    }
     for (int i = 0; i < q; i++)
     {
-        cout << gcd();
+        cin >> m;
+        if (m == 3 * n)
+            cout << "1\n";
+        else
+            cout << add(ncr(3 * n, m), dp[m][0]) << "\n";
     }
 }
 
