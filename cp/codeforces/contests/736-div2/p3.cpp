@@ -31,32 +31,24 @@ void solve()
         if (t < 3)
         {
             cin >> u >> v;
+            if (g[u].empty() || *g[u].rbegin() < u)
+                cur--;
+            if (g[v].empty() || *g[v].rbegin() < v)
+                cur--;
             if (t == 1)
             {
-                if (g[u].empty() || *g[u].rbegin() < u)
-                    cur--;
-                if (g[v].empty() || *g[v].rbegin() < v)
-                    cur--;
                 g[u].insert(v);
                 g[v].insert(u);
-                if (*g[u].rbegin() < u)
-                    cur++;
-                if (*g[v].rbegin() < v)
-                    cur++;
             }
             else
             {
-                if (g[u].empty() || *g[u].rbegin() < u)
-                    cur--;
-                if (g[v].empty() || *g[v].rbegin() < v)
-                    cur--;
                 g[u].erase(v);
                 g[v].erase(u);
-                if (g[u].empty() || *g[u].rbegin() < u)
-                    cur++;
-                if (g[v].empty() || *g[v].rbegin() < v)
-                    cur++;
             }
+            if (g[u].empty() || *g[u].rbegin() < u)
+                cur++;
+            if (g[v].empty() || *g[v].rbegin() < v)
+                cur++;
         }
         else
             cout << cur << "\n";
