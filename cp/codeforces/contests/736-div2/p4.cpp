@@ -10,70 +10,39 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-struct node
+const int N = 2e5 + 5, LGN = 18;
+ll sp[N][LGN], hp[N];
+
+void init()
 {
-    ll v = 0; // identity
-    node() {}
-    node(ll val)
-    {
-        v = val;
-    }
-    void merge(const node &l, const node &r)
-    {
-        v = __gcd(l.v, r.v);
-    }
-};
+    // highest power of 2 less than i
+    hp[0] = hp[1] = 0;
+    for (int i = 2; i < N; i++)
+        hp[i] = hp[i / 2] + 1;
+}
 
-template <typename node>
-struct segtree
+ll combine(ll x, ll y) {
+    // use your combiner here
+    return __gcd(x, y);
+}
+
+void build(vector<ll> &arr, int n)
 {
-    int len;
-    vector<node> t;
-    node identity_element;
-    segtree(int l)
-    {
-        len = l;
-        t.resize(4 * len);
-        identity_element = node();
-    }
+    // sparse table initialization with input array
+    for (int i = 0; i < n; i++)
+        sp[i][0] = arr[i];
+    // works for min, max, gcd
+    // updates not supported
+    for (int k = 1; k < LGN; k++)
+        for (int i = 0; i < n; i++)
+            sp[i][k] = combine(sp[i][k - 1], sp[min(n - 1, i + (1 << (k - 1)))][k - 1]);
+}
 
-    template <typename T>
-    void build(const T &arr, const int32_t &v, const int32_t &tl, const int32_t &tr)
-    {
-        if (tl == tr)
-        {
-            t[v].v = arr[tl];
-            return;
-        }
-        int32_t tm = (tl + tr) >> 1;
-        build(arr, v << 1, tl, tm);
-        build(arr, v << 1 | 1, tm + 1, tr);
-        t[v].merge(t[v << 1], t[v << 1 | 1]);
-    }
-
-    node query(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r)
-    {
-        if (l > tr || r < tl)
-            return identity_element;
-        if (l <= tl && tr <= r)
-            return t[v];
-        int32_t tm = (tl + tr) >> 1;
-        node a = query(v << 1, tl, tm, l, r), b = query(v << 1 | 1, tm + 1, tr, l, r), ans;
-        ans.merge(a, b);
-        return ans;
-    }
-
-public:
-    template <typename T>
-    void build(const T &arr)
-    {
-        build(arr, 1, 0, len - 1);
-    }
-    node query(const int32_t &l, const int32_t &r)
-    {
-        return query(1, 0, len - 1, l, r);
-    }
-};
+ll query(int l, int r)
+{
+    int dis = r - l + 1;
+    return combine(sp[l][hp[dis]], sp[r - (1 << hp[dis]) + 1][hp[dis]]);
+}
 
 int solve()
 {
@@ -87,8 +56,7 @@ int solve()
     vector<ll> seq(n - 1);
     for (int i = 1; i < n; i++)
         seq[i - 1] = abs(arr[i] - arr[i - 1]);
-    segtree<node> s(n - 1);
-    s.build(seq);
+    build(seq, n - 1);
     for (int i = 0; i < n - 1; i++)
     {
         if (seq[i] == 1)
@@ -97,7 +65,7 @@ int solve()
         while (low <= high)
         {
             int mid = low + (high - low) / 2;
-            if (s.query(mid, i).v != 1)
+            if (query(mid, i) != 1)
             {
                 idx = min(idx, mid);
                 high = mid - 1;
@@ -115,6 +83,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+    init();
     int t;
     cin >> t;
     while (t-- > 0)
