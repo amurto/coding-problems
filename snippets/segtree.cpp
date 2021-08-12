@@ -52,7 +52,7 @@ struct segtree
         identity_element = node();
         identity_transformation = update();
     }
-
+    segtree() = default;
     void pushdown(const int32_t &v, const int32_t &tl, const int32_t &tr)
     {
         if (!lazy[v])
