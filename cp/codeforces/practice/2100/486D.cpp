@@ -59,14 +59,10 @@ int solve()
         g[u].pb(v);
         g[v].pb(u);
     }
-    for (int i = n - 1; i = 0; i--)
+    for (int i = n - 1; i >= 0; i--)
     {
         int cur = ord[i];
-        cout << cur << "\n";
-        d(cur);
-        int lim = arr[cur] - d;
-        int w = dfs(arr, vis, cur, cur, lim);
-        res = add(res, w);
+        res = add(res, dfs(arr, vis, cur, cur, arr[cur] - d));
         vis[cur] = true;
     }
     return res;
