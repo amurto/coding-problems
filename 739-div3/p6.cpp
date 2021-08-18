@@ -25,7 +25,7 @@ ll dfs(vector<int> &nums, int cur, int f, int mask, int k, int sz)
         int lim = nums[cur];
         if (f == 1)
             lim = 0;
-        for (int i = lim; i <= 9; i++)
+        for (int i = lim; res==-10 &&i <= 9; i++)
         {
             int tmp_mask = (mask | (1 << i));
             int tmp_f = f;
@@ -35,7 +35,7 @@ ll dfs(vector<int> &nums, int cur, int f, int mask, int k, int sz)
             if (v >= 0)
             {
                 ll ans = ten[sz - cur - 1] * i + v;
-                if (res == -10 || ans < res)
+                if (res == -10)
                     res = ans;
             }
         }
