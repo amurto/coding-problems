@@ -11,23 +11,23 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<int, int> pii;
 #define pb push_back
 
 const int N = 5005;
-int adj[N][N];
-vector<int> g[N];
+vector<pii> g[N];
 
-void dfs(vector<int> &vis, int cur, int last)
+void dfs(vector<int> &cols, vector<int> &vis, int cur, int last, int id)
 {
     if (vis[cur] > 0)
     {
         if (vis[cur] == 1)
-            adj[last][cur] = 2;
+            cols[id] = 2;
         return;
     }
     vis[cur] = 1;
-    for (int e : g[cur])
-        dfs(vis, e, cur);
+    for (pii e : g[cur])
+        dfs(cols, vis, e.first, cur, e.second);
     vis[cur] = 2;
 }
 
@@ -35,20 +35,17 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-    vector<int> u(m), v(m);
+    vector<int> u(m), v(m), cols(m);
     vector<int> vis(n + 1);
     for (int i = 0; i < m; i++)
     {
         cin >> u[i] >> v[i];
-        g[u[i]].pb(v[i]);
-        adj[u[i]][v[i]] = 1;
+        g[u[i]].pb({v[i], i});
+        cols[i] = 1;
     }
     for (int i = 1; i <= n; i++)
         if (!vis[i])
-            dfs(vis, i, i);
-    vector<int> cols;
-    for (int i = 0; i < m; i++)
-        cols.pb(adj[u[i]][v[i]]);
+            dfs(cols, vis, i, i, -1);
     int k = *max_element(cols.begin(), cols.end());
     cout << k << "\n";
     for (int c : cols)
