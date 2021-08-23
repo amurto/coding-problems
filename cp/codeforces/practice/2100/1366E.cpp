@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1366/problem/E
 // Two Arrays
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

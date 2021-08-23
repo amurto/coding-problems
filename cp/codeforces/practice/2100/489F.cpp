@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/489/problem/F
 // Special Matrices
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

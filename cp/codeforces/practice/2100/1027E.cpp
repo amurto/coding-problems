@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1027/problem/E
 // Inverse Coloring
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/466/problem/D
 // Increase Sequence
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

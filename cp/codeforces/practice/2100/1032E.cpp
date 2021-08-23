@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1032/problem/E
 // The Unbearable Lightness of Weights
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

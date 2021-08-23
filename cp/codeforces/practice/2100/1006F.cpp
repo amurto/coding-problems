@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1006/problem/F
 // Xor-Paths
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

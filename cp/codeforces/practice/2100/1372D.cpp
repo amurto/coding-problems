@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1372/problem/D
 // Omkar and Circle
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

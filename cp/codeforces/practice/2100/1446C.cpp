@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1446/problem/C
 // Xor Tree
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

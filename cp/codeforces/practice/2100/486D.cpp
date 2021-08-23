@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/486/problem/D
 // Valid Sets
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

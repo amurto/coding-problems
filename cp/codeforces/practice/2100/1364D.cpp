@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1364/problem/D
 // Ehab's Last Corollary
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

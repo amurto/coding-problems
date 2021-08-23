@@ -1,4 +1,4 @@
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "Headers/debug.cpp"
 #else

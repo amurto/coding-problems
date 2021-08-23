@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1077/problem/F2
 // Pictures with Kittens (hard version)
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

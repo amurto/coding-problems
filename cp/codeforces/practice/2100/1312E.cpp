@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1312/problem/E
 // Array Shrinking
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

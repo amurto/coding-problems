@@ -20,7 +20,7 @@ public class A {
 ```
 
 ```c++
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else
@@ -53,13 +53,13 @@ int main()
 ```
 
 ```cpp
-g++ test.cpp -std=c++17 -Damurto -DDEBUG
+g++ test.cpp -std=c++17 -Duse_debug -DDEBUG
 ```
 
 "": {
   "prefix": "",
   "body": [
-    "#ifdef amurto",
+    "#ifdef use_debug",
     "#define TERMINAL",
     "#include \"headers/debug.cpp\"",
     "#else",

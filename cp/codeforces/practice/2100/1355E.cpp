@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1355/problem/E
 // Restorer Distance
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

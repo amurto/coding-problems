@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/992/problem/D
 // Nastya and a Game
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

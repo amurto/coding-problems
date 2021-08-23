@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1207/problem/F
 // Remainder Problem
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

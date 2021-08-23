@@ -8,18 +8,36 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<int, int> pii;
 #define pb push_back
 
 ll solve()
 {
-    int n;
-    ll res = 0;
-    cin >> n;
+    int n, k;
+    ll x, res = 0;
+    cin >> n >> k >> x;
     vector<ll> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
+    if (n == 1)
+        return arr[0];
+    if (k == 0)
+    {
+        for (ll a : arr)
+            res += a;
+        return res;
+    }
+    sort(arr.begin(), arr.end());
+    int idx = 0;
     for (int i = 1; i < n; i++)
-        res = max(res, arr[i - 1] * arr[i]);
+        if (arr[i - 1] + arr[i] > x)
+            idx = max(idx, n - i + 1);
+    int rem = min(idx, 2 * k);
+    if (rem & 1)
+        rem--;
+    res += x * (rem / 2);
+    for (int i = 0; i < n - rem; i++)
+        res += arr[i];
     return res;
 }
 

@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/587/problem/B
 // Duff in Beach
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

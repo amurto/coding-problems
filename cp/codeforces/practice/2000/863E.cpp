@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/863/problem/E
 // Turn Off The TV
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

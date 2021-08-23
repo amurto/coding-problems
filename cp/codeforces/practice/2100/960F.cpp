@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/960/problem/F
 // Pathwalks
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

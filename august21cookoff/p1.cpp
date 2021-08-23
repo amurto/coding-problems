@@ -12,14 +12,19 @@ typedef long long ll;
 
 int solve()
 {
-    int a, b, c;
-    cin >> a >> b >> c;
-    int diff = abs(a - b);
-    if (max(a, max(b, c)) > 2 * diff)
-        return -1;
-    if (c > diff)
-        return c - diff;
-    return c + diff;
+    int n, mx = 0;
+    cin >> n;
+    vector<int> arr(n);
+    map<int, int> mp;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+        mp[arr[i]]++;
+        mx = max(mx, mp[arr[i]]);
+    }
+    if (n == 1)
+        return 0;
+    return min(n - mx, n - 2);
 }
 
 int main()

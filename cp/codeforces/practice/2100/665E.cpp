@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/665/problem/E
 // Beautiful Subarrays
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

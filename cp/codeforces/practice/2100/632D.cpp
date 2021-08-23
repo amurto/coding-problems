@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/632/problem/D
 // Longest Subsequence
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1217/problem/D
 // Coloring Edges
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

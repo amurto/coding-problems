@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1213/problem/F
 // Unstable String Sort
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

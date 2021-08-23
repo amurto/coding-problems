@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/837/problem/E
 // Vasya's Function
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

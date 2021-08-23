@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/920/problem/E
 // Connected Components?
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

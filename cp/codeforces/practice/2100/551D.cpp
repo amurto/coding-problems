@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/551/problem/D
 // GukiZ and Binary Operations
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

@@ -1,7 +1,7 @@
 // https://codeforces.com/contest/1146/problem/D
 // Frog Jumping
 
-#ifdef amurto
+#ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
 #else

@@ -12,18 +12,31 @@ typedef long long ll;
 
 int solve()
 {
-    int n, res = 0;
+    int n;
     cin >> n;
-    vector<int> arr(n);
+    vector<int> arr(n), seq;
     map<int, int> mp;
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
         mp[arr[i]]++;
+        if (arr[i] != 0 && arr[i] != 1)
+            seq.pb(arr[i]);
     }
-    for (auto x : mp)
-        res += min(x.first - 1, x.second);
-    return res;
+    if (n == 1)
+        return 1;
+    int sz = seq.size();
+    if (seq.empty())
+        return 1;
+    if (seq[0] == -1)
+    {
+        if (mp[-1] != sz)
+            return 0;
+        if (mp[-1] == 1)
+            return 1;
+        return (mp[1] > 0) ? 1 : 0;
+    }
+    return (sz == 1) ? 1 : 0;
 }
 
 int main()
