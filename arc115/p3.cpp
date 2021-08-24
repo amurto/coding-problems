@@ -22,44 +22,34 @@ void solve()
     vector<int> arr(k), res;
     for (int i = 0; i < k; i++)
         cin >> arr[i];
-    if (k == 1)
-    {
-        for (int i = n; i > 0; i--)
-            res.pb(i);
-        display(res);
-        return;
-    }
+    vector<vector<int>> sts(k);
     for (int i = 0; i < k; i++)
     {
-        if (i == 0)
+        int lim = arr[i];
+        if (i == k - 1)
+            lim = n;
+        for (int j = lim; j >= arr[i]; j--)
+            sts[i].pb(j);
+    }
+    deque<int> dq;
+    int last = 0;
+    for (int i = 0; i < k; i++)
+    {
+        if (!dq.empty())
         {
-            int cur = arr[i];
-            while (cur > 0)
-            {
-                res.pb(cur);
-                cur--;
-            }
+            res.pb(dq.front());
+            dq.pop_front();
         }
-        else if (i == k - 1)
-        {
-            int cur = arr[i];
-            if (arr[i] < n)
-                cur = n;
-            while (cur > arr[i - 1])
-            {
-                res.pb(cur);
-                cur--;
-            }
-        }
-        else
-        {
-            int cur = arr[i];
-            while (cur > arr[i - 1])
-            {
-                res.pb(cur);
-                cur--;
-            }
-        }
+        for (int j = last + 1; j < arr[i]; j++)
+            dq.pb(j);
+        for (int e : sts[i])
+            res.pb(e);
+        last = arr[i];
+    }
+    while (!dq.empty())
+    {
+        res.pb(dq.back());
+        dq.pop_back();
     }
     display(res);
 }
