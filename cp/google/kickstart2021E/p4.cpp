@@ -10,30 +10,27 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+const int N = 1e6 + 1;
+const double E = 0.5772156649;
+
+double dp[N];
+double f(ll den)
+{
+    return 1.0 / (1.0 * den);
+}
+
+void init()
+{
+    dp[0] = 0;
+    for (int i = 1; i < N; i++)
+        dp[i] = dp[i - 1] + f(i);
+}
+
 double solve()
 {
-    int n, cnt=0, p=0;
+    ll n;
     cin >> n;
-    vector<int> arr(n);
-    iota(arr.begin(), arr.end(), 0);
-    do
-    {
-        p++;
-        int last = arr[0];
-        cnt++;
-        for (int i = 1; i < n; i++)
-        {
-            if (arr[i] > last)
-            {
-                last = arr[i];
-                cnt++;
-            }
-        }
-    } while (next_permutation(arr.begin(), arr.end()));
-    d(cnt, p);
-    double res= (1.0*cnt)/(1.0*p);
-    d(res);
-    return 1.0;
+    return (n < N) ? dp[n] : log(n) + E + f(2 * n) - (f(12) * f(n) * f(n));
 }
 
 int main()
@@ -42,6 +39,7 @@ int main()
     cin.tie(0);
     cout.tie(0);
     cout << fixed << setprecision(12);
+    init();
     int t;
     cin >> t;
     for (int tc = 1; tc <= t; tc++)
