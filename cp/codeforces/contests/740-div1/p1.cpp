@@ -14,15 +14,14 @@ void calc(vector<int> &vals, int a, int b)
 {
     int n = a + b;
     int s1 = (n + 1) / 2, s2 = n / 2;
+    // b loses serve i times
+    // a wins a-i serves
+    // a loses s1-(a-i) serves
     for (int i = 0; i <= a; i++)
-    {
-        // b loses serve i times
-        // a wins a-i serves
-        // a loses s1-(a-i) serves
         if (i <= s2 && s1 - a + i >= 0)
             vals.pb(i + s1 - a + i);
-    }
 }
+
 void solve()
 {
     int a, b;

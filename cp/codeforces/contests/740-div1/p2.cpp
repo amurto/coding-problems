@@ -11,7 +11,6 @@ typedef long long ll;
 #define pb push_back
 
 int MOD;
-
 int add(int x, int y)
 {
     x += y;
@@ -33,8 +32,7 @@ int solve()
     cin >> n >> MOD;
     int mx = n + 1;
     vector<int> dp(mx + 1), pdp(mx + 1);
-    dp[n] = 1;
-    pdp[n] = 1;
+    dp[n] = pdp[n] = 1;
     for (int i = n - 1; i >= 1; i--)
     {
         dp[i] = pdp[i + 1];
