@@ -4,7 +4,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-// Traverse through all subsets in 2 ^ (count of zeros)
+// Traverse through all subsets in 3 ^ (count of zeros)
 // Example: Subsets of 1011 are 1011, 1010, 1000, 0010,...
 void subsets(int n)
 {
@@ -20,7 +20,7 @@ void subsets(int n)
 	}
 }
 
-// Traverse through all supersets in 2 ^ (count of zeros)
+// Traverse through all supersets in 3 ^ (count of zeros)
 // Example: Supersets of 1010 are 1010, 1011, 1110, 1111,...
 void supersets(int n)
 {
