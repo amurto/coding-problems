@@ -43,9 +43,7 @@ int solve()
             // mask is original set
             // j is subset
             if (mask + j < n && st1[j] == st2[mask])
-            {
                 res = min(res, __builtin_popcount(mask));
-            }
             if (j == 0)
                 break;
         }
