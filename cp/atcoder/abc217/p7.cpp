@@ -71,7 +71,8 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-    vector<int> arr, dp(n + 1);
+    vector<int> arr;
+    arr.pb(0);
     for (int i = 1; i <= m; i++)
     {
         int cnt = 0;
@@ -79,23 +80,18 @@ void solve()
             cnt++;
         arr.pb(cnt);
     }
-    d(arr);
-    int mx = *max_element(arr.begin(), arr.end()), pre = 0;
-    for (int k = 1; k <= n; k++)
-    {
-        if (k < mx)
-        {
-            cout << "0\n";
-            continue;
-        }
-        int cur = 1;
-        for (int e : arr)
-        {
-            cur = mul(cur, mul(fact[e], ncr(k, e)));
-        }
-        dp[k] = add(cur, -pre);
-        cout << dp[k] << "\n";
-    }
+    int sz = arr.size();
+    vector<vector<int>> dp(sz, vector<int>(n + 1));
+    // k buckets
+    // choose j buckets and create arr[i]-j new buckets
+    dp[0][0] = 1;
+    for (int i = 1; i < sz; i++)
+        for (int k = 0; k <= n; k++)
+            if (dp[i - 1][k] > 0)
+                for (int j = 0; j <= min(arr[i], k); j++)
+                    dp[i][k + arr[i] - j] = add(dp[i][k + arr[i] - j], mul(dp[i - 1][k], mul(fact[j], mul(ncr(arr[i], j), ncr(k, j)))));
+    for (int i = 1; i <= n; i++)
+        cout << dp[sz - 1][i] << "\n";
 }
 
 int main()
