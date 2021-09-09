@@ -10,7 +10,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int MOD = 1e9 + 7, K = 26;
+const int MOD = 1e9 + 7;
 
 int add(int x, int y)
 {
