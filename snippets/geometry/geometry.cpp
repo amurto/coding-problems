@@ -6,6 +6,7 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+const double EPS = 5e-8;
 class Point
 {
 public:
