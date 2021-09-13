@@ -42,7 +42,7 @@ ld f(vector<Point> &pts, ld x0)
     return R;
 }
 
-void solve()
+ld solve()
 {
     int n, mn = 1e7 + 5, mx = -1e7 - 5;
     cin >> n;
@@ -59,10 +59,7 @@ void solve()
         mx = max(mx, X[i]);
     }
     if (pos && neg)
-    {
-        cout << "-1\n";
-        return;
-    }
+        return -1;
     if (neg)
         for (int i = 0; i < n; i++)
             Y[i] = -Y[i];
@@ -70,7 +67,7 @@ void solve()
     for (int i = 0; i < n; i++)
         pts.pb(Point(X[i], Y[i]));
     ld low = 1.0 * mn, high = 1.0 * mx;
-    for (int t = 1; t <= 100; t++)
+    for (int t = 1; t <= 200; t++)
     {
         ld m1 = low + (high - low) / 3.0;
         ld m2 = high - (high - low) / 3.0;
@@ -81,7 +78,7 @@ void solve()
         else
             low = m1;
     }
-    cout << f(pts, low) << "\n";
+    return f(pts, low);
 }
 
 int main()
@@ -89,7 +86,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    cout << fixed << setprecision(12);
-    solve();
+    cout << fixed << setprecision(18) << solve() << "\n";
     return 0;
 }
