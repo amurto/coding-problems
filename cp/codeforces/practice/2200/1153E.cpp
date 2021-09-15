@@ -30,8 +30,7 @@ void solve()
     array<int, 2> rows{-1, -1}, cols{-1, -1};
     for (int i = 1; i < n; i++)
     {
-        int ans = query(1, 1, i, n);
-        if (ans)
+        if (query(1, 1, i, n))
         {
             if (rows[0] == -1)
                 rows[0] = i;
@@ -40,8 +39,7 @@ void solve()
     }
     for (int j = 1; j < n; j++)
     {
-        int ans = query(1, 1, n, j);
-        if (ans)
+        if (query(1, 1, n, j))
         {
             if (cols[0] == -1)
                 cols[0] = j;
