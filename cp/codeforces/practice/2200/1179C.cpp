@@ -1,12 +1,22 @@
-#include "bits/stdc++.h"
+// https://codeforces.com/contest/1179/problem/C
+// Serge and Dining Room
+
+#ifdef use_debug
+#define TERMINAL
+#include "headers/debug.cpp"
+#else
+#define d(...) 0
+#endif
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
 #define pb push_back
 
+const int N = 1e6 + 5;
 struct node
 {
-    int v = 0; // identity
+    int v = -N; // identity
     node() {}
     node(int val)
     {
@@ -14,6 +24,7 @@ struct node
     }
     void merge(const node &l, const node &r)
     {
+        v = max(l.v, r.v);
     }
 };
 
@@ -23,15 +34,17 @@ struct update
     update() {}
     update(int val)
     {
+        v = val;
     }
     // combine the current update with the other update
     void combine(update &other, const int32_t &tl, const int32_t &tr)
     {
+        v += other.v;
     }
     // store the correct information in the node x
-    // apply x+=(tr-tl+1)*v for range addition and query sum
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
+        x.v += v;
     }
 };
 
@@ -135,17 +148,64 @@ public:
     }
 };
 
+void solve()
+{
+    int n, m, q;
+    cin >> n >> m;
+    vector<int> a(n), b(m), suf(N);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+        suf[a[i]]++;
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cin >> b[i];
+        suf[b[i]]--;
+    }
+    for (int i = N - 2; i >= 0; i--)
+        suf[i] += suf[i + 1];
+    segtree<node, update> s(N);
+    s.build(suf);
+    cin >> q;
+    for (int i = 0; i < q; i++)
+    {
+        int t, id, x;
+        cin >> t >> id >> x;
+        id--;
+        if (t == 1)
+        {
+            s.rupd(0, a[id], -1);
+            a[id] = x;
+            s.rupd(0, x, 1);
+        }
+        else
+        {
+            s.rupd(0, b[id], 1);
+            b[id] = x;
+            s.rupd(0, x, -1);
+        }
+        int low = 0, high = N - 1, res = 0;
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+            if (s.query(mid, N - 1).v > 0)
+            {
+                res = max(res, mid);
+                low = mid + 1;
+            }
+            else
+                high = mid - 1;
+        }
+        res == 0 ? cout << "-1\n" : cout << res << "\n";
+    }
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    segtree<node, update> s(n);
-    s.build(arr);
+    solve();
     return 0;
 }
