@@ -11,7 +11,6 @@ typedef long long ll;
 #define pb push_back
 
 const int inf = 1e9 + 7;
-
 int ap(int a, int n)
 {
     return (n * (2 * a + n - 1)) / 2;
