@@ -11,6 +11,7 @@ typedef long long ll;
 typedef pair<int, int> pii;
 #define pb push_back
 
+// king moves
 int di[8] = {-1, -1, 0, 1, 1, 1, 0, -1}, dj[8] = {0, 1, 1, 1, 0, -1, -1, -1};
 
 int bfs(vector<vector<ll>> &dis, int bx, int by, int n)
