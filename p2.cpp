@@ -10,6 +10,24 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
+static void run_with_stack_size(void (*func)(void), size_t stsize)
+{
+    char *stack, *send;
+    stack = (char *)malloc(stsize);
+    send = stack + stsize - 16;
+    send = (char *)((uintptr_t)send / 16 * 16);
+    asm volatile(
+        "mov %%rsp, (%0)\n"
+        "mov %0, %%rsp\n"
+        :
+        : "r"(send));
+    func();
+    asm volatile("mov (%0), %%rsp\n"
+                 :
+                 : "r"(send));
+    free(stack);
+}
+
 const int N = 8e5 + 5;
 vector<int> g[N];
 int F[N], cap[N], cur_cap[N], sz[N], vis1[N], vis2[N], ver[N];
@@ -17,6 +35,7 @@ int cur_f = 0, mx_f = 0;
 
 int set_sz(int cur, int last, int t)
 {
+    cout << cur << "\n";
     vis1[cur] = vis2[cur] = t;
     ver[t] = cur;
     sz[cur] = 1;
@@ -103,12 +122,12 @@ int solve()
     cur_f = 0;
     mx_f = 0;
     set_sz(1, 1, 0);
-    int res=0;
+    int res = 0;
     // res += sack(1, 1, true);
     return n;
 }
 
-int main()
+void main_()
 {
     freopen("test_input.txt", "rt", stdin);
     freopen("output.txt", "wt", stdout);
@@ -119,5 +138,10 @@ int main()
     cin >> t;
     for (int tc = 1; tc <= t; tc++)
         cout << "Case #" << tc << ": " << solve() << "\n";
+}
+
+int main()
+{
+    run_with_stack_size(main_, 1024 * 1024 * 1024);
     return 0;
 }
