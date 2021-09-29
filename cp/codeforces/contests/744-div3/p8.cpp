@@ -10,35 +10,18 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-bool pos(vector<int> &arr, int l, int r, int n)
+bool pos(vector<int> &arr, int m, int n)
 {
-    int cur = arr[0];
-    if (r < cur)
-        return false;
-    for (int i = 1; i < n; i++)
-    {
-        d(cur);
-        int d1 = abs(cur - l), d2 = abs(r - cur);
-        if (max(d1, d2) < arr[i])
-            return false;
-        d(d1, d2);
-        if (d1 < d2)
-        {
-            if (d1 >= arr[i])
-                cur -= arr[i];
-            else
-                cur += arr[i];
-        }
-        else
-        {
-            if (d2 >= arr[i])
-                cur += arr[i];
-            else
-                cur -= arr[i];
-        }
-    }
-    d(cur);
-    return true;
+    vector<vector<bool>> dp(n + 1, vector<bool>(m + 1));
+    for (int j = 0; j <= m; j++)
+        dp[0][j] = true;
+    for (int i = 1; i <= n; i++)
+        for (int j = 0; j <= m; j++)
+            dp[i][j] = ((j - arr[i - 1] >= 0 && dp[i - 1][j - arr[i - 1]]) || (j + arr[i - 1] <= m && dp[i - 1][j + arr[i - 1]]));
+    for (int j = 0; j <= m; j++)
+        if (dp[n][j])
+            return true;
+    return false;
 }
 
 int solve()
@@ -51,27 +34,16 @@ int solve()
         cin >> arr[i];
         mx = max(mx, arr[i]);
     }
-    int res = 2 * mx + 5;
-    cout << pos(arr, -2, 10, n) << "\n";
-    // for (int l = -2; l <= -2; l++)
-    // {
-    //     int low = arr[0], high = max(l + 2 * mx, arr[0]), r = max(arr[0], l + 2 * mx);
-    //     while (low <= high)
-    //     {
-    //         int mid = low + (high - low) / 2;
-    //         d(low,high);
-    //         if (pos(arr, l, mid, n))
-    //         {
-    //             r = min(r, mid);
-    //             high = mid - 1;
-    //         }
-    //         else
-    //             low = mid + 1;
-    //     }
-    //     d(l, r);
-    //     res = min(res, r - l);
-    // }
-    return res;
+    int low = mx, high = 2 * mx;
+    while (low < high)
+    {
+        int mid = low + (high - low) / 2;
+        if (pos(arr, mid, n))
+            high = mid;
+        else
+            low = mid + 1;
+    }
+    return low;
 }
 
 int main()
