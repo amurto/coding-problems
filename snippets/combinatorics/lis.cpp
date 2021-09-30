@@ -6,20 +6,35 @@ typedef long long ll;
 
 // Fastest approach
 // O(nlogn)
-// Uses Set to maintain length of Longest Increasing Subsequence
+// DP + Binary Search
+// https://cp-algorithms.com/sequences/longest_increasing_subsequence.html
 int LIS(vector<int> &arr, int n)
 {
-    int mx = 0;
-    set<int> st;
+    vector<int> small(n + 1, n), dp(n);
+
+    // small[i] -> lis of length i ends at small[i]
+    // small[i] is minimum possible
+    // small is always sorted
+    // dp[i] -> length of lis ending at i
+    small[0] = -1;
     for (int i = 0; i < n; i++)
     {
-        if (st.lower_bound(arr[i]) == st.end())
-            mx++;
-        else
-            st.erase(st.lower_bound(arr[i]));
-        st.insert(arr[i]);
+        int low = 0, high = n - 1, v = 0;
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+            if (small[mid] < arr[i])
+            {
+                v = max(v, mid);
+                low = mid + 1;
+            }
+            else
+                high = mid - 1;
+        }
+        dp[i] = v + 1;
+        small[v + 1] = arr[i];
     }
-    return mx;
+    return *max_element(dp.begin(), dp.end());
 }
 
 int solve()

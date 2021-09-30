@@ -10,142 +10,100 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-struct node
+int find_lis(vector<int> &arr, vector<int> &dp, vector<bool> &mark, int n)
 {
-    int v = 0, id = -1; // identity
-    node() {}
-    node(int val, int idx)
+    vector<int> small(n + 1, n);
+    small[0] = -1;
+    for (int i = 0; i < n; i++)
     {
-        v = val;
-        id = idx;
-    }
-    void merge(const node &l, const node &r)
-    {
-        if (l.v == r.v)
+        int low = 0, high = n - 1, v = 0;
+        while (low <= high)
         {
-            v = l.v;
-            id = max(l.id, r.id);
+            int mid = low + (high - low) / 2;
+            if (small[mid] <= arr[i])
+            {
+                v = max(v, mid);
+                low = mid + 1;
+            }
+            else
+                high = mid - 1;
         }
-        else if (l.v > r.v)
-        {
-            v = l.v;
-            id = l.id;
-        }
-        else
-        {
-            v = r.v;
-            id = r.id;
-        }
+        dp[i] = v + 1;
+        small[v + 1] = arr[i];
     }
-};
-
-template <typename node>
-struct segtree
-{
-    int len;
-    vector<node> t;
-    node identity_element;
-    segtree(int l)
+    int mx = *max_element(dp.begin(), dp.end());
+    vector<int> last(n + 1, -1);
+    for (int i = n - 1; i >= 0; i--)
     {
-        len = l;
-        t.resize(4 * len);
-        identity_element = node();
+        if (dp[i] == mx)
+            mark[i] = true;
+        else if (last[dp[i] + 1] >= arr[i])
+            mark[i] = true;
+        if (mark[i])
+            last[dp[i]] = max(last[dp[i]], arr[i]);
     }
-    segtree() = default;
-
-    node query(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r)
-    {
-        if (l > tr || r < tl)
-            return identity_element;
-        if (l <= tl && tr <= r)
-            return t[v];
-        int32_t tm = (tl + tr) >> 1;
-        node a = query(v << 1, tl, tm, l, r), b = query(v << 1 | 1, tm + 1, tr, l, r), ans;
-        ans.merge(a, b);
-        return ans;
-    }
-
-    // pupd = point update
-    void pupd(const int32_t &v, const int32_t &tl, const int32_t &tr, const int32_t &l, const int32_t &r, const node upd)
-    {
-        if (l > tr || r < tl)
-            return;
-        if (l <= tl && tr <= r)
-        {
-            t[v].merge(t[v], upd);
-            return;
-        }
-        int32_t tm = (tl + tr) >> 1;
-        pupd(v << 1, tl, tm, l, r, upd);
-        pupd(v << 1 | 1, tm + 1, tr, l, r, upd);
-        t[v].merge(t[v << 1], t[v << 1 | 1]);
-    }
-
-public:
-    node query(const int32_t &l, const int32_t &r)
-    {
-        return query(1, 0, len - 1, l, r);
-    }
-    void pupd(const int32_t &l, const int32_t &r, const node upd)
-    {
-        pupd(1, 0, len - 1, l, r, upd);
-    }
-};
+    return mx;
+}
 
 int solve()
 {
     int n, res = 0;
     cin >> n;
-    vector<int> arr(n), ids(n), is_lis(n), is_lds(n), last_lis(n, -1), last_lds(n, -1), dp1(n), dp2(n);
+    vector<int> arr(n);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
         arr[i]--;
     }
-    iota(ids.begin(), ids.end(), 0);
-    segtree<node> lis(n), lds(n);
-    int best_lis = 0;
+    vector<int> dp_lis(n), dp_lds(n), last(n, -1), mn_val(n + 1, -1), mx_val(n + 1, -1), dp(n);
+    vector<bool> is_lis(n), is_lds(n), valley(n), peak(n);
+    int mx_lis = find_lis(arr, dp_lis, is_lis, n);
+    reverse(arr.begin(), arr.end());
+    int mx_lds = find_lis(arr, dp_lds, is_lds, n);
+    reverse(arr.begin(), arr.end());
+    reverse(dp_lds.begin(), dp_lds.end());
+    reverse(is_lds.begin(), is_lds.end());
+    vector<vector<int>> ids(n);
+    for (int i = 0; i < n; i++)
+        ids[arr[i]].pb(i);
     for (int i = 0; i < n; i++)
     {
-        node mx = lis.query(0, arr[i]);
-        dp1[i] = mx.v + 1;
-        last_lis[i] = mx.id;
-        lis.pupd(arr[i], arr[i], node(dp1[i], i));
-        best_lis = max(best_lis, dp1[i]);
+        if (!ids[i].empty())
+        {
+            int last_id = -1, mx_i = 0, mx_d = 0, cur = 0;
+            for (int id : ids[i])
+            {
+                if (is_lis[id])
+                {
+                    if (last_id != -1 && is_lis[last_id] && dp_lis[last_id] + 1 == dp_lis[id])
+                        cur++;
+                    else
+                        cur = 1;
+                }
+                else
+                    cur = 0;
+                mx_i = max(mx_i, cur);
+                last_id = id;
+            }
+            last_id = -1;
+            cur = 0;
+            for (int id : ids[i])
+            {
+                if (is_lds[id])
+                {
+                    if (last_id != -1 && is_lds[last_id] && dp_lds[last_id] - 1 == dp_lds[id])
+                        cur++;
+                    else
+                        cur = 1;
+                }
+                else
+                    cur = 0;
+                mx_d = max(mx_d, cur);
+                last_id = id;
+            }
+            res = max(res, min(mx_i, mx_d));
+        }
     }
-    for (int i = 0; i < n; i++)
-        if (dp1[i] == best_lis)
-            is_lis[i] = 1;
-    for (int i = n - 1; i >= 0; i--)
-        if (is_lis[i] && last_lis[i] != -1)
-            is_lis[last_lis[i]] = 1;
-    int best_lds = 0;
-    for (int i = 0; i < n; i++)
-    {
-        node mx = lds.query(arr[i], n - 1);
-        dp2[i] = mx.v + 1;
-        last_lds[i] = mx.id;
-        lds.pupd(arr[i], arr[i], node(dp2[i], i));
-        best_lds = max(best_lds, dp2[i]);
-    }
-    for (int i = n - 1; i >= 0; i--)
-        if (dp2[i] == best_lds)
-            is_lds[i] = 1;
-    for (int i = n - 1; i >= 0; i--)
-        if (is_lds[i] && last_lds[i] != -1)
-            is_lds[last_lds[i]] = 1;
-    // vector<int> dp(n), last(n, -1);
-    // for (int i = 0; i < n; i--)
-    // {
-    //     if (is_lis[i] && is_lds[i])
-    //     {
-    //         dp[i] = 1;
-    //         if (last[i] >= 0 && is_lis[last[i]] && is_lds[last[i]])
-    //             dp[i] = dp[last[i]] + 1;
-    //     }
-    //     last[arr[i]] = i;
-    //     res = max(res, dp[i]);
-    // }
     return res;
 }
 

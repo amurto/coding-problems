@@ -10,29 +10,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 1e6 + 5;
-bool P[N];
-int cnt[N];
-// O(root(n) * lognlogn)
-// Store number of distinct prime factors for every number
-void distinct_primes()
-{
-    memset(P, true, sizeof(P));
-    memset(cnt, 0, sizeof(cnt));
-    P[0] = P[1] = false;
-    for (int i = 2; i < N; i++)
-    {
-        if (!P[i])
-            continue;
-        cnt[i] = 1;
-        for (int j = 2; i * j < N; j++)
-        {
-            P[i * j] = false;
-            cnt[i * j]++;
-        }
-    }
-}
-
 void solve()
 {
     ll n, a = 0, b = 0;
@@ -42,9 +19,9 @@ void solve()
         a = 2 * n;
         b = n;
     }
-    for (ll i = 3; a == 0 && i < N; i++)
+    for (ll i = 3; a == 0 && i < 100; i += 2)
     {
-        if (cnt[i - 1] == cnt[i] && __gcd(i - 1, n) == 1 && __gcd(i, n) == 1)
+        if (__gcd(n, i) == 1)
         {
             a = n * i;
             b = n * (i - 1);
@@ -58,7 +35,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    distinct_primes();
     int t;
     cin >> t;
     while (t-- > 0)
