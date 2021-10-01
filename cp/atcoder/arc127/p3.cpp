@@ -1,4 +1,10 @@
-#include "bits/stdc++.h"
+#ifdef use_debug
+#define TERMINAL
+#include "headers/debug.cpp"
+#else
+#define d(...) 0
+#endif
+#include <bits/stdc++.h>
 using namespace std;
 
 typedef long long ll;
@@ -14,6 +20,7 @@ struct node
     }
     void merge(const node &l, const node &r)
     {
+        v = l.v + r.v;
     }
 };
 
@@ -23,15 +30,18 @@ struct update
     update() {}
     update(int val)
     {
+        v = val;
     }
     // combine the current update with the other update
     void combine(update &other, const int32_t &tl, const int32_t &tr)
     {
+        v += other.v;
     }
     // store the correct information in the node x
     // apply x+=(tr-tl+1)*v for range addition and query sum
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
+        x.v += v;
     }
 };
 
@@ -123,7 +133,6 @@ struct segtree
     // O(logn)
     int find_kth_left(const int32_t &v, const int32_t &tl, const int32_t &tr, const int &k)
     {
-        // remove this in non lazy segment tree
         if (tl != tr)
             pushdown(v, tl, tr);
         if (t[v].v == 0)
@@ -176,17 +185,48 @@ public:
     }
 };
 
+void display(segtree<node, update> &s, int n)
+{
+    for (int i = 0; i < n; i++)
+        cout << s.query(i, i).v;
+    cout << "\n";
+}
+
+string solve()
+{
+    int n;
+    string str, res = "1";
+    cin >> n >> str;
+    int len = str.length();
+    vector<int> arr(n);
+    for (int i = n - 1, j = len - 1; j >= 0; i--, j--)
+        arr[i] = str[j] - '0';
+    segtree<node, update> s(n);
+    s.build(arr);
+    for (int i = 0; i < n - 1; i++)
+    {
+        int last = s.query(n - 1, n - 1).v, cur = s.query(i, i).v;
+        if (last == 1 && s.query(i, n - 2).v == 0)
+            i = n;
+        else if (cur == 0 || (cur == 1 && s.query(i + 1, n - 1).v == 0))
+        {
+            int mn = s.find_kth_right(1) + 1;
+            s.rupd(max(mn, i + 1), n - 1, 1);
+            if (mn - 1 > i)
+                s.rupd(mn - 1, mn - 1, -1);
+            res.pb('0');
+        }
+        else
+            res.pb('1');
+    }
+    return res;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int n;
-    cin >> n;
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    segtree<node, update> s(n);
-    s.build(arr);
+    cout << solve() << "\n";
     return 0;
 }
