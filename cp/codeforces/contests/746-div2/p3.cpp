@@ -32,7 +32,6 @@ bool solve()
 {
     int n, k, u, v, x = 0;
     cin >> n >> k;
-    int mn = k;
     for (int i = 1; i <= n; i++)
         g[i].clear();
     for (int i = 1; i <= n; i++)
@@ -47,10 +46,10 @@ bool solve()
         g[v].pb(u);
     }
     int cnt = 0;
-    v = dfs(1, 1, x, cnt);
+    dfs(1, 1, x, cnt);
     if (x == 0)
         return true;
-    while (cnt > mn)
+    while (cnt > k)
         cnt -= 2;
     return cnt >= 2;
 }
