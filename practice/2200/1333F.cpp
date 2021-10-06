@@ -37,8 +37,7 @@ void solve()
             int num = i * pr[j];
             if (num > n || num / lp[num] != i)
                 pos = false;
-            if (pos)
-                cur++;
+            cur += pos;
         }
         for (int j = last + 1; j <= cur; j++)
             res[j] = i;
