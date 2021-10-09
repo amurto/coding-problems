@@ -41,15 +41,11 @@ void dfs(int cur, int last, ll par)
             swap(mx[0], mx[1]);
     }
     for (pii e : g[cur])
-    {
         if (e.first != last)
-        {
             if (max(sub[e.first], D[e.first]) + e.second == mx[0])
                 dfs(e.first, cur, mx[1] + e.second);
             else
                 dfs(e.first, cur, mx[0] + e.second);
-        }
-    }
 }
 
 void solve()
