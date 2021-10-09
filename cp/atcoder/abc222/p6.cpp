@@ -13,7 +13,6 @@ typedef pair<int, ll> pii;
 
 const int N = 2e5 + 5;
 vector<pii> g[N];
-
 ll D[N], sub[N], res[N];
 
 ll precompute(int cur, int last)
