@@ -29,7 +29,7 @@ struct update
     {
     }
     // store the correct information in the node x
-    // apply x+=(tr-tl+1)*v for range addition and query sum
+    // apply x.v+=(tr-tl+1)*v for range addition and query sum
     void apply(node &x, const int32_t &tl, const int32_t &tr)
     {
     }
