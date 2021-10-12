@@ -121,7 +121,7 @@ struct segtree
 
     // kth element from left
     // O(logn)
-    int find_kth_left(const int32_t &v, const int32_t &tl, const int32_t &tr, const int &k)
+    int find_kth_left(const int32_t &v, const int32_t &tl, const int32_t &tr, const int k)
     {
         // remove this in non lazy segment tree
         if (tl != tr)
@@ -132,13 +132,13 @@ struct segtree
             return tl;
         int32_t tm = (tl + tr) >> 1;
         if (t[v << 1].v >= k)
-            return find_kth_left(v << 1, tm + 1, tr, k);
-        return find_kth_left(v << 1 | 1, tl, tm, k);
+            return find_kth_left(v << 1, tl, tm, k);
+        return find_kth_left(v << 1 | 1, tm + 1, tr, k - t[v << 1].v);
     }
 
     // kth element from right
     // O(logn)
-    int find_kth_right(const int32_t &v, const int32_t &tl, const int32_t &tr, const int &k)
+    int find_kth_right(const int32_t &v, const int32_t &tl, const int32_t &tr, const int k)
     {
         if (tl != tr)
             pushdown(v, tl, tr);
@@ -149,7 +149,7 @@ struct segtree
         int32_t tm = (tl + tr) >> 1;
         if (t[v << 1 | 1].v >= k)
             return find_kth_right(v << 1 | 1, tm + 1, tr, k);
-        return find_kth_right(v << 1, tl, tm, k);
+        return find_kth_right(v << 1, tl, tm, k - t[v << 1 | 1].v);
     }
 
 public:
@@ -166,11 +166,11 @@ public:
     {
         rupd(1, 0, len - 1, l, r, upd);
     }
-    int find_kth_left(const int &k)
+    int find_kth_left(const int k)
     {
         return find_kth_left(1, 0, len - 1, k);
     }
-    int find_kth_right(const int &k)
+    int find_kth_right(const int k)
     {
         return find_kth_right(1, 0, len - 1, k);
     }
