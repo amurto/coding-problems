@@ -4,6 +4,7 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<ll, ll> pii;
 #define pb push_back
 
 const double EPS = 5e-8;
@@ -102,3 +103,21 @@ pair<double, double> rotate(double px, double py, double ox, double oy, double t
 // a^2 = b^2 + c^2 - 2bc*cos(A) // angle A opposite to a
 // b^2 = a^2 + c^2 - 2ac*cos(B) // angle B opposite to b
 // c^2 = a^2 + b^2 - 2ab*cos(C) // angle C opposite to c
+
+// Check if a point lies on a segment joining two points 
+int cmp(ll a, ll b)
+{
+    if (a < b)
+        return -1;
+    if (a == b)
+        return 0;
+    return 1;
+}
+
+// Check if point c lies on a segment joining points a and b
+bool is_between(pii a, pii b, pii c)
+{
+    return ((b.first - a.first) * (c.second - a.second) == (c.first - a.first) * (b.second - a.second) &&
+            abs(cmp(a.first, c.first) + cmp(b.first, c.first)) <= 1 &&
+            abs(cmp(a.second, c.second) + cmp(b.second, c.second)) <= 1);
+}

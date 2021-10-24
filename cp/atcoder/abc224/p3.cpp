@@ -19,6 +19,7 @@ int cmp(ll a, ll b)
         return 0;
     return 1;
 }
+
 bool is_between(pii a, pii b, pii c)
 {
     return ((b.first - a.first) * (c.second - a.second) == (c.first - a.first) * (b.second - a.second) &&
