@@ -20,7 +20,6 @@ int main()
         vector<ll> arr(n);
         for (int i = 0; i < n; i++)
             cin >> arr[i];
-
         ll ans = 0, sum = 0;
         for (int i = 0; i < n; i++)
         {
