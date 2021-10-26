@@ -21,7 +21,6 @@ int main()
         arr[0] = arr[n + 1] = -1;
         for (int i = 1; i <= n; i++)
             cin >> arr[i];
-
         int res = 0;
         for (int i = 1; i <= n; i++)
             if (arr[i] != arr[i - 1])
