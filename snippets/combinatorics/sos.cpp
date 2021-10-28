@@ -31,7 +31,7 @@ bool possibleSqrt(vector<int> &arr, int n, int sum)
         int r = i;
         while (r < n && arr[r] == arr[i])
             r++;
-        vector<int> cnt(n + 1);
+        vector<int> cnt(sum + 1);
         for (int cur = arr[i]; cur <= sum; cur++)
         {
             if (!vis[cur] && vis[cur - arr[i]] && cnt[cur - arr[i]] < r - i)
