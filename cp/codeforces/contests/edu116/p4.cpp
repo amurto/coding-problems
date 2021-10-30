@@ -34,95 +34,51 @@ void solve()
     {
         // red -> 0
         // blue -> 1
-        int mn1 = 1e7, mx1 = 0, mn2 = 1e7, mx2 = 0;
+        int mn = 1e7, mx = 0;
         for (int i = 0; i < n; i++)
         {
             vis[i][0] = vis[i][1] = 0;
             pre_mn[i] = min(pre_mn[i], arr[i][c]);
             pre_mx[i] = max(pre_mx[i], arr[i][c]);
-            mn1 = min(mn1, pre_mn[i]);
-            mx1 = max(mx1, pre_mx[i]);
-            mn2 = min(mn2, suf_mn[i][c + 1]);
-            mx2 = max(mx2, suf_mx[i][c + 1]);
+            mx = max(mx, pre_mx[i]);
+            mn = min(mn, suf_mn[i][c + 1]);
         }
-        // d(mn1,mn2,mx1,mx2);
         priority_queue<pii> pq_mx;
         priority_queue<pii, vector<pii>, greater<pii>> pq_mn;
         for (int i = 0; i < n; i++)
             pq_mx.push({pre_mx[i], i});
-        while (!pq_mx.empty() && mx1 <= pq_mx.top().first)
-        {
-            pii cur = pq_mx.top();
-            pq_mx.pop();
-            vis[cur.second][0] = 1;
-            mx1 = min(mx1, pre_mn[cur.second]);
-        }
-        while (!pq_mx.empty())
-            pq_mx.pop();
-        for (int i = 0; i < n; i++)
-            pq_mx.push({suf_mx[i][c + 1], i});
-        while (!pq_mx.empty() && mx2 <= pq_mx.top().first)
-        {
-            pii cur = pq_mx.top();
-            pq_mx.pop();
-            vis[cur.second][1] = 1;
-            mx2 = min(mx2, suf_mn[cur.second][c + 1]);
-        }
-        for (int i = 0; i < n; i++)
-            pq_mn.push({pre_mn[i], i});
-        while (!pq_mn.empty() && mn1 >= pq_mn.top().first)
-        {
-            pii cur = pq_mn.top();
-            pq_mn.pop();
-            vis[cur.second][1] = 1;
-            mn1 = max(mn1, pre_mx[cur.second]);
-        }
-        while (!pq_mn.empty())
-            pq_mn.pop();
         for (int i = 0; i < n; i++)
             pq_mn.push({suf_mn[i][c + 1], i});
-        while (!pq_mn.empty() && mn2 >= pq_mn.top().first)
+        while (!pq_mn.empty() && !pq_mx.empty())
         {
-            pii cur = pq_mn.top();
-            pq_mn.pop();
-            vis[cur.second][0] = 1;
-            mn2 = max(mn2, suf_mx[cur.second][c + 1]);
+            while (!pq_mn.empty() && mn >= pq_mn.top().first)
+            {
+                pii cur = pq_mn.top();
+                pq_mn.pop();
+                vis[cur.second][0] = 1;
+                mx = min(mx, pre_mn[cur.second]);
+                mn = max(mn, suf_mx[cur.second][c + 1]);
+            }
+            while (!pq_mx.empty() && mx <= pq_mx.top().first)
+            {
+                pii cur = pq_mx.top();
+                pq_mx.pop();
+                vis[cur.second][0] = 1;
+                mx = min(mx, pre_mn[cur.second]);
+                mn = max(mn, suf_mx[cur.second][c + 1]);
+            }
+            if (!pq_mn.empty() && !pq_mx.empty() && mn < pq_mn.top().first && mx > pq_mx.top().first)
+                break;
         }
-        bool pos = true;
-        for (int i = 0; pos && i < n; i++)
-            if (vis[i][0] + vis[i][1] == 2)
-                pos = false;
-        if (pos)
+        if (!pq_mn.empty() && !pq_mx.empty())
         {
-            vector<int> ids;
+            string res(n, 'B');
             for (int i = 0; i < n; i++)
-                if (vis[i][0] + vis[i][1] == 0)
-                    ids.pb(i);
-            
-            int l_mn = 1e7, l_mx = 0, r_mn = 1e7, r_mx = 0;
-            for (int i = 0; i < n; i++)
-            {
                 if (vis[i][0] == 1)
-                {
-                    l_mn = min(l_mn, pre_mn[i]);
-                    r_mx = max(r_mx, suf_mx[i][c + 1]);
-                }
-                else if (vis[i][1] == 1)
-                {
-                    l_mx = max(l_mx, pre_mx[i]);
-                    r_mn = min(r_mn, suf_mn[i][c + 1]);
-                }
-            }
-            if (l_mn > l_mx && r_mn > r_mx)
-            {
-                string res(n, 'R');
-                for (int i = 0; i < n; i++)
-                    if (vis[i][1] == 1)
-                        res[i] = 'B';
-                cout << "YES\n";
-                cout << res << " " << c + 1 << "\n";
-                return;
-            }
+                    res[i] = 'R';
+            cout << "YES\n";
+            cout << res << " " << c + 1 << "\n";
+            return;
         }
     }
     cout << "NO\n";
