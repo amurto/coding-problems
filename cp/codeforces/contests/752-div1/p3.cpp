@@ -8,9 +8,11 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<int, int> pii;
 #define pb push_back
 
-const int MOD = 998244353, N = 2e5 + 5;
+const int MOD = 998244353, N = 1e5 + 5;
+int cnt[N];
 
 int add(int x, int y)
 {
@@ -27,53 +29,46 @@ int mul(int x, int y)
     return (x * 1ll * y) % MOD;
 }
 
-// Binary Exponentiation O(logn)
-// n^m mod p
-int power(int n, int m, int p)
-{
-    int res = 1;
-    while (m > 0)
-    {
-        if (m & 1)
-            res = (res * 1ll * n) % p;
-        n = (n * 1ll * n) % p;
-        m /= 2;
-    }
-    return res;
-}
-
-// factorial and inverse factorial
-int fact[N], invfact[N];
-void init()
-{
-    fact[0] = fact[1] = 1;
-    int i;
-    for (i = 2; i < N; i++)
-        fact[i] = (fact[i - 1] * 1ll * i) % MOD;
-    i--;
-    // Fermat's Little Theorem
-    // 1/(a! % mod) = a!^mod-2 % mod
-    invfact[i] = power(fact[i], MOD - 2, MOD);
-    for (i--; i >= 0; i--)
-        invfact[i] = (invfact[i + 1] * 1ll * (i + 1)) % MOD;
-}
-
-// NCR
-// n!/r!*(n-r)!
-int ncr(int n, int r)
-{
-    if (r > n || n < 0 || r < 0)
-        return 0;
-    return mul(fact[n], mul(invfact[r], invfact[n - r]));
-}
-
 int solve()
 {
-    int n;
+    int n, res = 0;
     cin >> n;
     vector<int> arr(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
+    vector<pii> dp;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        vector<pii> tdp, ndp;
+        for (pii p : dp)
+        {
+            // arr[i] -> p.first
+            int tmp = arr[i];
+            if (arr[i] > p.first)
+            {
+                int parts = (arr[i] + p.first - 1) / p.first;
+                tmp = arr[i] / parts;
+                res = add(res, mul(i + 1, mul(parts - 1, p.second)));
+            }
+            tdp.pb({tmp, p.second});
+        }
+        tdp.pb({arr[i], 1});
+        sort(tdp.begin(), tdp.end());
+        int sz = (int)tdp.size();
+        for (int j = 0; j < sz;)
+        {
+            int r = j;
+            ndp.pb({tdp[j].first, 0});
+            while (r < sz && tdp[j].first == tdp[r].first)
+            {
+                ndp.back().second += tdp[r].second;
+                r++;
+            }
+            j = r;
+        }
+        swap(dp, ndp);
+    }
+    return res;
 }
 
 int main()
