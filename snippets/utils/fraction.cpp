@@ -44,38 +44,11 @@ public:
     }
 };
 
-int solve()
-{
-    int n, res = 1;
-    cin >> n;
-    vector<ll> x(n), y(n);
-    vector<pair<fraction, fraction>> arr;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> x[i] >> y[i];
-        arr.pb({fraction(y[i] - 1, x[i]), fraction(y[i], x[i] - 1)});
-    }
-    sort(arr.begin(), arr.end(), [&](pair<fraction, fraction> &p1, pair<fraction, fraction> &p2)
-         { if (p1.second==p2.second)
-            return p1.first<p2.first;
-        return p1.second < p2.second; });
-    fraction last = arr[0].second;
-    for (int i = 1; i < n; i++)
-    {
-        if (arr[i].first >= last)
-        {
-            last = arr[i].second;
-            res++;
-        }
-    }
-    return res;
-}
-
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    cout << solve() << "\n";
+    fraction f = fraction(1, 1);
     return 0;
 }
