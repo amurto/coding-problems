@@ -1,3 +1,6 @@
+// https://codeforces.com/contest/1607/problem/H
+// Banquet Preparations 2
+
 #ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"
