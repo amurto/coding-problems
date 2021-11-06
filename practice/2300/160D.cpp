@@ -11,6 +11,7 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<int, int> pii;
 #define pb push_back
 
 class edge
@@ -78,13 +79,13 @@ vector<int> find_bridges(set<int> nodes)
         {
             if (!b_vis[e.v])
             {
-                bout[cur] = self(self, e.v, cur, bout[cur] + 1);
+                bout[cur] = self(self, e.v, e.id, bout[cur] + 1);
                 mn_time[cur] = min(mn_time[cur], mn_time[e.v]);
                 // check for bridge
                 if (mn_time[e.v] > bin[cur])
                     bridge_ids.pb(e.id);
             }
-            else if (e.v != par)
+            else if (e.id != par)
                 mn_time[cur] = min(mn_time[cur], bin[e.v]);
         }
         return bout[cur];
@@ -117,7 +118,6 @@ void solve()
     sort(edges.begin(), edges.end());
     for (int i = 0; i < m;)
     {
-        d(edges[i].w);
         int r = i;
         set<int> nodes;
         while (r < m && edges[i].w == edges[r].w)
@@ -125,25 +125,29 @@ void solve()
             if (st.root(edges[r].u) != st.root(edges[r].v))
             {
                 res[edges[r].id] = 1;
-                nodes.insert(edges[r].u);
-                nodes.insert(edges[r].v);
+                nodes.insert(st.root(edges[r].u));
+                nodes.insert(st.root(edges[r].v));
             }
             r++;
         }
-        d(nodes);
-        while (i < r)
+        for (int x : nodes)
+            g[x].clear();
+        for (int j = i; j < r; j++)
         {
-            if (res[edges[i].id] == 1)
+            if (res[edges[j].id] == 1)
             {
-                g[edges[i].u].pb(edge(edges[i].u, edges[i].v, edges[i].w, edges[i].id));
-                g[edges[i].v].pb(edge(edges[i].v, edges[i].u, edges[i].w, edges[i].id));
+                g[st.root(edges[j].u)].pb(edge(st.root(edges[j].u), st.root(edges[j].v), edges[j].w, edges[j].id));
+                g[st.root(edges[j].v)].pb(edge(st.root(edges[j].v), st.root(edges[j].u), edges[j].w, edges[j].id));
             }
-            st.merge(edges[i].u, edges[i].v);
-            i++;
         }
         vector<int> bridge_ids = find_bridges(nodes);
         for (int x : bridge_ids)
             res[x] = 2;
+        while (i < r)
+        {
+            st.merge(edges[i].u, edges[i].v);
+            i++;
+        }
     }
     for (int i = 0; i < m; i++)
         if (res[i] == 0)
