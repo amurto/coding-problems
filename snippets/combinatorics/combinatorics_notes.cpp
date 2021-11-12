@@ -2,6 +2,7 @@
 
 // nCr -> number of ways of choosing r objects from n objects
 // nCr = nC(n-r)
+// number of cyclic permutations with n objects = (n-1)!
 
 /*
 Stars and Bars Theorem
@@ -43,4 +44,35 @@ Another way to look at it is -> In how many ways can you select r balls such tha
 You’ll get 0C(r-1) + 1C(r-1) + … + nC(r-1).
 Since both expressions calculate same thing you have
 0C(r-1) + 1C(r-1) + … + nC(r-1)=(n+1)Cr
+*/
+
+/*
+
+Problem : https://atcoder.jp/contests/abc226/tasks/abc226_f
+Comment : https://codeforces.com/blog/entry/96714?#comment-857164
+
+Number of ways to partition n numbers into fixed size subsets 
+
+> sum of all sizes = n
+> partitions should be distinct (Ex. [[1,2],[3,4]] = [[3,4],[1,2]])
+
+This is equivalent to determining such sequence a1,a2,…,an such that:
+
+Each element ai is an integer between 0 and m;
+For each j=1,…,m, there are exactly kj elements such that ai=j.
+So this means that element i belongs a cyclic permutation group ai, or does not belong to any cyclic permutation if ai=0.
+
+How many such sequences are there? Consider a sequence B = ((N−∑kj copies of 0), (k1 copies of 1), (k2 copies of 2), …, (km copies of m)). This is an n-element sequence, and each permutation of B correspond to the aforementioned (ai) one-to-one. Therefore, the number can be found as:
+
+N! / (∏ (1 to j) kj!)
+
+However, in the first chapter we distinguished the group with the same length. So we have to divide by an additional duplicate-remover.
+
+To do this, let's convert the sequence k1,…,km into the sequence of occurrences: F1 elements of k1,…,km are equal to K1, F2 elements are equal to K2, and so on. Using this notation, the last expression can be re-written as follows:
+
+Ka -> size of group 
+Fa -> number of groups with size Ka
+
+N! / (∏Fa,Ka) ((Ka!)^Fa) * (Fa!)
+
 */
