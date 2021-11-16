@@ -29,7 +29,6 @@ vector<int> find_bridges(int n)
     vector<bool> b_vis(n + 1);
     auto preorder_dfs = [&](const auto &self, int cur, int par, int t) -> int
     {
-        d(cur, par);
         bin[cur] = bout[cur] = mn_time[cur] = t;
         b_vis[cur] = true;
         for (edge e : g[cur])
