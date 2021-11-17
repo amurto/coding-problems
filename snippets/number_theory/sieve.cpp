@@ -87,8 +87,25 @@ void mobius()
     }
 }
 
+// Segmented Sieve
+// Returns biggest prime for each number from l to r
+// r-l+1 should not be too big
+vector<ll> segmented_sieve(ll l, ll r)
+{
+    int sz = r - l + 1;
+    vector<ll> big_pr(sz);
+    for (int i = 0; i < sz; i++)
+        big_pr[i] = l + i;
+    for (int x : pr)
+        for (ll i = x * 1ll * ((l + x - 1) / x); i <= r; i += x)
+            while (big_pr[i - l] % x == 0)
+                big_pr[i - l] /= x;
+    return big_pr;
+}
+
 int main()
 {
     sieve();
+    vector<ll> big_pr = segmented_sieve(1000000, 2000000);
     return 0;
 }

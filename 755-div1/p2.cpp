@@ -10,21 +10,6 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-ll I = 1, J = 3, K = 5;
-vector<ll> arr = {3, 2, 1, 6, 5, 4};
-
-ll calc(ll l, ll r)
-{
-    ll cnt = 0;
-    l--;
-    r--;
-    for (ll i = l; i < r; i++)
-        for (ll j = i + 1; j <= r; j++)
-            if (arr[i] > arr[j])
-                cnt++;
-    return cnt;
-}
-
 ll nc2(ll x)
 {
     return (x * (x - 1)) / 2;
@@ -48,8 +33,6 @@ ll query(ll l, ll r)
 {
     cout << "? " << l << " " << r << endl;
     ll ans;
-    // ans = calc(l, r);
-    // d(ans);
     cin >> ans;
     if (ans == -1)
         exit(0);
@@ -60,32 +43,20 @@ void solve()
 {
     ll n;
     cin >> n;
-    ll low = 1, high = n, res = 1;
+    ll low = 1, high = n;
     ll mx = query(1, n);
-    while (low <= high)
+    while (low < high)
     {
         ll mid = low + (high - low) / 2;
         ll q = query(1, mid);
-        if (q == 0)
-        {
-            res = max(res, mid);
-            low = mid + 1;
-        }
+        if (q >= mx)
+            high = mid;
         else
-        {
-            ll v = check_sqrt(2 * q);
-            if (nc2(v) == q)
-            {
-                res = max(res, mid);
-                low = mid + 1;
-            }
-            else
-                high = mid - 1;
-        }
+            low = mid + 1;
     }
-    ll q = query(1, res);
-    ll v1 = check_sqrt(2 * q), v2 = check_sqrt(2 * (mx - q));
-    ll j = res, k = res + v2 - 1, i = res - v1;
+    ll sz2 = mx - query(1, low - 1) + 1;
+    ll sz1 = check_sqrt(2 * (mx - nc2(sz2)));
+    ll j = low - sz2 + 1, k = low, i = low - sz1 - sz2 + 1;
     cout << "! " << i << " " << j << " " << k << endl;
 }
 

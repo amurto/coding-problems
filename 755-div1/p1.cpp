@@ -22,7 +22,7 @@ bool solve()
     sort(a.begin(), a.end());
     sort(b.begin(), b.end());
     for (int i = 0; i < n; i++)
-        if (b[i] - a[i] != 0 || b[i] - a[i] != 1)
+        if (b[i] - a[i] != 0 && b[i] - a[i] != 1)
             return false;
     return true;
 }
