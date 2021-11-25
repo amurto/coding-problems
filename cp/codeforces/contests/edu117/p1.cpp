@@ -14,6 +14,7 @@ int distance(int x1, int y1, int x2, int y2)
 {
     return abs(x2 - x1) + abs(y2 - y1);
 }
+
 void solve()
 {
     int x, y;
@@ -28,7 +29,6 @@ void solve()
         else
             py -= dis;
         cout << px << " " << py << "\n";
-        // cout << dis << " " << distance(0, 0, px, py) << " " << distance(x, y, px, py) << "\n";
     }
 }
 

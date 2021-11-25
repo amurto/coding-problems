@@ -19,11 +19,11 @@ bool is_greater(ll p1, ll q1, ll p2, ll q2)
 {
     return (p1 * q2) <= (p2 * q1);
 }
+
 void solve()
 {
-    int n, mx = 0;
+    int n;
     cin >> n;
-    memset(cnt, 0, sizeof(cnt));
     vector<int> M(n), K(n), ids, res;
     for (int i = 0; i < n; i++)
     {
@@ -34,26 +34,26 @@ void solve()
     }
     sort(ids.begin(), ids.end());
     ids.resize(unique(ids.begin(), ids.end()) - ids.begin());
-    sort(ids.begin(), ids.end(), [&](int &i1, int &i2)
-         { return cnt[i1] > cnt[i2]; });
-    ll p = 0, q = 1;
-    vector<int> st(21);
-    for (int i = 0; i < (int)ids.size(); i++)
+    int pins = (int)ids.size();
+    ll best_p = 0, best_q = 1;
+    for (int t = 1; t <= min(pins, 20); t++)
     {
-        int id = ids[i];
-        for (int j : g[id])
-            st[K[j]]++;
-        ll tp = 0, tq = i + 1;
-        for (int j = 1; j <= 20; j++)
-            tp += (min(j, i + 1) * st[j]);
-        if (is_greater(p, q, tp, tq))
+        memset(cnt, 0, sizeof(cnt));
+        for (int i = 0; i < n; i++)
+            cnt[M[i]] += min(t, K[i]);
+        sort(ids.begin(), ids.end(), [&](int &i1, int &i2)
+             { return cnt[i1] > cnt[i2]; });
+        ll p = 0, q = t;
+        for (int i = 0; i < t; i++)
+            p += cnt[ids[i]];
+        if (is_greater(best_p, best_q, p, q))
         {
-            mx = max(mx, i + 1);
-            p = tp, q = tq;
+            res.clear();
+            for (int i = 0; i < t; i++)
+                res.pb(ids[i]);
+            best_p = p, best_q = q;
         }
     }
-    for (int i = 0; i < mx; i++)
-        res.pb(ids[i]);
     cout << (int)res.size() << "\n";
     for (int x : res)
         cout << x << " ";
