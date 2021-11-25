@@ -13,7 +13,6 @@ typedef long long ll;
 const int N = 2e5 + 5;
 
 int cnt[N];
-vector<int> g[N];
 
 bool is_greater(ll p1, ll q1, ll p2, ll q2)
 {
@@ -30,7 +29,6 @@ void solve()
         cin >> M[i] >> K[i];
         cnt[M[i]] += K[i];
         ids.pb(M[i]);
-        g[M[i]].pb(i);
     }
     sort(ids.begin(), ids.end());
     ids.resize(unique(ids.begin(), ids.end()) - ids.begin());
