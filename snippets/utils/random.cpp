@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+typedef long long ll;
+#define pb push_back
+
 // for 64 bit, use mt19937_64
 mt19937 rng((unsigned int)chrono::steady_clock::now().time_since_epoch().count());
 
-typedef long long ll;
-#define pb push_back
 
 // Just call rand(minValue, maxValue);
 // Note: it doesn't guarantee distinct values.
