@@ -44,32 +44,23 @@ int power(int n, int m, int p)
 
 int solve()
 {
-    int n;
+    int n, pre = 1;
     cin >> n;
-    vector<ll> arr(n + 1);
-    vector<int> dp(n + 1), pre(n + 1);
-    map<ll, int> id, vis;
-    dp[0] = pre[0] = 1;
+    vector<int> arr(n + 1), dp(n + 1);
+    map<ll, int> last;
+    dp[0] = 1;
     for (int i = 1; i <= n; i++)
         cin >> arr[i];
     ll sum = 0;
     for (int i = 1; i <= n; i++)
     {
-        sum += arr[i];
-        dp[i] = pre[i - 1];
-        d(dp[i]);
-        d(id[sum]);
-        if (id[sum] - 1 >= 0)
-            dp[i] = add(dp[i], -pre[id[sum] - 1]);
-        if (vis[sum])
-            dp[i] = add(dp[i], dp[id[sum]]);
-
-        pre[i] = add(pre[i - 1], dp[i]);
-        vis[sum] = 1;
-        id[sum] = i;
+        sum += 1ll * arr[i];
+        dp[i] = pre;
+        if (last[sum] > 0)
+            pre = add(pre, -dp[last[sum]]);
+        pre = add(pre, dp[i]);
+        last[sum] = i;
     }
-    d(dp);
-    d(pre);
     return dp[n];
 }
 
