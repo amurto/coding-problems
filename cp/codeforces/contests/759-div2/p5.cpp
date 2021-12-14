@@ -94,20 +94,6 @@ struct segtree
         return find_kth_left(v << 1 | 1, tm + 1, tr, k - t[v << 1].v);
     }
 
-    // kth element from right
-    // O(logn)
-    int find_kth_right(const int32_t &v, const int32_t &tl, const int32_t &tr, const int k)
-    {
-        if (t[v].v == 0)
-            return -1;
-        if (tl == tr)
-            return tl;
-        int32_t tm = (tl + tr) >> 1;
-        if (t[v << 1 | 1].v >= k)
-            return find_kth_right(v << 1 | 1, tm + 1, tr, k);
-        return find_kth_right(v << 1, tl, tm, k - t[v << 1 | 1].v);
-    }
-
 public:
     template <typename T>
     void build(const T &arr)
