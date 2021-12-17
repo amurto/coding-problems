@@ -65,18 +65,18 @@ int dfs(int cur, int par, int a, int b, int n)
     {
         if (e != par)
         {
-            int ta = a - sub[e][0], tb = b - sub[e][1];
+            int ta = sub[e][0], tb = sub[e][1];
             if (col[cur] == 0)
             {
-                contrib[cur] = add(contrib[cur], mul(ta, n - sub[e][0] - sub[e][1]));
-                contrib[cur] = add(contrib[cur], -mul(tb, n - sub[e][0] - sub[e][1]));
+                contrib[cur] = add(contrib[cur], mul(ta, n - ta - tb));
+                contrib[cur] = add(contrib[cur], -mul(tb, n - ta - tb));
             }
             else
             {
-                contrib[cur] = add(contrib[cur], -mul(ta, n - sub[e][0] - sub[e][1]));
-                contrib[cur] = add(contrib[cur], mul(tb, n - sub[e][0] - sub[e][1]));
+                contrib[cur] = add(contrib[cur], -mul(ta, n - ta - tb));
+                contrib[cur] = add(contrib[cur], mul(tb, n - ta - tb));
             }
-            res = add(res, dfs(e, cur, ta, tb, n));
+            res = add(res, dfs(e, cur, a - ta, b - tb, n));
         }
     }
     res = add(res, mul(contrib[cur], V[cur]));
@@ -100,10 +100,7 @@ int solve()
         g[v].pb(u);
     }
     set_sz(1, 0, 0);
-    int ans = dfs(1, 0, 0, 0, n);
-    for (int i = 1; i <= n; i++)
-        d(contrib[i]);
-    return ans;
+    return dfs(1, 0, 0, 0, n);
 }
 
 int main()

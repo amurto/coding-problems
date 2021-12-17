@@ -19,10 +19,10 @@ struct sparse_table
     sparse_table(int n)
     {
         sp.resize(n, vector<int>(LGN));
-        hp.resize(n);
+        hp.resize(n + 1);
         // highest power of 2 less than i
         hp[0] = hp[1] = 0;
-        for (int i = 2; i < n; i++)
+        for (int i = 2; i <= n; i++)
             hp[i] = hp[i / 2] + 1;
     }
     sparse_table() = default;

@@ -8,16 +8,16 @@ const int N = 2e5 + 5, LGN = 19;
 vector<int> g[N];
 int up[N][LGN + 1], tin[N], tout[N], dep[N], timer = 0;
 
-void dfs(int cur, int last, int d)
+void dfs(int cur, int last, int dd)
 {
     tin[cur] = ++timer;
-    dep[cur] = d;
+    dep[cur] = dd;
     up[cur][0] = last;
     for (int i = 1; i <= LGN; i++)
         up[cur][i] = up[up[cur][i - 1]][i - 1];
     for (int e : g[cur])
         if (e != last)
-            dfs(e, cur, d + 1);
+            dfs(e, cur, dd + 1);
     tout[cur] = timer;
 }
 
