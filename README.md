@@ -54,6 +54,8 @@ int main()
 
 ```cpp
 g++ test.cpp -std=c++17 -Duse_debug -DDEBUG
+g++ test.cpp -std=c++17 -Duse_debug -DDEBUG -Wall -Wextra -Wshadow -D_GLIBCXX_DEBUG -ggdb3 -fsanitize=address -fsanitize=undefined
+g++ test.cpp -std=c++17 -Duse_debug -DDEBUG -Wall -Wextra -Wshadow
 ```
 
 "": {
