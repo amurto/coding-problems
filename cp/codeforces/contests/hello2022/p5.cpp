@@ -217,7 +217,7 @@ void solve()
     }
     sort(arr.begin(), arr.end());
     segtree<node, update> s(n);
-    for (int i = n - 1, j = -1; i >= 0; i--, j--)
+    for (int i = n - 1, j = -m; i >= 0; i--, j++)
         bld[i] = j;
     s.build(bld);
     for (int i = 0; i < m; i++)
