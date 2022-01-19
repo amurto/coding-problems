@@ -39,7 +39,6 @@ void solve()
         c1--;
         r2--;
         c2--;
-        // d(r1, c1, r2, c2);
         lads[r1].pb(ladder(r1, c1, r2, c2, h));
         rooms[r1].pb(c1);
         rooms[r2].pb(c2);
@@ -56,7 +55,6 @@ void solve()
                 dp[i][j] = inf;
         }
     }
-    // d(rooms);
     dp[0][0] = 0;
     for (int i = 0; i < n; i++)
     {
@@ -79,7 +77,6 @@ void solve()
             }
         }
     }
-    // d(dp);
     if (dp[n - 1].back() >= inf)
         cout << "NO ESCAPE\n";
     else
