@@ -14,17 +14,9 @@ bool solve()
 {
     int n;
     cin >> n;
-    vector<int> arr(n), pre_mn(n), pre_mx(n), suf_mn(n), suf_mx(n), mn_val(n), mx_val(n);
+    vector<int> arr(n), pre_mn(n), pre_mx(n), suf_mn(n), suf_mx(n);
     for (int i = 0; i < n; i++)
         cin >> arr[i];
-    if (n <= 2)
-    {
-        if (n == 1)
-            return true;
-        if (arr[0] < arr[1])
-            return true;
-        return false;
-    }
     pre_mn[0] = pre_mx[0] = arr[0];
     for (int i = 1; i < n; i++)
     {
@@ -37,56 +29,10 @@ bool solve()
         suf_mn[i] = min(suf_mn[i + 1], arr[i]);
         suf_mx[i] = max(suf_mx[i + 1], arr[i]);
     }
-    set<int> st;
-    for (int i = 0; i < n; i++)
-    {
-        if (st.empty() || *st.begin() > arr[i])
-            st.insert(arr[i]);
-        mn_val[i] = *st.rbegin();
-        if (i == n - 1)
-        {
-            if ((int)st.size() == 1)
-                return true;
-        }
-    }
-    st.clear();
-    for (int i = n - 1; i >= 0; i--)
-    {
-        if (st.empty() || *st.rbegin() < arr[i])
-            st.insert(arr[i]);
-        mx_val[i] = *st.begin();
-        if (i == 0)
-        {
-            if ((int)st.size() == 1)
-                return true;
-        }
-    }
-    if (arr[0] == 1 || arr[n - 1] == n)
-        return true;
-    for (int i = 0; i < n; i++)
-    {
-        if (arr[i] == 1)
-        {
-            int pmn = 0, smx = 0;
-            if (i - 1 >= 0)
-                pmn = mn_val[i - 1];
-            if (i + 1 < n)
-                smx = suf_mx[i + 1];
-            if (pmn < smx)
-                return true;
-        }
-        else if (arr[i] == n)
-        {
-            int pmn = n + 1, smx = 0;
-            if (i - 1 >= 0)
-                pmn = pre_mn[i - 1];
-            if (i + 1 < n)
-                smx = mx_val[i + 1];
-            if (pmn < smx)
-                return true;
-        }
-    }
-    return false;
+    for (int i = 1; i < n; i++)
+        if (pre_mn[i - 1] > suf_mx[i])
+            return false;
+    return true;
 }
 
 int main()
