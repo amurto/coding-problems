@@ -8,7 +8,7 @@
 
 /*
 Stars and Bars Theorem
-Number of ways to put n identical objects into k labeled boxes = (n+k-1)Cn
+Number of ways to put n identical objects into k labeled boxes = (n+k-1)Cn = (n+k-1)C(k-1)
 
 https://cp-algorithms.com/combinatorics/stars_and_bars.html
 
@@ -24,7 +24,7 @@ Its equivalent to number of permutations containing n stars and k-1 bars
 Number of ways to put n identical objects into k labeled boxes such that none of the boxes is empty = (n-1)C(k-1)
 
 Proof:
-First we fill k boxes with n objects each. Now, we have n-k objects and k boxes.
+First we fill k boxes with 1 object each. Now, we have n-k objects and k boxes.
 Using Stars and bars, number of ways
 = ((n-k)+k-1)C(n-k)
 = (n-1)C(n-k)
