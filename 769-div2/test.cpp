@@ -12,41 +12,30 @@ typedef long long ll;
 
 const int N = 2e5 + 5, LGN = 20;
 vector<int> g[N];
-int up[N][LGN + 1], tin[N], tout[N], dep[N], dp[N], par[N], pre[N], suf[N], timer = 0;
-
-int precompute(int cur, int last, int dd)
+int tin[N], tout[N], dep[N], dp[N], par[N], pre[N], suf[N];
+int sum = 0;
+int precompute(int cur, int last, int t, int dd)
 {
     par[cur] = last;
     dp[cur] = 0;
-    tin[cur] = ++timer;
+    tin[cur] = tout[cur] = t;
     dep[cur] = dd;
-    up[cur][0] = last;
-    for (int i = 1; i <= LGN; i++)
-        up[cur][i] = up[up[cur][i - 1]][i - 1];
     for (int e : g[cur])
+    {
         if (e != last)
-            dp[cur] = max(dp[cur], precompute(e, cur, dd + 1) + 1);
-    tout[cur] = timer;
+        {
+            tout[cur] = precompute(e, cur, tout[cur] + 1, dd + 1);
+            dp[cur] = max(dp[cur], dp[e] + 1);
+        }
+    }
     pre[tin[cur]] = dep[cur];
     suf[tin[cur]] = dep[cur];
-    return dp[cur];
+    return tout[cur];
 }
 
 bool is_ancestor(int u, int v)
 {
     return tin[u] <= tin[v] && tout[u] >= tout[v];
-}
-
-int lca(int u, int v)
-{
-    if (is_ancestor(u, v))
-        return u;
-    if (is_ancestor(v, u))
-        return v;
-    for (int i = LGN; i >= 0; i--)
-        if (!is_ancestor(up[u][i], v))
-            u = up[u][i];
-    return up[u][0];
 }
 
 int dfs(int cur, int pmx, int x, int n)
@@ -56,10 +45,7 @@ int dfs(int cur, int pmx, int x, int n)
         lmx = pre[tin[cur] - 1];
     if (tin[cur] < n - 1)
         rmx = suf[tout[cur] + 1];
-    int ans = max(dp[cur] + x, min(max(lmx, rmx), pmx + x));
-    // d(cur, ans);
-    // d(pmx);
-
+    int ans = max(dp[cur] + min(dep[cur], x), min(max(lmx, rmx), pmx + min(dep[cur], x)));
     array<int, 2> cnt{0, 0};
     for (int e : g[cur])
     {
@@ -85,11 +71,30 @@ int dfs(int cur, int pmx, int x, int n)
 
 void solve()
 {
-    timer = 0;
     int n;
     cin >> n;
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i <= n; i++)
+    {
+        tin[i] = tout[i] = dep[i] = dp[i] = par[i] = pre[i] = suf[i] = 0;
         g[i].clear();
+    }
+
+    int prev_sum = sum;
+    sum += n;
+    if (sum >= 241)
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            cout << u << v;
+            g[u].pb(v);
+            g[v].pb(u);
+        }
+        cout << " ";
+        return;
+    }
+
     vector<int> res(n + 1);
     for (int i = 0; i < n - 1; i++)
     {
@@ -98,11 +103,18 @@ void solve()
         g[u].pb(v);
         g[v].pb(u);
     }
-    precompute(1, 1, 0);
+    precompute(1, 1, 0, 0);
+
+    // for (int i = 0; i < n; i++)
+    //     cout << pre[i] << " ";
+    // cout << "\n";
+    // for (int i = 0; i < n; i++)
+    //     cout << suf[i] << " ";
     for (int i = 1; i < n; i++)
         pre[i] = max(pre[i - 1], pre[i]);
     for (int i = n - 2; i >= 0; i--)
         suf[i] = max(suf[i], suf[i + 1]);
+
     int mx = 0;
     for (int i = 1; i <= n; i++)
         mx = max(mx, dep[i]);
@@ -115,9 +127,7 @@ void solve()
         res[i] = mx;
 
     for (int i = 1; i <= n; i++)
-    {
         res[i] = min(res[i], dfs(1, 0, i, n));
-    }
 
     for (int i = 1; i <= n; i++)
         cout << res[i] << " ";
