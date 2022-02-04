@@ -10,74 +10,113 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-const int N = 2e5 + 5, LGN = 20;
-vector<int> g[N];
-int up[N][LGN + 1], tin[N], tout[N], dep[N], timer = 0;
-
-void dfs(int cur, int last, int dd)
+struct tree
 {
-    tin[cur] = ++timer;
-    dep[cur] = dd;
-    up[cur][0] = last;
-    for (int i = 1; i <= LGN; i++)
-        up[cur][i] = up[up[cur][i - 1]][i - 1];
-    for (int e : g[cur])
-        if (e != last)
-            dfs(e, cur, dd + 1);
-    tout[cur] = timer;
-}
+    int n;
+    vector<vector<int>> g;
+    vector<int> tin, tout, dep, mx_dep, vis;
+    tree(int sz)
+    {
+        n = sz;
+        g.resize(n + 1);
+        tin.resize(n + 1);
+        tout.resize(n + 1);
+        dep.resize(n + 1);
+        mx_dep.resize(n + 1);
+    }
 
-bool is_ancestor(int u, int v)
-{
-    return tin[u] <= tin[v] && tout[u] >= tout[v];
-}
+    int precompute(int cur, int last, int t, int lvl)
+    {
+        tin[cur] = tout[cur] = t;
+        dep[cur] = lvl;
+        for (int e : g[cur])
+        {
+            if (e != last)
+            {
+                tout[cur] = precompute(e, cur, tout[cur] + 1, lvl + 1);
+                mx_dep[cur] = max(mx_dep[cur], mx_dep[e] + 1);
+            }
+        }
+        return tout[cur];
+    }
 
-int lca(int u, int v)
-{
-    if (is_ancestor(u, v))
-        return u;
-    if (is_ancestor(v, u))
-        return v;
-    for (int i = LGN; i >= 0; i--)
-        if (!is_ancestor(up[u][i], v))
-            u = up[u][i];
-    return up[u][0];
-}
+    int dfs(int cur, int last, int pmx, int x)
+    {
+        int ans = pmx;
+        if (dep[cur] + mx_dep[cur] > x)
+            ans = max(ans, mx_dep[cur]);
+        array<int, 2> cnt{0, 0};
+        for (int e : g[cur])
+        {
+            if (e != last)
+            {
+                if (dep[e] + mx_dep[e] > x)
+                    cnt[1] = max(cnt[1], mx_dep[e] + 1);
+                if (cnt[1] > cnt[0])
+                    swap(cnt[0], cnt[1]);
+            }
+        }
+        for (int e : g[cur])
+        {
+            if (e != last)
+            {
+                int far = 0;
+                if (dep[cur] > x)
+                    far = 1;
+                if (pmx > 0)
+                    far = max(far, pmx + 1);
+                int cur_dep = 0;
+                if (dep[e] + mx_dep[e] > x)
+                    cur_dep = mx_dep[e] + 1;
+                if (cnt[0] == cur_dep)
+                {
+                    if (cnt[1] > 0)
+                        far = max(far, cnt[1] + 1);
+                }
+                else
+                {
+                    if (cnt[0] > 0)
+                        far = max(far, cnt[0] + 1);
+                }
+                ans = min(ans, dfs(e, cur, far, x));
+            }
+        }
+        return ans;
+    }
+
+    int calc(int x)
+    {
+        return dfs(1, 1, 0, x);
+    }
+};
 
 void solve()
 {
     int n;
     cin >> n;
-    for (int i = 1; i <= n; i++)
-        g[i].clear();
+    tree tr(n);
     vector<int> res(n + 1);
     for (int i = 0; i < n - 1; i++)
     {
         int u, v;
         cin >> u >> v;
-        g[u].pb(v);
-        g[v].pb(u);
+        tr.g[u].pb(v);
+        tr.g[v].pb(u);
     }
-    dfs(1, 1, 0);
-    int mx = 0;
-    for (int i = 1; i <= n; i++)
-        mx = max(mx, dep[i]);
-    vector<int> leaves;
-    for (int i = 1; i <= n; i++)
-        if (dep[i] == mx)
-            leaves.pb(i);
-
+    tr.precompute(1, 1, 0, 0);
+    int mx = tr.mx_dep[1];
     for (int i = 1; i <= n; i++)
         res[i] = mx;
-
-    int root = leaves[0];
-    for (int i = 1; i < (int)leaves.size(); i++)
-        root = lca(root, leaves[i]);
-
-    int dis = mx - dep[leaves[0]];
+    vector<int> deps(mx);
+    for (int i = 0; i < mx; i++)
+        deps[i] = tr.calc(i);
     for (int i = 1; i <= n; i++)
-        res[i] = min(res[i], dis + i);
-
+    {
+        int ans = n + 1;
+        for (int j = 0; j < mx; j++)
+            ans = min(ans, max(j, deps[j] + i));
+        res[i] = min(res[i], ans);
+    }
     for (int i = 1; i <= n; i++)
         cout << res[i] << " ";
     cout << "\n";
