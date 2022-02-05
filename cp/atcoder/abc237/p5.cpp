@@ -11,29 +11,24 @@ typedef long long ll;
 typedef pair<ll, ll> pii;
 #define pb push_back
 
-const int N = 2e5 + 5;
-vector<pii> g[N];
-ll H[N];
-
 const ll inf = 1e16;
-ll dijkstra(int n)
+vector<ll> dijkstra(vector<vector<pii>> &g, int n)
 {
-    vector<ll> dis(n + 1, 0);
+    vector<ll> dis(n + 1, inf);
     vector<bool> vis(n + 1);
-    priority_queue<pii> pq;
-    for (int i = 1; i <= n; i++)
-        pq.push({0, i});
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    dis[1] = 0;
+    pq.push({0, 1});
     while (!pq.empty())
     {
         pii cur = pq.top();
         pq.pop();
-        // d(cur.second, cur.first);
         if (!vis[cur.second])
         {
             vis[cur.second] = true;
             for (pii e : g[cur.second])
             {
-                if (!vis[e.first] && dis[cur.second] + e.second > dis[e.first])
+                if (!vis[e.first] && dis[cur.second] + e.second < dis[e.first])
                 {
                     dis[e.first] = dis[cur.second] + e.second;
                     pq.push({dis[e.first], e.first});
@@ -41,7 +36,7 @@ ll dijkstra(int n)
             }
         }
     }
-    return dis[1];
+    return dis;
 }
 
 ll solve()
@@ -49,24 +44,23 @@ ll solve()
     int n, m;
     cin >> n >> m;
     ll res = 0;
+    vector<vector<pii>> g(n + 1);
+    vector<ll> H(n + 1);
     for (int i = 1; i <= n; i++)
         cin >> H[i];
     for (int i = 0; i < m; i++)
     {
         int u, v;
         cin >> u >> v;
-        if (H[u] >= H[v])
-        {
-            g[u].pb({v, -2 * (H[u] - H[v])});
-            g[v].pb({u, H[u] - H[v]});
-        }
-        else
-        {
-            g[u].pb({v, H[v] - H[u]});
-            g[v].pb({u, -2 * (H[v] - H[u])});
-        }
+        if (H[u] < H[v])
+            swap(u, v);
+        g[u].pb({v, 0});
+        g[v].pb({u, H[u] - H[v]});
     }
-    res = dijkstra(n);
+    vector<ll> dis = dijkstra(g, n);
+    for (int i = 2; i <= n; i++)
+        if (H[1] > H[i])
+            res = max(res, H[1] - H[i] - dis[i]);
     return res;
 }
 
