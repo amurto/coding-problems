@@ -6,19 +6,19 @@ typedef long long ll;
 
 const int N = 2e5 + 5, LGN = 19;
 vector<int> g[N];
-int up[N][LGN + 1], tin[N], tout[N], dep[N], timer = 0;
+int up[N][LGN + 1], tin[N], tout[N], dep[N];
 
-void dfs(int cur, int last, int dd)
+int dfs(int cur, int last, int dd, int tt)
 {
-    tin[cur] = ++timer;
+    tin[cur] = tout[cur] = tt;
     dep[cur] = dd;
     up[cur][0] = last;
     for (int i = 1; i <= LGN; i++)
         up[cur][i] = up[up[cur][i - 1]][i - 1];
     for (int e : g[cur])
         if (e != last)
-            dfs(e, cur, dd + 1);
-    tout[cur] = timer;
+            tout[cur] = dfs(e, cur, dd + 1, tout[cur] + 1);
+    return tout[cur];
 }
 
 bool is_ancestor(int u, int v)
@@ -65,6 +65,6 @@ int main()
         g[u].pb(v);
         g[v].pb(u);
     }
-    dfs(1, 1, 0);
+    dfs(1, 1, 0, 0);
     return 0;
 }
