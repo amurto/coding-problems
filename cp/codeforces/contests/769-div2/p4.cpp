@@ -78,7 +78,7 @@ void solve()
                 high = mid - 1;
             }
         }
-        if (st.query(id, i) == i-id + 1)
+        if (st.query(id, i) == i - id + 1)
         {
             last = i;
             arr[i] = pr;
