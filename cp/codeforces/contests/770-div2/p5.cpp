@@ -23,33 +23,6 @@ struct edge
     }
 };
 
-bool check_valid(vector<vector<int>> &grid, vector<string> &str, int m)
-{
-    vector<int> arr1, arr2;
-    for (int i = 0; i < m; i++)
-    {
-        int t = 0;
-        for (int j = 0; j < (int)grid[i].size(); j++)
-        {
-            if (str[i][j] == 'L')
-            {
-                arr1.pb(grid[i][j]);
-                t++;
-            }
-            else
-            {
-                arr2.pb(grid[i][j]);
-                t--;
-            }
-        }
-        if (t != 0)
-            return false;
-    }
-    sort(arr1.begin(), arr1.end());
-    sort(arr2.begin(), arr2.end());
-    return arr1 == arr2;
-}
-
 void solve()
 {
     int m;
@@ -57,7 +30,6 @@ void solve()
     vector<vector<int>> grid(m);
     vector<string> str(m);
     vector<int> sz(m);
-    vector<bool> vis(m);
     for (int i = 0; i < m; i++)
     {
         cin >> sz[i];
@@ -113,7 +85,6 @@ void solve()
                     q.pop();
                     if (cur.second == 0)
                     {
-                        vis[cur.first] = true;
                         int len = (int)g[cur.first].size();
                         while (ptr_g[cur.first] < len && str[g[cur.first][ptr_g[cur.first]].i][g[cur.first][ptr_g[cur.first]].j] != '0')
                             ptr_g[cur.first]++;
