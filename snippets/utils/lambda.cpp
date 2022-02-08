@@ -23,6 +23,6 @@ int main()
             return 1;
         return self(self, i - 1) + 1ll;
     };
-    cout << rec(rec, 10) << '\n';
+    cout << rec(rec, 10) << "\n";
     return 0;
 }
