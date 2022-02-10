@@ -1,3 +1,6 @@
+// https://codeforces.com/contest/1253/problem/E
+// Antenna Coverage
+
 #ifdef use_debug
 #define TERMINAL
 #include "headers/debug.cpp"

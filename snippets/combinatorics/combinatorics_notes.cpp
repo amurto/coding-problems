@@ -76,3 +76,11 @@ Fa -> number of groups with size Ka
 N! / (∏Fa,Ka) ((Ka!)^Fa) * (Fa!)
 
 */
+
+/*
+Number of ways to put n unidentical objects into k labeled boxes such that none of the boxes is empty
+https://codeforces.com/contest/1342/problem/E
+Use inclusion-exclusion
+for i=1 to i=k
+sum of (-1)^i * ncr(k,i) * pow(i,n)
+*/
