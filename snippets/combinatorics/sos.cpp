@@ -45,6 +45,28 @@ bool possibleSqrt(vector<int> &arr, int n, int sum)
     return vis[sum];
 }
 
+// Check if a subset sum is possible, elements are powers of 2
+// arr[i] = (1<<arr[i])
+bool is_possible_sum_pw2(vector<int> &arr, ll t)
+{
+    // increase MX if required
+    int MX = 55;
+    vector<int> cnt(MX);
+    for (int x : arr)
+        cnt[x]++;
+    int carry = 0;
+    for (int bit = 0; bit < MX; bit++)
+    {
+        int req = ((t >> bit) & 1);
+        cnt[bit] += carry;
+        if (req > cnt[bit])
+            return false;
+        cnt[bit] -= req;
+        carry = cnt[bit] / 2;
+    }
+    return true;
+}
+
 // Sum over Subsets Dynamic Programming
 // https://codeforces.com/blog/entry/45223
 void sos()
