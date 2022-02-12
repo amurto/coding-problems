@@ -45,7 +45,6 @@ void solve()
     sort(res.begin(), res.end());
     for (int i = 0; i < (int)res.size(); i++)
         res[i] = arr[res[i]];
-
     vector<int> res2;
     mx = arr[ids[seq[0]][0] + n];
     itr = -1;
@@ -62,17 +61,16 @@ void solve()
         }
     }
     sort(res2.begin(), res2.end());
-    for (int i = 0; i < (int)res.size(); i++)
+    for (int i = 0; i < (int)res2.size(); i++)
         res2[i] = arr[res2[i]];
-    if (res2 < res)
+    if (res.empty() || res2 < res)
         swap(res, res2);
-        
     for (int i : ids[seq[0]])
     {
         vector<int> tmp(2);
         tmp[0] = arr[i];
         tmp[1] = arr[i + n];
-        if (tmp < res)
+        if (res.empty() || tmp < res)
             swap(tmp, res);
     }
     for (int x : res)
