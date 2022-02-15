@@ -32,10 +32,10 @@ struct FenwickTreeRP
             ret += bit[idx];
         return ret;
     }
-    int sum(int l, int r)
-    {
-        return sum(r) - sum(l - 1);
-    }
+    // int sum(int l, int r)
+    // {
+    //     return sum(r) - sum(l - 1);
+    // }
     void update(int idx, int delta)
     {
         for (++idx; idx < n; idx += idx & -idx)
@@ -46,6 +46,7 @@ struct FenwickTreeRP
         update(l, val);
         update(r + 1, -val);
     }
+    // use this
     int point_query(int idx)
     {
         int ret = 0;
