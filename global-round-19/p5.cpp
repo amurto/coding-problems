@@ -43,20 +43,23 @@ ll solve()
     }
     for (int i = 1; i <= n; i++)
         if (!st[i].empty())
-            sort(st[i].rbegin(), st[i].rend());
+            reverse(st[i].rbegin(), st[i].rend());
     sort(freq.begin(), freq.end());
     freq.resize(unique(freq.begin(), freq.end()) - freq.begin());
-    for (pii p : seq)
+
+    for (ll cx : freq)
     {
-        for (ll f : freq)
+        for (ll x : st[cx])
         {
-            for (ll x : st[f])
+            for (int i = 0; i < (int)freq.size() && freq[i] <= cx; i++)
             {
-                pii cur = {p.first, x};
-                if (p.first != x && bad_st.find(cur) == bad_st.end())
+                for (ll y : st[freq[i]])
                 {
-                    res = max(res, (p.first + x) * (p.second + f));
-                    break;
+                    if (y != x && bad_st.find(pair<int, int>{x, y}) == bad_st.end())
+                    {
+                        res = max(res, (y + x) * (cx + freq[i]));
+                        break;
+                    }
                 }
             }
         }
