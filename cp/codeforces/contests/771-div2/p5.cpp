@@ -88,7 +88,7 @@ void solve()
         val += ops[col[it->first]];
         return val;
     };
-    
+
     for (int i = 0; i < q; i++)
     {
         string str;
@@ -150,9 +150,7 @@ void solve()
         {
             int id;
             cin >> id;
-            id--;
-            ll res = query(id);
-            cout << res << "\n";
+            cout << query(id - 1) << "\n";
         }
     }
 }
