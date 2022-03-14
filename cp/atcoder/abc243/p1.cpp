@@ -10,17 +10,19 @@ using namespace std;
 typedef long long ll;
 #define pb push_back
 
-ll solve()
+char solve()
 {
-    ll n;
-    cin >> n;
-    ll res = 1;
-    while (n & 1)
-    {
-        res *= 2;
-        n /= 2;
-    }
-    return res;
+    int v, a, b, c;
+    cin >> v >> a >> b >> c;
+    int sum = a + b + c;
+    v %= sum;
+    if (a > v)
+        return 'F';
+    v -= a;
+    if (b > v)
+        return 'M';
+    v -= b;
+    return 'T';
 }
 
 int main()
@@ -28,9 +30,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int t;
-    cin >> t;
-    while (t-- > 0)
-        cout << solve() << "\n";
+    cout << solve() << "\n";
     return 0;
 }
