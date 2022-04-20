@@ -14,34 +14,29 @@ void solve()
 {
     int n;
     cin >> n;
-    ll sum = 0;
+    ll sum = 0, pre = 0;
     vector<ll> A(n), C(n);
     for (int i = 0; i < n; i++)
     {
         cin >> C[i];
         sum += C[i];
     }
-    if (sum > 0)
+    int ones = sum / n;
+    vector<ll> diff(n);
+    for (int i = n - 1; ones > 0 && i >= 0; i--)
     {
-        for (int i = 0; i < n; i++)
-            A[i] = 1;
-        ll pre = 0;
-        vector<ll> diff(n + 1);
-        for (int i = 0; i < n; i++)
+        C[i] += pre;
+        pre--;
+        diff[i - ones + 1]++;
+        if (C[i] == i + 1)
         {
-            pre += diff[i];
-            C[i] += pre;
-            if (i + C[i] < n)
-                A[i + C[i]] = 0;
-            pre -= C[i];
-            if (i + C[i] < n)
-                diff[i + C[i]] += C[i];
-            d(A);
+            A[i] = 1;
+            ones--;
         }
+        pre += diff[i];
     }
-
-    for (int a : A)
-        cout << a << " ";
+    for (int i = 0; i < n; i++)
+        cout << A[i] << " ";
     cout << "\n";
 }
 
